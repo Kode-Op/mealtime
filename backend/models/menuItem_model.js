@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
 
-import { Schema } from "mongoose";
+const Schema = mongoose.Schema;
 
 const menuItemSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        minlength: 8
-    },
+    id: {type: Number, required: true},
+    name: {type: String, required: true, unique: true, trim: true, minlength: 8},
+    price: {type: Number, required: true},
+    preptime: {type: Number, required: true},
+    description: {type: String, required: true},
+    tag: {type: String, required: true}
 }, {
     timestamps: true,
 });

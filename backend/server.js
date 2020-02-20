@@ -17,6 +17,10 @@ connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 })
 
+const menuItemsRouter = require('./routes/menuItems');
+
+app.use('/menuItems', menuItemsRouter);
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
