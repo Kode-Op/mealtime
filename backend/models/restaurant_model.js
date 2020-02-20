@@ -44,14 +44,12 @@ const restaurantSchema = new Schema({
                     //Start time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
                     //End time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
@@ -76,14 +74,12 @@ const restaurantSchema = new Schema({
                     //Start time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
                     //End time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
@@ -108,14 +104,12 @@ const restaurantSchema = new Schema({
                     //Start time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
                     //End time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
@@ -140,14 +134,12 @@ const restaurantSchema = new Schema({
                     //Start time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
                     //End time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
@@ -172,14 +164,12 @@ const restaurantSchema = new Schema({
                     //Start time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
                     //End time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
@@ -204,14 +194,12 @@ const restaurantSchema = new Schema({
                     //Start time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
                     //End time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
@@ -236,14 +224,12 @@ const restaurantSchema = new Schema({
                     //Start time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
                     //End time 1
                     {
                         type: Number,
-                        required: true,
                         minimum: 0,
                         maximum: 2359
                     },
