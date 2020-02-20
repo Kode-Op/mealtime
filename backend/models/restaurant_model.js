@@ -37,9 +37,9 @@ const restaurantSchema = new Schema({
     hoursofoperation: {
         type: Array,
         items: [
+            {
             type: Array,
             //Sunday
-            {
                 items: [
                     //Start time 1
                     {
