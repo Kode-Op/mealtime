@@ -16,6 +16,8 @@ router.route('/add').post((req,res) => {
     const minorder = Number(req.body.price);
     const tag = req.body.tag;
     const menuitem = req.body.menuitem;
+    const order = req.body.order;
+    const location = req.body.location;
     const hoursofoperation = req.body.hoursofoperation; 
 
     const newItem = new Restaurant({
@@ -26,6 +28,8 @@ router.route('/add').post((req,res) => {
         minorder,
         tag,
         menuitem,
+        order,
+        location,
         hoursofoperation,
     });
 

@@ -14,12 +14,12 @@ const restaurantSchema = new Schema({
             type: Array,
             items: [
                 {
-                    type: Number,
+                    type: String,
                     required: true,
                     unique: true
                 },
                 {
-                    type: Number,
+                    type: String,
                     required: true,
                     minimum: 1
                 }
@@ -29,10 +29,28 @@ const restaurantSchema = new Schema({
     menuitem: {
         type: Array,
         items: {
-            type: Number,
+            type: String,
             required: true,
             unique: true
         }
+    },
+    order: {
+        type: Array,
+        items: {
+            type: String,
+            required: true,
+            unique: true
+        }
+    },
+    location: {
+        x_coordinate: {
+            type: Number,
+            required: true
+        },
+        y_coordinate: {
+            type: Number,
+            required: true
+        },
     },
     hoursofoperation: {
         type: Array,
