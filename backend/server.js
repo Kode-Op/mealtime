@@ -25,11 +25,32 @@ const menuItemsRouter = require("./routes/menuItems");
 const restaurantsRouter = require("./routes/restaurants");
 const ordersRouter = require("./routes/orders");
 const apiKeysRouter = require("./routes/apiKeys");
+const reviewRouter = require("./routes/reviews");
 
 app.use("/menuItems", menuItemsRouter);
 app.use("/restaurants", restaurantsRouter);
 app.use("/orders", ordersRouter);
 app.use("/apiKeys", apiKeysRouter);
+app.use("/reviews", reviewRouter);
+
+/////////////////////////////////////////////////////////////////////////
+// Use multer for uploading images.
+// Read: https://medium.com/@alvenw/how-to-store-images-to-mongodb-with-node-js-fb3905c37e6d
+//
+//app.post(‘/api/photo’,function(req,res){
+// var newItem = new Item();
+// newItem.img.data = fs.readFileSync(req.files.userPhoto.path)
+// newItem.img.contentType = ‘image/png’;
+// newItem.save();
+//});
+//
+//app.use(multer({ dest: ‘./uploads/’,
+// rename: function (fieldname, filename) {
+//   return filename;
+// },
+//}));
+//
+/////////////////////////////////////////////////////////////////////////
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
