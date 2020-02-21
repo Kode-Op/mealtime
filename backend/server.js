@@ -33,6 +33,24 @@ app.use("/orders", ordersRouter);
 app.use("/apiKeys", apiKeysRouter);
 app.use("/reviews", reviewRouter);
 
+/////////////////////////////////////////////////////////////////////////
+// Use multer for uploading images. We'll figure this part out later - RS
+//
+//app.post(‘/api/photo’,function(req,res){
+// var newItem = new Item();
+// newItem.img.data = fs.readFileSync(req.files.userPhoto.path)
+// newItem.img.contentType = ‘image/png’;
+// newItem.save();
+//});
+//
+//app.use(multer({ dest: ‘./uploads/’,
+// rename: function (fieldname, filename) {
+//   return filename;
+// },
+//}));
+//
+/////////////////////////////////////////////////////////////////////////
+
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
