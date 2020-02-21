@@ -25,11 +25,13 @@ const menuItemsRouter = require("./routes/menuItems");
 const restaurantsRouter = require("./routes/restaurants");
 const ordersRouter = require("./routes/orders");
 const apiKeysRouter = require("./routes/apiKeys");
+const reviewRouter = require("./routes/reviews");
 
 app.use("/menuItems", menuItemsRouter);
 app.use("/restaurants", restaurantsRouter);
 app.use("/orders", ordersRouter);
 app.use("/apiKeys", apiKeysRouter);
+app.use("/reviews", reviewRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
