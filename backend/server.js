@@ -26,12 +26,15 @@ const restaurantsRouter = require("./routes/restaurants");
 const ordersRouter = require("./routes/orders");
 const apiKeysRouter = require("./routes/apiKeys");
 const reviewRouter = require("./routes/reviews");
+const userRouter = require('./routes/users');
 
 app.use("/menuItems", menuItemsRouter);
 app.use("/restaurants", restaurantsRouter);
 app.use("/orders", ordersRouter);
 app.use("/apiKeys", apiKeysRouter);
 app.use("/reviews", reviewRouter);
+app.use('/users', userRouter);
+
 
 /////////////////////////////////////////////////////////////////////////
 // Use multer for uploading images.
