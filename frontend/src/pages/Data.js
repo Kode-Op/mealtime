@@ -1,16 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-
-const ApiKey = props => (
-  <tr>
-    <td>{props.apiKey._id}</td>
-    <td>{props.apiKey.name}</td>
-    <td>{props.apiKey.key}</td>
-    <td>{props.apiKey.createdAt}</td>
-    <td>{props.apiKey.updatedAt}</td>
-    <td>{props.apiKey.__v}</td>
-  </tr>
-);
+import ApiComponent from ".././components/api-component";
 
 export default class Data extends Component {
   constructor(props) {
@@ -79,7 +69,7 @@ export default class Data extends Component {
 
   apiList() {
     return this.state.apikeys.map(currentAPI => {
-      return <ApiKey apiKey={currentAPI} key={currentAPI._id} />;
+      return <ApiComponent apiKey={currentAPI} key={currentAPI._id} />;
     });
   }
 
