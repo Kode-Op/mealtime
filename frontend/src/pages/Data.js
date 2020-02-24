@@ -67,7 +67,7 @@ export default class Data extends Component {
     axios
       .get("http://localhost:5000/users")
       .then(response => {
-        this.setState({ user: response.data });
+        this.setState({ users: response.data });
       })
       .catch(error => {
         console.log(error);
@@ -207,20 +207,39 @@ export default class Data extends Component {
           <tbody>{this.reviewList()}</tbody>
         </table>
 
-        <h3>API Keys</h3>
+        <h3>Users</h3>
         <table>
           <thead>
             <tr>
               <th>_id</th>
-              <th>name</th>
-              <th>key</th>
+              <th>preferencesTag</th>
+              <th>orderHistory</th>
+              <th>userID</th>
+              <th>email</th>
+              <th>userName</th>
+              <th>firstName</th>
+              <th>lastName</th>
+              <th>password</th>
+              <th>creditCardName</th>
+              <th>creditCardNumber</th>
+              <th>creditCardCCV</th>
+              <th>expMonth</th>
+              <th>expYear</th>
+              <th>x_coordinate</th>
+              <th>y_coordinate</th>
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>__v</th>
             </tr>
           </thead>
-          <tbody>{this.apiList()}</tbody>
+          <tbody>{this.userList()}</tbody>
         </table>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     );
   }
