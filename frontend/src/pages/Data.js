@@ -95,7 +95,7 @@ export default class Data extends Component {
     });
   }
   restaurantList() {
-    return this.state.apikeys.map(currentRestaurant => {
+    return this.state.restaurants.map(currentRestaurant => {
       return (
         <RestaurantComponent
           restaurant={currentRestaurant}
@@ -168,19 +168,27 @@ export default class Data extends Component {
           <tbody>{this.orderList()}</tbody>
         </table>
 
-        <h3>API Keys</h3>
+        <h3>Restaurants</h3>
         <table>
           <thead>
             <tr>
               <th>_id</th>
+              <th>tag</th>
+              <th>menuitem</th>
+              <th>hoursofoperation</th>
               <th>name</th>
-              <th>key</th>
+              <th>price</th>
+              <th>rating</th>
+              <th>description</th>
+              <th>minorder</th>
+              <th>x_coordinate</th>
+              <th>y_coordinate</th>
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>__v</th>
             </tr>
           </thead>
-          <tbody>{this.apiList()}</tbody>
+          <tbody>{this.restaurantList()}</tbody>
         </table>
 
         <h3>API Keys</h3>
