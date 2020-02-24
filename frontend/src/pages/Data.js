@@ -105,12 +105,12 @@ export default class Data extends Component {
     });
   }
   reviewList() {
-    return this.state.apikeys.map(currentReview => {
-      return <ReviewComponent review={currentReview} key={currentReview._id} />;
+    return this.state.reviews.map(currentReview => {
+      return <ReviewComponent Review={currentReview} key={currentReview._id} />;
     });
   }
   userList() {
-    return this.state.apikeys.map(currentUser => {
+    return this.state.users.map(currentUser => {
       return <UserComponent user={currentUser} key={currentUser._id} />;
     });
   }
@@ -191,19 +191,20 @@ export default class Data extends Component {
           <tbody>{this.restaurantList()}</tbody>
         </table>
 
-        <h3>API Keys</h3>
+        <h3>Reviews</h3>
         <table>
           <thead>
             <tr>
               <th>_id</th>
-              <th>name</th>
-              <th>key</th>
+              <th>review</th>
+              <th>restaurantid</th>
+              <th>userid</th>
               <th>createdAt</th>
               <th>updatedAt</th>
               <th>__v</th>
             </tr>
           </thead>
-          <tbody>{this.apiList()}</tbody>
+          <tbody>{this.reviewList()}</tbody>
         </table>
 
         <h3>API Keys</h3>
