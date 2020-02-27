@@ -8,7 +8,7 @@ To run the frontend:
 2. Navigate to project directory
 3. Run the following command:
 
-`npm install -g react create-react-app bootstrap react-bootstrap react-router-dom axios`
+`npm install -g react create-react-app bootstrap react-bootstrap react-scripts react-router-dom axios`
 
 ## Run the virtual web server
 
