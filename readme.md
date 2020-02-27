@@ -8,10 +8,14 @@ To run the frontend:
 2. Navigate to project directory
 3. Run the following command:
 
-`npm install -g react create-react-app bootstrap react-bootstrap react-scripts react-router-dom axios`
+`npm install -g react create-react-app bootstrap react-bootstrap react-scripts react-router-dom axios nodemon`
 
-## Run the virtual web server
+## Run the virtual web server and connect to MongoDB Atlas
 
 * In the command prompt, run the following command:
 
+`cd backend`
+`nodemon server`
+`cd ..`
+`cd frontend`
 `npm run start`
