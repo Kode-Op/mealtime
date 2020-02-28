@@ -24,8 +24,10 @@ export default class Data extends Component {
   }
 
   componentDidMount() {
+    var url = "https://protected-woodland-90535.herokuapp.com/";
+
     axios
-      .get("http://localhost:5000/apikeys")
+      .get(url + "apikeys")
       .then(response => {
         this.setState({ apikeys: response.data });
       })
@@ -33,7 +35,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("http://localhost:5000/menuitems")
+      .get(url + "menuitems")
       .then(response => {
         this.setState({ menuitems: response.data });
       })
@@ -41,7 +43,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("http://localhost:5000/orders")
+      .get(url + "orders")
       .then(response => {
         this.setState({ orders: response.data });
       })
@@ -49,7 +51,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("http://localhost:5000/restaurants")
+      .get(url + "restaurants")
       .then(response => {
         this.setState({ restaurants: response.data });
       })
@@ -57,7 +59,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("http://localhost:5000/reviews")
+      .get(url + "reviews")
       .then(response => {
         this.setState({ reviews: response.data });
       })
@@ -65,7 +67,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("http://localhost:5000/users")
+      .get(url + "users")
       .then(response => {
         this.setState({ users: response.data });
       })
