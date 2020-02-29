@@ -25,7 +25,7 @@ export default class Data extends Component {
 
   componentDidMount() {
     axios
-      .get("/apikeys")
+      .get("/api/apikeys")
       .then(response => {
         this.setState({ apikeys: response.data });
       })
@@ -33,7 +33,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("/menuitems")
+      .get("/api/menuitems")
       .then(response => {
         this.setState({ menuitems: response.data });
       })
@@ -41,7 +41,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("/orders")
+      .get("/api/orders")
       .then(response => {
         this.setState({ orders: response.data });
       })
@@ -49,7 +49,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("/restaurants")
+      .get("/api/restaurants")
       .then(response => {
         this.setState({ restaurants: response.data });
       })
@@ -57,7 +57,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("/reviews")
+      .get("/api/reviews")
       .then(response => {
         this.setState({ reviews: response.data });
       })
@@ -65,7 +65,7 @@ export default class Data extends Component {
         console.log(error);
       });
     axios
-      .get("/users")
+      .get("/api/users")
       .then(response => {
         this.setState({ users: response.data });
       })
