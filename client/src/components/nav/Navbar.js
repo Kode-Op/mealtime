@@ -6,8 +6,8 @@ import "./Navbar.css"
 export default class NavBar extends Component {
   render() {
     return (
-      <div className="navcontainer">
-        <Navbar sticky="top" variant="light">
+      <div>
+        <Navbar fixed="top" variant="light" className="navcontainer">
           <Navbar.Brand>MealTime</Navbar.Brand>
           <Nav.Link>
             <Link to="/">Home</Link>
