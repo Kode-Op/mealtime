@@ -8,6 +8,7 @@ import OrderComponent from "../components/order-component";
 import RestaurantComponent from "../components/restaurant-component";
 import ReviewComponent from "../components/review-component";
 import UserComponent from "../components/user-component";
+import Navbar from "../components/nav/Navbar";
 
 export default class Data extends Component {
   constructor(props) {
@@ -118,6 +119,7 @@ export default class Data extends Component {
   render() {
     return (
       <div>
+        <Navbar />
         <h3>API Keys</h3>
         <table>
           <thead>

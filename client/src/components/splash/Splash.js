@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import "./Splash.css";
+import splashplaceholder from "./splashplaceholder.jpg"
 
 export default class Splash extends Component {
   render() {
     return (
-      <div className="splashcontainer">
-        <h2>Hello, world</h2>
-      </div>
+      <img src={splashplaceholder} className="splashimg" width="100%"/>
     );
   }
 }

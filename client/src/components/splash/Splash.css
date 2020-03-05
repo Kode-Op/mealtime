@@ -1,5 +1,3 @@
-.splashcontainer{
-    background-color: lightseagreen;
-    height: 550px;
-    padding-top:240px;
+.splashimage{
+    z-index:-1;
 }
