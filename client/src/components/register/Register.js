@@ -21,11 +21,11 @@ export default class Register extends Component {
         <label htmlFor="password">Password</label>
         <input type="password" name="password" className="inputBox" />
         <Button variant="success" className="registerButton" block>
-          Login
+          Sign up
         </Button>
         Already have an account?
         <Link to="/login" className="loginLink">
-          Register!
+          Log in!
         </Link>
       </div>
     );
