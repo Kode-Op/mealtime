@@ -1,0 +1,37 @@
+.linkstyle{
+    color:white;
+    font-size: 1.3em;
+    font-weight: bolder;
+}
+
+.loginbutton{
+    border-radius: 12px;
+    border: 3px solid white;
+    padding:8px 20px 8px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.registerbutton{
+    border: none;
+    border-radius: 12px;
+    background-color: blue;
+    padding:11px 18px 11px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.navcontainer{
+    width: 100%;
+    margin: 0 auto;
+}
+
+@media only screen and (min-width: 1024px) {
+    .navcontainer {
+        width: 1024px;
+    }
+}
