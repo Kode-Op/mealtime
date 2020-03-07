@@ -116,7 +116,7 @@ export default class Register extends Component {
 
   render() {
     return (
-      <div className="mainContainer">
+      <div className="registerMainContainer">
         <div className="registerContainer">
           <form onSubmit={this.onSubmit}>
             <h2 className="registerHeader">Create your account</h2>
