@@ -4,6 +4,8 @@ import splashplaceholder from "./splashplaceholder.png";
 
 export default class Splash extends Component {
   render() {
-    return <img src={splashplaceholder} className="splashimg" width="100%" />;
+    return (
+      <img src={splashplaceholder} className="splashimg" alt="" width="100%" />
+    );
   }
 }

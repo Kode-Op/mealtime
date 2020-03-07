@@ -41,3 +41,11 @@
 .loginLink {
   margin-left: 10px;
 }
+
+.registerErrorMessage {
+  color: red;
+  margin: 20px 0px 10px 0px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  font-size: 0.9em;
+}
