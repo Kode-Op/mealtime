@@ -5,6 +5,7 @@ import Data from "./pages/Data";
 import Home from "./pages/Home";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
+import RegisterConfirmation from "./components/register/Confirmation";
 
 function App() {
   return (
@@ -12,6 +13,11 @@ function App() {
       <div className="App">
         <Switch>
           <Route path="/" exact component={Home} />
+          <Route
+            path="/register/confirmation"
+            exact
+            component={RegisterConfirmation}
+          />
           <Route path="/data" component={Data} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Register.css";
 //import axios from 'axios';
@@ -9,7 +10,8 @@ const initialState = {
   lastName: "",
   email: "",
   password: "",
-  errorMessage: ""
+  errorMessage: "",
+  isValidated: false
 };
 
 export default class Register extends Component {
@@ -98,84 +100,92 @@ export default class Register extends Component {
     e.preventDefault();
 
     const isValid = this.validate();
-    const user = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: this.state.email,
-      password: this.state.password
-    };
 
     if (isValid) {
-      console.log(user);
-      //Clear form
-      this.setState(initialState);
+      this.setState({ isValidated: true });
     }
-
-    //window.location = "/"; // Go to the home page on submit
   }
 
   render() {
-    return (
-      <div className="registerMainContainer">
-        <div className="registerContainer">
-          <form onSubmit={this.onSubmit}>
-            <h2 className="registerHeader">Create your account</h2>
-            <div className="registerDivSplitLeft">
-              <label htmlFor="fName">First name</label>
+    if (this.state.isValidated) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/register/confirmation",
+            state: {
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              email: this.state.email,
+              password: this.state.password
+            }
+          }}
+        />
+      );
+    } else {
+      return (
+        <div className="registerMainContainer">
+          <div className="registerContainer">
+            <form onSubmit={this.onSubmit}>
+              <h2 className="registerHeader">Create your account</h2>
+              <div className="registerDivSplitLeft">
+                <label htmlFor="fName">First name</label>
+                <input
+                  type="text"
+                  name="fName"
+                  className="inputBox"
+                  value={this.state.firstName}
+                  onChange={this.onChangeFirstName}
+                  required
+                />
+              </div>
+              <div className="registerDivSplitRight">
+                <label htmlFor="lName">Last name</label>
+                <input
+                  type="text"
+                  name="lName"
+                  className="inputBox"
+                  value={this.state.lastName}
+                  onChange={this.onChangeLastName}
+                  required
+                />
+              </div>
+              <label htmlFor="email">Email</label>
               <input
                 type="text"
-                name="fName"
+                name="email"
                 className="inputBox"
-                value={this.state.firstName}
-                onChange={this.onChangeFirstName}
+                value={this.state.email}
+                onChange={this.onChangeEmail}
                 required
               />
-            </div>
-            <div className="registerDivSplitRight">
-              <label htmlFor="lName">Last name</label>
+              <label htmlFor="password">Password</label>
               <input
-                type="text"
-                name="lName"
+                type="password"
+                name="password"
                 className="inputBox"
-                value={this.state.lastName}
-                onChange={this.onChangeLastName}
+                value={this.state.password}
+                onChange={this.onChangePassword}
                 required
               />
+              <Button
+                variant="success"
+                className="registerButton"
+                type="submit"
+                block
+              >
+                Sign up
+              </Button>
+            </form>
+            <div className="registerErrorMessage">
+              {this.state.errorMessage}
             </div>
-            <label htmlFor="email">Email</label>
-            <input
-              type="text"
-              name="email"
-              className="inputBox"
-              value={this.state.email}
-              onChange={this.onChangeEmail}
-              required
-            />
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="inputBox"
-              value={this.state.password}
-              onChange={this.onChangePassword}
-              required
-            />
-            <Button
-              variant="success"
-              className="registerButton"
-              type="submit"
-              block
-            >
-              Sign up
-            </Button>
-          </form>
-          <div className="registerErrorMessage">{this.state.errorMessage}</div>
-          Already have an account?
-          <Link to="/login" className="loginLink">
-            Log in!
-          </Link>
+            Already have an account?
+            <Link to="/login" className="loginLink">
+              Log in!
+            </Link>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
