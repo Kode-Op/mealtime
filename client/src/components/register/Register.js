@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Register.css";
-//import axios from 'axios';
 
 const initialState = {
   firstName: "",
