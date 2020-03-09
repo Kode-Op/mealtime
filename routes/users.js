@@ -8,20 +8,20 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/add').post((req,res) => {
-    const userID = req.body.userID;
+    const userID = req.body.email;
     const email = req.body.email;
-    const userName = req.body.userName;
+    const userName = "";
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const password = req.body.password;
-    const creditCardName = req.body.creditCardName;
-    const creditCardNumber = Number(req.body.creditCardNumber);
-    const creditCardCCV = Number(req.body.creditCardCCV);
-    const expMonth = Number(req.body.expMonth);
-    const expYear = Number(req.body.expYear);
-    const location = req.body.location;
-    const preferencesTag = req.body.preferencesTag;
-    const orderHistory = Array(req.body.orderHistory);
+    const creditCardName = "";
+    const creditCardNumber = Number(0);
+    const creditCardCCV = Number(0);
+    const expMonth = Number(0);
+    const expYear = Number(0);
+    const location = {"x_coordinate" : Number(0), "y_coordinate": Number(0)};
+    const preferencesTag = Array([""]);
+    const orderHistory = Array([""]);
 
     const newItem = new User({
         userID,
@@ -61,7 +61,7 @@ router.route('/:id').get((req, res) => {
   router.route('/update/:id').post((req, res) => {
     User.findById(req.params.id)
         .then(users => {
-            users.userID = req.body.userID;
+            users.userID = "";
             users.email = req.body.email;
             users.userName = req.body.userName;
             users.firstName = req.body.firstName;
