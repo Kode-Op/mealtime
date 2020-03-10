@@ -50,15 +50,21 @@ router.route('/:id').get((req, res) => {
     User.findById(req.params.id)
         .then(users => res.json(users))
         .catch(err => res.status(400).json('Error: ' + err));
-  });
+});
+
+router.route('find/').get((req, res) => {
+    User.findOne({'email' : 'test@cpp.edu'})
+        .then(users => res.json(users))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
   
-  router.route('/:id').delete((req, res) => {
+router.route('/:id').delete((req, res) => {
     User.findByIdAndDelete(req.params.id)
         .then(() => res.json('User deleted.'))
         .catch(err => res.status(400).json('Error: ' + err));
-  });
+});
   
-  router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').post((req, res) => {
     User.findById(req.params.id)
         .then(users => {
             users.userID = "";
@@ -80,6 +86,6 @@ router.route('/:id').get((req, res) => {
             .catch(err => res.status(400).json('Error: ' + err));
       })
       .catch(err => res.status(400).json('Error: ' + err));
-  });
+});
 
 module.exports = router;
