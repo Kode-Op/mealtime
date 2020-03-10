@@ -16,29 +16,29 @@
 .splashzone {
   font-family: "Catamaran", sans-serif;
   color: white;
-  margin-top: 250px;
-  margin-right: 850px;
+  margin-top: 220px;
+  margin-right: 750px;
 }
 
 .splashzone h1 {
   font-weight: bolder;
-  font-size: 4.5rem;
+  font-size: 3.5em;
 }
 
 .splashbox {
-  height: 50px;
+  height: 45px;
   width: 78%;
   float: left;
   margin-top: 20px;
   border-radius: 15px;
   padding: 5px 20px 0 20px;
-  font-size: 1.3em;
+  font-size: 1.05em;
 }
 
 .splashgo {
   width: 20%;
+  height: 45px;
   float: right;
-  height: 50px;
   margin-top: 20px;
   border-radius: 15px !important;
 }

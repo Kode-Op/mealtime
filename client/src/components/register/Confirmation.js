@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 
-export default class Confirmation extends Component {
+export default class RegisterConfirmation extends Component {
   constructor(props) {
     super(props);
     const user = {
