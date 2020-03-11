@@ -57,6 +57,45 @@ router.route('find/').get((req, res) => {
         .then(users => res.json(users))
         .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.post('/register', function(req, res) {
+    var email = req.body.email;
+    var password = req.body.password;
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+
+    var newuser = new user();
+    newuser.email = email;
+    newuser.password = password;
+    newuser.firstName = firstName;
+    newuser.lastName = lastName;
+    newuser.save(function(err, savedUser) {
+        if(err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+        return res.status(200).send();
+    })
+});
+
+router.post('/login', function(req, res) {
+    var email = req.body.email;
+    var password = req.body.password;
+
+    User.findOne({email: email, password: password}, function(err, user) {
+        if(err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if(!user) {
+            return res.status(404).send();
+        }
+        else {
+            return res.status(200).send();
+        }
+    })
+});
   
 router.route('/:id').delete((req, res) => {
     User.findByIdAndDelete(req.params.id)
