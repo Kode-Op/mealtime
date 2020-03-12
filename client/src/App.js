@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import RegisterConfirmation from "./components/register/Confirmation";
+import LoginConfirmation from "./components/login/Confirmation";
 
 function App() {
   return (
@@ -17,6 +18,11 @@ function App() {
             path="/register/confirmation"
             exact
             component={RegisterConfirmation}
+          />
+          <Route
+            path="/login/confirmation"
+            exact
+            component={LoginConfirmation}
           />
           <Route path="/data" component={Data} />
           <Route path="/login" component={Login} />

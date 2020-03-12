@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import "./Login.css";
 
 const initialState = {
   email: "",
   password: "",
-  errorMessage: ""
+  errorMessage: "",
+  isValidated: false
 };
 
 export default class Login extends Component {
@@ -53,60 +54,66 @@ export default class Login extends Component {
     e.preventDefault();
 
     const isValid = this.validate();
-    const user = {
-      email: this.state.email,
-      password: this.state.password
-    };
 
     if (isValid) {
-      console.log(user);
-      //Clear form
-      this.setState(initialState);
+      this.setState({ isValidated: true });
     }
-
-    //window.location = "/"; // Go to the home page on submit
   }
 
   render() {
-    return (
-      <div className="loginMainContainer">
-        <div className="loginContainer">
-          <h2 className="loginHeader">Welcome back</h2>
-          <form onSubmit={this.onSubmit}>
-            <label htmlFor="email">Email</label>
-            <input
-              type="text"
-              name="email"
-              className="inputBox"
-              value={this.state.email}
-              onChange={this.onChangeEmail}
-              required
-            />
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="inputBox"
-              value={this.state.password}
-              onChange={this.onChangePassword}
-              required
-            />
-            <Button
-              variant="success"
-              className="loginButton"
-              type="submit"
-              block
-            >
-              Login
-            </Button>
-          </form>
-          <div className="loginErrorMessage">{this.state.errorMessage}</div>
-          New to MealTime?
-          <Link to="/register" className="registerLink">
-            Sign up!
-          </Link>
+    if (this.state.isValidated) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/login/confirmation",
+            state: {
+              email: this.state.email,
+              password: this.state.password
+            }
+          }}
+        />
+      );
+    } else {
+      return (
+        <div className="loginMainContainer">
+          <div className="loginContainer">
+            <h2 className="loginHeader">Welcome back</h2>
+            <form onSubmit={this.onSubmit}>
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                name="email"
+                className="inputBox"
+                value={this.state.email}
+                onChange={this.onChangeEmail}
+                required
+              />
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                className="inputBox"
+                value={this.state.password}
+                onChange={this.onChangePassword}
+                required
+              />
+              <Button
+                variant="success"
+                className="loginButton"
+                type="submit"
+                block
+              >
+                Login
+              </Button>
+            </form>
+            <div className="loginErrorMessage">{this.state.errorMessage}</div>
+            New to MealTime?
+            <Link to="/register" className="registerLink">
+              Sign up!
+            </Link>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }

@@ -1,6 +1,6 @@
 .linkstyle {
   color: white;
-  font-size: 1.3em;
+  font-size: 1.05em;
   font-weight: bolder;
   padding-top: 8px;
   display: inline-block;
@@ -16,9 +16,9 @@
   border-radius: 12px;
   background-color: white;
   color: black;
-  font-size: 1.2em;
+  font-size: 1.05em;
   font-weight: bolder;
-  padding: 11px 18px 11px 18px;
+  padding: 8px 16px 8px 16px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -26,10 +26,4 @@
 
 .registerbutton:hover {
   text-decoration: underline;
-}
-
-.registerfont {
-  color: black;
-  font-size: 1.3em;
-  font-weight: bolder;
 }
