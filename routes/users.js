@@ -52,32 +52,6 @@ router.route('/:id').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('find/').get((req, res) => {
-    User.findOne({'email' : 'test@cpp.edu'})
-        .then(users => res.json(users))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
-
-router.post('/register', function(req, res) {
-    var email = req.body.email;
-    var password = req.body.password;
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-
-    var newuser = new user();
-    newuser.email = email;
-    newuser.password = password;
-    newuser.firstName = firstName;
-    newuser.lastName = lastName;
-    newuser.save(function(err, savedUser) {
-        if(err) {
-            console.log(err);
-            return res.status(500).send();
-        }
-        return res.status(200).send();
-    })
-});
-
 router.post('/login', function(req, res) {
     var email = req.body.email;
     var password = req.body.password;
@@ -94,7 +68,8 @@ router.post('/login', function(req, res) {
         else {
             return res.status(200).send();
         }
-    })
+    }).then(users => res.json(users))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
   
 router.route('/:id').delete((req, res) => {
