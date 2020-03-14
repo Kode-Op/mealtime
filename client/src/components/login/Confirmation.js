@@ -11,14 +11,14 @@ export default class LoginConfirmation extends Component {
     };
     this.state = { accountConfirmed: false, isLoaded: false, redirect: false };
 
-  axios
-    .post("/api/users/login", user)
-    .then(res => {
-      this.setState({ accountConfirmed: true, isLoaded: true });
-    })
-    .catch(error => {
-      this.setState({ isLoaded: true });
-    });
+    axios
+      .post("/api/users/login", user)
+      .then(res => {
+        this.setState({ accountConfirmed: true, isLoaded: true });
+      })
+      .catch(error => {
+        this.setState({ isLoaded: true });
+      });
   }
 
   componentDidMount() {
@@ -32,17 +32,13 @@ export default class LoginConfirmation extends Component {
   render() {
     if (this.state.isLoaded) {
       if (this.state.accountConfirmed || this.state.redirect) {
-        console.log("User Confirmed!")
         return <Redirect to="/" />;
       } else {
         return (
           <div>
             <br />
             <br />
-            <p>
-              Incorrect Password or email.
-              Redirecting in 3 seconds....
-            </p>
+            <p>Incorrect Password or email. Redirecting in 3 seconds....</p>
           </div>
         );
       }
