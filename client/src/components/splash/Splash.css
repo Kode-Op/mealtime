@@ -1,7 +1,5 @@
 .splashcontainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
 }
 
@@ -15,14 +13,14 @@
 
 .splashzone {
   font-family: "Catamaran", sans-serif;
-  color: white;
-  margin-top: 220px;
-  margin-right: 750px;
+  color: black;
+  width: 100%;
+  margin-top: 33vw;
 }
 
 .splashzone h1 {
   font-weight: bolder;
-  font-size: 3.5em;
+  font-size: 2.5em;
 }
 
 .splashbox {
@@ -41,4 +39,41 @@
   float: right;
   margin-top: 20px;
   border-radius: 15px !important;
+}
+
+@media only screen and (min-width: 1024px) {
+  .splashzone {
+    margin-top: 10vw;
+    margin-left: 10vw;
+    color: white;
+    width: auto;
+  }
+
+  .splashzone h1 {
+    font-size: 2.3em;
+  }
+}
+
+@media only screen and (min-width: 1140px) {
+  .splashzone h1 {
+    font-size: 2.7em;
+  }
+}
+
+@media only screen and (min-width: 1366px) {
+  .splashzone h1 {
+    font-size: 3em;
+  }
+}
+
+@media only screen and (min-width: 1480px) {
+  .splashzone h1 {
+    font-size: 3.3em;
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  .splashzone h1 {
+    font-size: 3.5em;
+  }
 }
