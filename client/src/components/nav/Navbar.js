@@ -13,11 +13,6 @@ export default class NavBar extends Component {
               MealTime
             </Link>
           </Nav.Link>
-          <Nav.Link>
-            <Link to="/data" className="linkstyle">
-              Data
-            </Link>
-          </Nav.Link>
           <Navbar.Collapse className="justify-content-end">
             <ButtonToolbar>
               <Nav.Link>
