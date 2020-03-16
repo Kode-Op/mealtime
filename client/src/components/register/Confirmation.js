@@ -5,33 +5,41 @@ import axios from "axios";
 export default class RegisterConfirmation extends Component {
   constructor(props) {
     super(props);
-    const user = {
-      firstName: this.props.location.state.firstName,
-      lastName: this.props.location.state.lastName,
-      email: this.props.location.state.email,
-      password: this.props.location.state.password
-    };
+
     this.state = {
       accountCreated: false,
       isLoaded: false,
       redirect: false,
-      message: "An unexpected error has occured."
+      message: ""
     };
 
-    axios
-      .post("/api/users/add", user)
-      .then(() => {
-        this.setState({
-          accountCreated: true,
-          isLoaded: true
+    if (typeof this.props.location.state !== "undefined") {
+      let user = {
+        firstName: this.props.location.state.firstName,
+        lastName: this.props.location.state.lastName,
+        email: this.props.location.state.email,
+        password: this.props.location.state.password
+      };
+      axios
+        .post("/api/users/add", user)
+        .then(() => {
+          this.setState({
+            accountCreated: true,
+            isLoaded: true
+          });
+        })
+        .catch(error => {
+          this.setState({
+            isLoaded: true,
+            message: JSON.stringify(error.message)
+          });
         });
-      })
-      .catch(error => {
-        this.setState({
-          isLoaded: true,
-          message: JSON.stringify(error.message)
-        });
-      });
+    } else {
+      this.state = {
+        isLoaded: true,
+        message: "An unexpected error has occured"
+      };
+    }
   }
 
   componentDidMount() {
@@ -54,7 +62,7 @@ export default class RegisterConfirmation extends Component {
             to={{
               pathname: "/register",
               state: {
-                errorMessage: "Account with email already exists. \n"
+                errorMessage: "An account with that email already exists. \n"
               }
             }}
           />
@@ -64,7 +72,7 @@ export default class RegisterConfirmation extends Component {
           <div>
             <br />
             <br />
-            <p>Error: {this.state.message}. Redirecting in 3 seconds...</p>
+            <p>{this.state.message}. Redirecting in 3 seconds...</p>
           </div>
         );
       }
