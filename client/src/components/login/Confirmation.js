@@ -38,7 +38,7 @@ export default class LoginConfirmation extends Component {
           <div>
             <br />
             <br />
-            <p>Incorrect Password or email. Redirecting in 3 seconds....</p>
+            <p>Incorrect email or password. Redirecting in 3 seconds....</p>
           </div>
         );
       }
