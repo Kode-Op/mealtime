@@ -43,7 +43,15 @@ router.route("/add").post((req, res) => {
   newItem
     .save()
     .then(() => res.json("User added!"))
-    .catch(err => res.status(400).json("Error: " + err));
+    .catch(() => {
+      User.find({ email: email }, (err, previousUsers) => {
+        if (previousUsers.length > 0) {
+          res.status(403).json("Error: Account already exists");
+        } else if (err) {
+          res.status(400).json("Error: " + err);
+        }
+      });
+    });
 });
 
 router.route("/:id").get((req, res) => {
@@ -52,9 +60,9 @@ router.route("/:id").get((req, res) => {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.post('/login', function(req, res) {
-    var email = req.body.email;
-    var password = req.body.password;
+router.post("/login", function(req, res) {
+  var email = req.body.email;
+  var password = req.body.password;
 
   User.findOne({ email: email, password: password }, function(err, user) {
     if (err) {
@@ -62,14 +70,14 @@ router.post('/login', function(req, res) {
       return res.status(500).send();
     }
 
-        if(!user) {
-            return res.status(404).send();
-        }
-        else {
-            return res.status(200).send();
-        }
-    }).then(users => res.json(users))
-    .catch(err => res.status(400).json('Error: ' + err));
+    if (!user) {
+      return res.status(404).send();
+    } else {
+      return res.status(200).send();
+    }
+  })
+    .then(users => res.json(users))
+    .catch(err => res.status(400).json("Error: " + err));
 });
 
 router.route("/:id").delete((req, res) => {
@@ -79,28 +87,26 @@ router.route("/:id").delete((req, res) => {
 });
 
 router.route("/update/:id").post((req, res) => {
-  User.findById(req.params.id)
-    .then(users => {
-      users.userID = "";
-      users.email = req.body.email;
-      users.userName = req.body.userName;
-      users.firstName = req.body.firstName;
-      users.lastName = req.body.lastName;
-      users.password = req.body.password;
-      users.creditCardName = req.body.creditCardName;
-      users.creditCardNumber = Number(req.body.creditCardNumber);
-      users.creditCardCCV = Number(req.body.creditCardCCV);
-      users.expMonth = Number(req.body.expMonth);
-      users.expYear = Number(req.body.expYear);
-      users.location = req.body.location;
-      users.preferencesTag = req.body.preferencesTag;
-      users.orderHistory = Array(req.body.orderHistory);
-      users
-        .save()
-        .then(() => res.json("User updated!"))
-        .catch(err => res.status(400).json("Error: " + err));
-    })
-    .catch(err => res.status(400).json("Error: " + err));
+  User.findById(req.params.id).then(users => {
+    users.userID = "";
+    users.email = req.body.email;
+    users.userName = req.body.userName;
+    users.firstName = req.body.firstName;
+    users.lastName = req.body.lastName;
+    users.password = req.body.password;
+    users.creditCardName = req.body.creditCardName;
+    users.creditCardNumber = Number(req.body.creditCardNumber);
+    users.creditCardCCV = Number(req.body.creditCardCCV);
+    users.expMonth = Number(req.body.expMonth);
+    users.expYear = Number(req.body.expYear);
+    users.location = req.body.location;
+    users.preferencesTag = req.body.preferencesTag;
+    users.orderHistory = Array(req.body.orderHistory);
+    users
+      .save()
+      .then(() => res.json("User updated."))
+      .catch(err => res.status(400).json("Error: " + err));
+  });
 });
 
 module.exports = router;

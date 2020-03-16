@@ -23,6 +23,10 @@ export default class Register extends Component {
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = initialState;
+
+    if (typeof this.props.location.state !== "undefined") {
+      this.state = { errorMessage: this.props.location.state.errorMessage };
+    }
   }
 
   onChangeFirstName(e) {

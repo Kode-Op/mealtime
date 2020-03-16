@@ -11,15 +11,26 @@ export default class RegisterConfirmation extends Component {
       email: this.props.location.state.email,
       password: this.props.location.state.password
     };
-    this.state = { accountCreated: false, isLoaded: false, redirect: false };
+    this.state = {
+      accountCreated: false,
+      isLoaded: false,
+      redirect: false,
+      message: "An unexpected error has occured."
+    };
 
     axios
       .post("/api/users/add", user)
-      .then(res => {
-        this.setState({ accountCreated: true, isLoaded: true });
+      .then(() => {
+        this.setState({
+          accountCreated: true,
+          isLoaded: true
+        });
       })
       .catch(error => {
-        this.setState({ isLoaded: true });
+        this.setState({
+          isLoaded: true,
+          message: JSON.stringify(error.message)
+        });
       });
   }
 
@@ -35,15 +46,25 @@ export default class RegisterConfirmation extends Component {
     if (this.state.isLoaded) {
       if (this.state.accountCreated || this.state.redirect) {
         return <Redirect to="/" />;
+      } else if (
+        this.state.message === '"Request failed with status code 403"'
+      ) {
+        return (
+          <Redirect
+            to={{
+              pathname: "/register",
+              state: {
+                errorMessage: "Account with email already exists. \n"
+              }
+            }}
+          />
+        );
       } else {
         return (
           <div>
             <br />
             <br />
-            <p>
-              An unexpected error has occured during your account creation.
-              Redirecting in 3 seconds...
-            </p>
+            <p>Error: {this.state.message}. Redirecting in 3 seconds...</p>
           </div>
         );
       }
