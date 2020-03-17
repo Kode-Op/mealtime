@@ -73,9 +73,7 @@ router.post("/login", function(req, res) {
     } else {
       return res.status(200).send();
     }
-  })
-    .then(users => res.json(users))
-    .catch(err => res.status(400).json("Error: " + err));
+  });
 });
 
 router.route("/:id").delete((req, res) => {
