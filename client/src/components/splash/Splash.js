@@ -4,11 +4,50 @@ import "./Splash.css";
 import splashplaceholder from "./splashplaceholdershadow.png";
 
 export default class Splash extends Component {
+  constructor() {
+    super();
+    this.state = {
+      scrolled: false
+    };
+  }
+
+  componentDidMount() {
+    let intViewportWidth = window.innerWidth / 10 + 75;
+    let isTop = window.scrollY < intViewportWidth;
+    window.addEventListener("scroll", () => {
+      intViewportWidth = window.innerWidth / 10 + 75;
+      isTop = window.scrollY < intViewportWidth;
+      if (isTop !== true) {
+        this.setState({ scrolled: true });
+      } else {
+        this.setState({ scrolled: false });
+      }
+    });
+    window.addEventListener("resize", () => {
+      intViewportWidth = window.innerWidth / 10 + 75;
+      isTop = window.scrollY < intViewportWidth;
+      if (isTop !== true) {
+        this.setState({ scrolled: true });
+      } else {
+        this.setState({ scrolled: false });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll");
+  }
+
   render() {
     return (
-      <div className="splashcontainer">
-        <img src={splashplaceholder} alt="" />
-        <div className="splashzone">
+      <React.Fragment>
+        <div className="splashcontainer">
+          <img src={splashplaceholder} alt="" />
+        </div>
+
+        <div
+          className={this.state.scrolled ? "splashzonesticky" : "splashzone"}
+        >
           <h1>Any time can be MealTime.</h1>
           <form>
             <input
@@ -22,7 +61,48 @@ export default class Splash extends Component {
             </Button>
           </form>
         </div>
-      </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </React.Fragment>
     );
   }
 }
