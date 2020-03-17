@@ -58,7 +58,7 @@ export default class LoginConfirmation extends Component {
             to={{
               pathname: "/login",
               state: {
-                errorMessage: "Invalid username or password. \n"
+                errorMessage: "Invalid email or password. \n"
               }
             }}
           />
