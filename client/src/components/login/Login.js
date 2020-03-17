@@ -14,11 +14,15 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.state = initialState;
-
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+
+    this.state = initialState;
+
+    if (typeof this.props.location.state !== "undefined") {
+      this.state = { errorMessage: this.props.location.state.errorMessage };
+    }
   }
 
   onChangeEmail(e) {
