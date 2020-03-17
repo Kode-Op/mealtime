@@ -40,6 +40,9 @@ router.route("/add").post((req, res) => {
     orderHistory
   });
 
+  newItem.password = newItem.generateHash(password);
+  newItem.email = email.toLowerCase();
+
   newItem
     .save()
     .then(() => res.json("User added!"))
@@ -62,16 +65,19 @@ router.route("/:id").get((req, res) => {
 
 router.post("/login", function(req, res) {
   var email = req.body.email;
+  email = email.toLowerCase();
   var password = req.body.password;
 
-  User.findOne({ email: email, password: password }, function(err, user) {
+  User.findOne({ email: email}, function(err, user) {
     if (err) {
       return res.status(500).send();
     }
     if (!user) {
       return res.status(404).send();
-    } else {
+    } else if (user.validPassword(password)) { //found
       return res.status(200).send();
+    } else {
+      return res.status(404).send();
     }
   });
 });
