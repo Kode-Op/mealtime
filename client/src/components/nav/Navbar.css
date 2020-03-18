@@ -27,3 +27,7 @@
 .registerbutton:hover {
   text-decoration: underline;
 }
+
+.navheader {
+  background-color: black !important;
+}

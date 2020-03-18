@@ -4,10 +4,27 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 export default class NavBar extends Component {
+  componentDidMount() {
+    let intViewportWidth = window.innerWidth / 10 + 75;
+    window.addEventListener("scroll", () => {
+      intViewportWidth = window.innerWidth / 10 + 75;
+      isTop = window.scrollY < intViewportWidth;
+    });
+    window.addEventListener("resize", () => {
+      intViewportWidth = window.innerWidth / 10 + 75;
+      isTop = window.scrollY < intViewportWidth;
+    });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll");
+    window.removeEventListener("resize");
+  }
+
   render() {
     return (
       <div>
-        <Navbar fixed="top" variant="light">
+        <Navbar fixed="top" className="navheader">
           <Nav.Link>
             <Link to="/" className="linkstyle">
               MealTime

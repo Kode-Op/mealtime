@@ -36,6 +36,7 @@ export default class Splash extends Component {
 
   componentWillUnmount() {
     window.removeEventListener("scroll");
+    window.removeEventListener("resize");
   }
 
   render() {
