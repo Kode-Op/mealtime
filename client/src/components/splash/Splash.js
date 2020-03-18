@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import "./Splash.css";
 import splashplaceholder from "./splashplaceholdershadow.png";
+import mobilesplash from "./mobilebackground.png";
 
 export default class Splash extends Component {
   constructor() {
@@ -9,6 +10,8 @@ export default class Splash extends Component {
     this.state = {
       scrolled: false
     };
+    if (window.innerWidth < 1024) this.state = { mobileview: true };
+    else this.state = { mobileview: false };
   }
 
   getScrollState = () => {
@@ -18,6 +21,11 @@ export default class Splash extends Component {
       this.setState({ scrolled: true });
     } else {
       this.setState({ scrolled: false });
+    }
+    if (window.innerWidth < 1024) {
+      this.setState({ mobileview: true });
+    } else {
+      this.setState({ mobileview: false });
     }
   };
 
@@ -35,7 +43,10 @@ export default class Splash extends Component {
     return (
       <React.Fragment>
         <div className="splashcontainer">
-          <img src={splashplaceholder} alt="" />
+          <img
+            src={this.state.mobileview ? mobilesplash : splashplaceholder}
+            alt=""
+          />
         </div>
 
         <div

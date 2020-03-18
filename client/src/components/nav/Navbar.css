@@ -1,9 +1,10 @@
 .linkstyle {
   color: white;
-  font-size: 1.05em;
+  font-size: 0.95em;
   font-weight: bolder;
   padding-top: 8px;
   display: inline-block;
+  margin: 0 -10px 0 -10px;
 }
 
 .linkstyle:hover {
@@ -16,7 +17,7 @@
   border-radius: 12px;
   background-color: white;
   color: black;
-  font-size: 1.05em;
+  font-size: 0.95em;
   font-weight: bolder;
   padding: 8px 16px 8px 16px;
   text-align: center;
@@ -33,4 +34,15 @@
   top: 0;
   height: 80px;
   width: 100%;
+}
+
+@media only screen and (min-width: 435px) {
+  .linkstyle {
+    font-size: 1.05em;
+    margin: 0;
+  }
+
+  .registerbutton {
+    font-size: 1.05em;
+  }
 }

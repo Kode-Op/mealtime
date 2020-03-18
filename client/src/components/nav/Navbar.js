@@ -6,9 +6,8 @@ import "./Navbar.css";
 export default class NavBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      opacity: 0
-    };
+    if (window.innerWidth < 1024) this.state = { mobileview: true, opacity: 0 };
+    else this.state = { mobileview: false, opacity: 0 };
   }
 
   getOpacity = () => {
@@ -19,9 +18,9 @@ export default class NavBar extends Component {
       let calc = (intViewport - bottomHeight + range) / range;
       if (calc > 1) calc = 1;
       else if (calc < 0) calc = 0;
-      this.setState({ opacity: calc });
+      this.setState({ opacity: calc, mobileview: true });
     } else {
-      this.setState({ opacity: 0 });
+      this.setState({ opacity: 0, mobileview: false });
     }
   };
 
@@ -42,9 +41,9 @@ export default class NavBar extends Component {
           style={{ opacity: this.state.opacity, backgroundColor: "#2b1d0e" }}
           className="navheader"
         />
-        <Navbar fixed="top">
+        <Navbar fixed={this.state.mobileview ? "top" : ""}>
           <Nav.Link>
-            <Link to="/" className="linkstyle">
+            <Link to="/" className="linkstyle" style={{ paddingTop: 0 }}>
               MealTime
             </Link>
           </Nav.Link>
