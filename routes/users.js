@@ -1,5 +1,6 @@
 const router = require("express").Router();
 let User = require("../models/user_model");
+let UserSession = require("../models/userSession_model");
 
 router.route("/").get((req, res) => {
   User.find()
@@ -72,11 +73,29 @@ router.post("/login", function(req, res) {
     if (err) {
       return res.status(500).send();
     }
-    if (!user) {
+    if (!user) {                               // not found
       return res.status(404).send();
-    } else if (user.validPassword(password)) { //found
-      return res.status(200).send();
-    } else {
+    } else if (user.validPassword(password)) { // found
+      // if found => create new session
+      console.log('found correct user');
+      const userSession = new UserSession();
+      userSession.userId = user._id;
+      userSession.save((err, doc) => {
+        if (err) {
+          return res.send({
+            success: false,
+            message: 'Error: server error'
+          });
+        }
+
+        return res.status(200).send({
+          success: true,
+          message: 'Valid sign in',
+          token: doc._id
+        });
+      });
+
+    } else {                                   // incorrect password
       return res.status(404).send();
     }
   });
