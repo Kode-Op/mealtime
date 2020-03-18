@@ -142,6 +142,7 @@
     width: 450px;
     position: fixed;
     margin-top: 30px;
+    margin-left: 12vw;
   }
 
   .splashzonesticky h1 {
