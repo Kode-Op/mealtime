@@ -11,32 +11,24 @@ export default class Splash extends Component {
     };
   }
 
-  componentDidMount() {
+  getScrollState = () => {
     let intViewportWidth = window.innerWidth / 10 + 75;
     let isTop = window.scrollY < intViewportWidth;
-    window.addEventListener("scroll", () => {
-      intViewportWidth = window.innerWidth / 10 + 75;
-      isTop = window.scrollY < intViewportWidth;
-      if (isTop !== true) {
-        this.setState({ scrolled: true });
-      } else {
-        this.setState({ scrolled: false });
-      }
-    });
-    window.addEventListener("resize", () => {
-      intViewportWidth = window.innerWidth / 10 + 75;
-      isTop = window.scrollY < intViewportWidth;
-      if (isTop !== true) {
-        this.setState({ scrolled: true });
-      } else {
-        this.setState({ scrolled: false });
-      }
-    });
+    if (isTop !== true) {
+      this.setState({ scrolled: true });
+    } else {
+      this.setState({ scrolled: false });
+    }
+  };
+
+  componentDidMount() {
+    window.addEventListener("scroll", this.getScrollState, false);
+    window.addEventListener("resize", this.getScrollState, false);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll");
-    window.removeEventListener("resize");
+    window.removeEventListener("scroll", this.getScrollState);
+    window.removeEventListener("resize", this.getScrollState);
   }
 
   render() {
@@ -62,47 +54,7 @@ export default class Splash extends Component {
             </Button>
           </form>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <div style={{ height: 500 }} />
       </React.Fragment>
     );
   }

@@ -29,5 +29,8 @@
 }
 
 .navheader {
-  background-color: black !important;
+  position: fixed;
+  top: 0;
+  height: 80px;
+  width: 100%;
 }

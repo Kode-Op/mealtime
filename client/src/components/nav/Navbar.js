@@ -4,27 +4,45 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 export default class NavBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      opacity: 0
+    };
+  }
+
+  getOpacity = () => {
+    const range = 75;
+    let intViewport = window.scrollY;
+    let bottomHeight = window.innerWidth / 3.310344827586207 - 80;
+    if (window.innerWidth > 1024) {
+      let calc = (intViewport - bottomHeight + range) / range;
+      if (calc > 1) calc = 1;
+      else if (calc < 0) calc = 0;
+      this.setState({ opacity: calc });
+    } else {
+      this.setState({ opacity: 0 });
+    }
+  };
+
   componentDidMount() {
-    let intViewportWidth = window.innerWidth / 10 + 75;
-    window.addEventListener("scroll", () => {
-      intViewportWidth = window.innerWidth / 10 + 75;
-      isTop = window.scrollY < intViewportWidth;
-    });
-    window.addEventListener("resize", () => {
-      intViewportWidth = window.innerWidth / 10 + 75;
-      isTop = window.scrollY < intViewportWidth;
-    });
+    window.addEventListener("scroll", this.getOpacity, false);
+    window.addEventListener("resize", this.getOpacity, false);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll");
-    window.removeEventListener("resize");
+    window.removeEventListener("scroll", this.getOpacity);
+    window.removeEventListener("resize", this.getOpacity);
   }
 
   render() {
     return (
       <div>
-        <Navbar fixed="top" className="navheader">
+        <div
+          style={{ opacity: this.state.opacity, backgroundColor: "#2b1d0e" }}
+          className="navheader"
+        />
+        <Navbar fixed="top">
           <Nav.Link>
             <Link to="/" className="linkstyle">
               MealTime
