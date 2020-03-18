@@ -129,7 +129,7 @@
 
   .splashzone {
     width: 450px;
-    margin-top: 10vw;
+    margin-top: 30px;
     margin-left: 12vw;
   }
 
@@ -141,8 +141,7 @@
   .splashzonesticky {
     width: 450px;
     position: fixed;
-    margin-left: 12vw;
-    margin-top: -10px;
+    margin-top: 30px;
   }
 
   .splashzonesticky h1 {
@@ -157,6 +156,16 @@
   .splashgo {
     width: 20%;
     margin-right: 0px;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .splashzone {
+    margin-top: 10vw;
+  }
+
+  .splashzonesticky {
+    margin-top: -10px;
   }
 }
 
