@@ -19,13 +19,13 @@
   top: 0px;
   position: absolute;
   justify-content: center;
+  z-index: -1;
 }
 
 .splashcontainermobile img {
   position: absolute;
   top: 0;
   height: 100%;
-  z-index: -1;
 }
 
 .splashzonesticky {

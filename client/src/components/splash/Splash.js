@@ -10,12 +10,18 @@ export default class Splash extends Component {
     this.state = {
       scrolled: false
     };
-    if (window.innerWidth < 1024) this.state = { mobileview: true };
-    else this.state = { mobileview: false };
+    if (window.innerWidth < 1024)
+      this.state = { mobileview: true, smallscreendesktop: false };
+    else if (window.innerWidth < 1366)
+      this.state = { mobileview: false, smallscreendesktop: true };
+    else this.state = { mobileview: false, smallscreendesktop: false };
   }
 
   getScrollState = () => {
-    let intViewportWidth = window.innerWidth / 10 + 75;
+    let intViewportWidth;
+    this.state.smallscreendesktop
+      ? (intViewportWidth = window.innerWidth / 8 + 30)
+      : (intViewportWidth = window.innerWidth / 10 + 75);
     let isTop = window.scrollY < intViewportWidth;
 
     if (window.innerWidth < 1024) {

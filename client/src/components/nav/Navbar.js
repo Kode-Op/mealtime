@@ -14,7 +14,7 @@ export default class NavBar extends Component {
     const range = 75;
     let intViewport = window.scrollY;
     let bottomHeight = window.innerWidth / 3.310344827586207 - 80;
-    if (window.innerWidth > 1024) {
+    if (window.innerWidth >= 1024) {
       let calc = (intViewport - bottomHeight + range) / range;
       if (calc > 1) calc = 1;
       else if (calc < 0) calc = 0;
