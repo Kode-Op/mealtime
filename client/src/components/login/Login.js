@@ -69,10 +69,10 @@ export default class Login extends Component {
       return (
         <Redirect
           to={{
-            pathname: "/login/confirmation",
+            pathname: "../session_component",
             state: {
-              email: this.state.email,
-              password: this.state.password
+              token: this.state.token,
+              email: this.state.email
             }
           }}
         />
