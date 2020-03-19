@@ -31,6 +31,10 @@ export default class Splash extends Component {
   };
 
   componentDidMount() {
+    //Force each splash image to preload
+    new Image().src = mobilesplash;
+    new Image().src = splashplaceholder;
+
     window.addEventListener("scroll", this.getScrollState, false);
     window.addEventListener("resize", this.getScrollState, false);
   }

@@ -12,10 +12,11 @@
 }
 
 .splashzonesticky {
+  position: absolute;
   font-family: "Catamaran", sans-serif;
   color: white;
   width: 100%;
-  margin-top: 5vw;
+  top: 25vw;
   z-index: 2;
 }
 
@@ -26,10 +27,11 @@
 }
 
 .splashzone {
+  position: absolute;
   font-family: "Catamaran", sans-serif;
   color: white;
   width: 100%;
-  margin-top: 5vw;
+  top: 25vw;
 }
 
 .splashzone h1 {
@@ -69,11 +71,11 @@
   }
 
   .splashzone {
-    margin-top: 10vw;
+    top: 25vw;
   }
 
   .splashzonesticky {
-    margin-top: 10vw;
+    top: 25vw;
   }
 
   .splashzone h1 {
@@ -95,11 +97,11 @@
   }
 
   .splashzone {
-    margin-top: 15vw;
+    top: 28vw;
   }
 
   .splashzonesticky {
-    margin-top: 15vw;
+    top: 28vw;
   }
 }
 
@@ -113,11 +115,11 @@
   }
 
   .splashzone {
-    margin-top: 18vw;
+    top: 30vw;
   }
 
   .splashzonesticky {
-    margin-top: 18vw;
+    top: 30vw;
   }
 }
 
@@ -129,8 +131,8 @@
 
   .splashzone {
     width: 450px;
-    margin-top: 30px;
-    margin-left: 12vw;
+    top: 30px;
+    left: 12vw;
   }
 
   .splashzone h1 {
@@ -141,8 +143,8 @@
   .splashzonesticky {
     width: 450px;
     position: fixed;
-    margin-top: 30px;
-    margin-left: 12vw;
+    top: 30px;
+    left: 12vw;
   }
 
   .splashzonesticky h1 {
@@ -162,11 +164,11 @@
 
 @media only screen and (min-width: 1025px) {
   .splashzone {
-    margin-top: 10vw;
+    top: 10vw;
   }
 
   .splashzonesticky {
-    margin-top: -10px;
+    top: -10px;
   }
 }
 
