@@ -77,7 +77,6 @@ router.post("/login", function(req, res) {
       return res.status(404).send();
     } else if (user.validPassword(password)) { // found
       // if found => create new session
-      console.log('found correct user');
       const userSession = new UserSession();
       userSession.userId = user._id;
       userSession.save((err, doc) => {
@@ -98,6 +97,48 @@ router.post("/login", function(req, res) {
     } else {                                   // incorrect password
       return res.status(404).send();
     }
+  });
+});
+
+router.get("/verify/:id", function(req, res) {
+  const token = req.params.id;
+
+  UserSession.findOne({
+    _id: token,
+    isDeleted: false
+  }, (err, sessions) => {
+    if (err) {
+      return res.send({
+        success: false,
+        message: 'Error: Invalid'
+      });
+    }
+    return res.send({
+      success: true,
+      message: 'Good'
+    });
+  });
+});
+
+router.get("/logout/:id", function(req, res) {
+  const token = req.params.id;
+
+  UserSession.findOneAndUpdate({
+    _id: token,
+    isDeleted: false
+  }, {$set:{isDeleted:true}}, null, 
+  (err, sessions) => {
+    if (err) {
+      return res.send({
+        success: false,
+        message: 'Error: Server Error'
+      });
+    }
+
+    return res.send({
+      success: true,
+      message: 'Good'
+    });
   });
 });
 
