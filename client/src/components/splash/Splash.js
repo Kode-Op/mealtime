@@ -47,7 +47,11 @@ export default class Splash extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="splashcontainer">
+        <div
+          className={
+            this.state.mobileview ? "splashcontainermobile" : "splashcontainer"
+          }
+        >
           <img
             src={this.state.mobileview ? mobilesplash : splashplaceholder}
             alt=""

@@ -11,18 +11,36 @@
   z-index: -1;
 }
 
+.splashcontainermobile {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  height: 388px;
+  margin-top: -80px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+.splashcontainermobile img {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  z-index: -1;
+}
+
 .splashzonesticky {
   position: absolute;
   font-family: "Catamaran", sans-serif;
   color: white;
   width: 100%;
-  top: 25vw;
+  top: 140px;
   z-index: 2;
 }
 
 .splashzonesticky h1 {
   font-weight: bolder;
-  font-size: 1.5em;
+  font-size: 1.7em;
   color: white;
 }
 
@@ -31,12 +49,12 @@
   font-family: "Catamaran", sans-serif;
   color: white;
   width: 100%;
-  top: 25vw;
+  top: 140px;
 }
 
 .splashzone h1 {
   font-weight: bolder;
-  font-size: 1.5em;
+  font-size: 1.7em;
   color: white;
   padding-top: 0px;
 }
@@ -70,20 +88,20 @@
     width: 18%;
   }
 
-  .splashzone {
-    top: 25vw;
-  }
-
-  .splashzonesticky {
-    top: 25vw;
-  }
-
   .splashzone h1 {
-    font-size: 2em;
+    font-size: 2.2em;
   }
 
   .splashzonesticky h1 {
-    font-size: 2em;
+    font-size: 2.2em;
+  }
+
+  .splashzone {
+    top: 135px;
+  }
+
+  .splashzonesticky {
+    top: 135px;
   }
 }
 
@@ -97,11 +115,11 @@
   }
 
   .splashzone {
-    top: 28vw;
+    top: 130px;
   }
 
   .splashzonesticky {
-    top: 28vw;
+    top: 130px;
   }
 }
 
@@ -115,11 +133,11 @@
   }
 
   .splashzone {
-    top: 30vw;
+    top: 125px;
   }
 
   .splashzonesticky {
-    top: 30vw;
+    top: 125px;
   }
 }
 
@@ -131,7 +149,7 @@
 
   .splashzone {
     width: 450px;
-    top: 30px;
+    top: 10vw;
     left: 12vw;
   }
 
@@ -143,7 +161,7 @@
   .splashzonesticky {
     width: 450px;
     position: fixed;
-    top: 30px;
+    top: -10px;
     left: 12vw;
   }
 
@@ -159,16 +177,6 @@
   .splashgo {
     width: 20%;
     margin-right: 0px;
-  }
-}
-
-@media only screen and (min-width: 1025px) {
-  .splashzone {
-    top: 10vw;
-  }
-
-  .splashzonesticky {
-    top: -10px;
   }
 }
 
