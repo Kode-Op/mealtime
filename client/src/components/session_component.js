@@ -33,7 +33,7 @@ export default class Session extends Component {
                             isLoading: false
                         });
                     } else {
-                        this.setSate({
+                        this.setState({
                             isLoading: false
                         });
                     }
