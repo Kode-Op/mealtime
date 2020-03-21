@@ -38,6 +38,7 @@ export default class Account extends Component {
           </ul>
         </div>
         <div className="accountrightpane">
+          <Route exact path="/account/" component={Profile} />
           <Route path="/account/profile" component={Profile} />
           <Route path="/account/card" component={CreditCard} />
           <Route path="/account/address" component={Address} />

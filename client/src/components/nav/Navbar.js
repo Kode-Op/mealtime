@@ -35,6 +35,7 @@ export default class NavBar extends Component {
         <Navbar
           fixed={this.state.mobileview ? "" : "top"}
           style={{ backgroundColor: "#2b1d0e" }}
+          className="navheader"
         >
           <Nav.Link>
             <Link to="/" className="linkstyle" style={{ paddingTop: 0 }}>

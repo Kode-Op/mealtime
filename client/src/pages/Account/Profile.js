@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Accordion, Card } from "react-bootstrap";
+import { Accordion, Card, Button } from "react-bootstrap";
 import "./Profile.css";
 
 function EditButton() {
@@ -24,7 +24,44 @@ export default class Profile extends Component {
               <EditButton />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
-              <Card.Body>Hello! I'm the body</Card.Body>
+              <Card.Body>
+                <h5>Edit name</h5>
+                <br />
+                <form>
+                  <label htmlFor="fname" className="ProfileFormTest">
+                    First name
+                  </label>
+                  <input
+                    type="text"
+                    name="fname"
+                    value="Firstname"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <label htmlFor="lname" className="ProfileFormTest">
+                    Last name
+                  </label>
+                  <input
+                    type="text"
+                    name="lname"
+                    value="Lastname"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <label htmlFor="passwordname" className="ProfileFormTest">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="passwordname"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <Button variant="success" type="submit">
+                    Update name
+                  </Button>
+                </form>
+              </Card.Body>
             </Accordion.Collapse>
           </Card>
           <Card>
@@ -38,7 +75,42 @@ export default class Profile extends Component {
               <EditButton />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="1">
-              <Card.Body>Hello! I'm another body</Card.Body>
+              <Card.Body>
+                <h5>Edit email</h5>
+                <br />
+                <form>
+                  <label htmlFor="email" className="ProfileFormTest">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    name="email"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <label htmlFor="emailconfirm" className="ProfileFormTest">
+                    Confirm email
+                  </label>
+                  <input
+                    type="text"
+                    name="emailconfirm"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <label htmlFor="passwordemail" className="ProfileFormTest">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="passwordemail"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <Button variant="success" type="submit">
+                    Update email
+                  </Button>
+                </form>
+              </Card.Body>
             </Accordion.Collapse>
           </Card>
           <Card>
@@ -52,7 +124,45 @@ export default class Profile extends Component {
               <EditButton />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="2">
-              <Card.Body>Hello! I'm another body</Card.Body>
+              <Card.Body>
+                <h5>Edit password</h5>
+                <br />
+                <form>
+                  <label htmlFor="passwordcurrent" className="ProfileFormTest">
+                    Current password
+                  </label>
+                  <input
+                    type="password"
+                    name="passwordcurrent"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <label htmlFor="passwordnew" className="ProfileFormTest">
+                    New password
+                  </label>
+                  <input
+                    type="password"
+                    name="passwordnew"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <label
+                    htmlFor="passwordnewconfirm"
+                    className="ProfileFormTest"
+                  >
+                    Confirm new password
+                  </label>
+                  <input
+                    type="password"
+                    name="passwordnewconfirm"
+                    className="ProfileInputBox"
+                    required
+                  />
+                  <Button variant="success" type="submit">
+                    Update password
+                  </Button>
+                </form>
+              </Card.Body>
             </Accordion.Collapse>
           </Card>
           <Card>
@@ -68,7 +178,7 @@ export default class Profile extends Component {
               <EditButton />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="3">
-              <Card.Body>Hello! I'm another body</Card.Body>
+              <Card.Body>To be replaced</Card.Body>
             </Accordion.Collapse>
           </Card>
         </Accordion>
