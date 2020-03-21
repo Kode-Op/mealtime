@@ -1,3 +1,7 @@
+.navspacer {
+  height: 74px;
+}
+
 .linkstyle {
   color: white;
   font-size: 0.95em;
@@ -36,6 +40,18 @@
   width: 100%;
 }
 
+.navzone {
+  display: none;
+}
+
+.navbox {
+  display: none;
+}
+
+.navgo {
+  display: none;
+}
+
 @media only screen and (min-width: 435px) {
   .linkstyle {
     font-size: 1.05em;
@@ -44,5 +60,32 @@
 
   .registerbutton {
     font-size: 1.05em;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .navzone {
+    margin-left: 50px;
+    display: block;
+    width: 50vw;
+    height: 40px;
+  }
+
+  .navbox {
+    display: inline-block;
+    width: 78%;
+    height: 100%;
+    margin-left: 10px;
+    border-radius: 15px;
+    padding: 5px 20px 0 20px;
+    font-size: 1.05em;
+  }
+
+  .navgo {
+    display: inline-block;
+    width: 16%;
+    height: 100%;
+    float: right;
+    border-radius: 15px !important;
   }
 }

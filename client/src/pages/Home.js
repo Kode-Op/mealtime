@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Splash from "../components/splash/Splash"
-import Navbar from "../components/nav/Navbar"
+import Splash from "../components/splash/Splash";
+import Navbar from "../components/nav/NavbarHomepage";
 
 export default class Home extends Component {
   render() {
@@ -8,9 +8,7 @@ export default class Home extends Component {
       <div>
         <Navbar />
         <Splash />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div style={{ height: 1200 }} />
       </div>
     );
   }

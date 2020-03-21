@@ -1,0 +1,15 @@
+.ProfileHeaderLeft {
+  float: left;
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+.ProfileUserInfo {
+  display: inline;
+  font-size: 0.8em;
+}
+
+.ProfileEditLink {
+  float: right;
+  padding-right: 40px;
+}

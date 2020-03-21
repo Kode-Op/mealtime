@@ -1,52 +1,57 @@
 import React, { Component } from "react";
-import { Navbar, Nav, ButtonToolbar } from "react-bootstrap";
+import { Navbar, Nav, Button, ButtonToolbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 export default class NavBar extends Component {
   constructor(props) {
     super(props);
-    if (window.innerWidth < 1024) this.state = { mobileview: true, opacity: 0 };
-    else this.state = { mobileview: false, opacity: 0 };
+    if (window.innerWidth < 1024) {
+      this.state = { mobileview: true };
+    } else {
+      this.state = { mobileview: false };
+    }
   }
 
-  getOpacity = () => {
-    const range = 75;
-    let intViewport = window.scrollY;
-    let bottomHeight = window.innerWidth / 3.310344827586207 - 80;
-    if (window.innerWidth >= 1024) {
-      let calc = (intViewport - bottomHeight + range) / range;
-      if (calc > 1) calc = 1;
-      else if (calc < 0) calc = 0;
-      this.setState({ opacity: calc, mobileview: true });
+  getMobileView = () => {
+    if (window.innerWidth < 1024) {
+      this.setState({ mobileview: true });
     } else {
-      this.setState({ opacity: 0, mobileview: false });
+      this.setState({ mobileview: false });
     }
   };
 
   componentDidMount() {
-    window.addEventListener("scroll", this.getOpacity, false);
-    window.addEventListener("resize", this.getOpacity, false);
+    window.addEventListener("resize", this.getMobileView, false);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.getOpacity);
-    window.removeEventListener("resize", this.getOpacity);
+    window.removeEventListener("resize", this.getMobileView);
   }
 
   render() {
     return (
       <div>
-        <div
-          style={{ opacity: this.state.opacity, backgroundColor: "#2b1d0e" }}
-          className="navheader"
-        />
-        <Navbar fixed={this.state.mobileview ? "top" : ""}>
+        <Navbar
+          fixed={this.state.mobileview ? "" : "top"}
+          style={{ backgroundColor: "#2b1d0e" }}
+        >
           <Nav.Link>
             <Link to="/" className="linkstyle" style={{ paddingTop: 0 }}>
               MealTime
             </Link>
           </Nav.Link>
+          <div className="navzone">
+            <input
+              type="text"
+              name="address"
+              className="navbox"
+              placeholder="Enter your address..."
+            />
+            <Button className="navgo" variant="danger">
+              >
+            </Button>
+          </div>
           <Navbar.Collapse className="justify-content-end">
             <ButtonToolbar>
               <Nav.Link>
@@ -62,6 +67,7 @@ export default class NavBar extends Component {
             </ButtonToolbar>
           </Navbar.Collapse>
         </Navbar>
+        <div className={this.state.mobileview ? "" : "navspacer"} />
       </div>
     );
   }
