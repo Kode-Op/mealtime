@@ -1,13 +1,177 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { Accordion, Card, Button } from "react-bootstrap";
 import "./Profile.css";
 
 function EditButton() {
-  return <Link className="ProfileEditLink">Edit</Link>;
+  return <div className="ProfileEditLink">Edit</div>;
 }
 
+const initialState = {
+  fname: "Firstname",
+  lname: "Lastname",
+  passwordname: "",
+  email: "",
+  emailconfirm: "",
+  passwordemail: "",
+  passwordcurrent: "",
+  passwordnew: "",
+  passwordnewconfirm: "",
+  errorMessageName: "",
+  errorMessageEmail: "",
+  errorMessagePassword: "",
+  nameRedirect: false,
+  emailRedirect: false,
+  passwordRedirect: false
+};
+
 export default class Profile extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onChangeFName = this.onChangeFName.bind(this);
+    this.onChangeLName = this.onChangeLName.bind(this);
+    this.onChangePasswordName = this.onChangePasswordName.bind(this);
+    this.onChangeEmail = this.onChangeEmail.bind(this);
+    this.onChangeEmailConfirm = this.onChangeEmailConfirm.bind(this);
+    this.onChangePasswordEmail = this.onChangePasswordEmail.bind(this);
+    this.onChangePasswordCurrent = this.onChangePasswordCurrent.bind(this);
+    this.onChangePasswordNew = this.onChangePasswordNew.bind(this);
+    this.onChangePasswordNewConfirm = this.onChangePasswordNewConfirm.bind(
+      this
+    );
+    this.onSubmitName = this.onSubmitName.bind(this);
+    this.onSubmitEmail = this.onSubmitEmail.bind(this);
+    this.onSubmitPassword = this.onSubmitPassword.bind(this);
+
+    this.state = initialState;
+  }
+
+  onChangeFName(e) {
+    this.setState({
+      fname: e.target.value
+    });
+  }
+  onChangeLName(e) {
+    this.setState({
+      lname: e.target.value
+    });
+  }
+  onChangePasswordName(e) {
+    this.setState({
+      passwordname: e.target.value
+    });
+  }
+  onChangeEmail(e) {
+    this.setState({
+      email: e.target.value
+    });
+  }
+  onChangeEmailConfirm(e) {
+    this.setState({
+      emailconfirm: e.target.value
+    });
+  }
+  onChangePasswordEmail(e) {
+    this.setState({
+      passwordemail: e.target.value
+    });
+  }
+  onChangePasswordCurrent(e) {
+    this.setState({
+      passwordcurrent: e.target.value
+    });
+  }
+  onChangePasswordNew(e) {
+    this.setState({
+      passwordnew: e.target.value
+    });
+  }
+  onChangePasswordNewConfirm(e) {
+    this.setState({
+      passwordnewconfirm: e.target.value
+    });
+  }
+
+  validateEmail = () => {
+    //Regular expression courtesy of https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+    const emailVerification = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    let errorMessage = "";
+
+    if (
+      !emailVerification.test(this.state.email) ||
+      !emailVerification.test(this.state.emailconfirm)
+    ) {
+      errorMessage = "You must enter a valid email address. \n";
+    }
+
+    if (this.state.email !== this.state.emailconfirm) {
+      errorMessage = errorMessage.concat("Your emails must match. \n");
+    }
+
+    if (errorMessage) {
+      this.setState({ errorMessageEmail: errorMessage });
+      return false;
+    }
+    return true;
+  };
+
+  validatePassword = () => {
+    let errorMessage = "";
+    const lowerCaseLetters = /[a-z]/g;
+    const upperCaseLetters = /[A-Z]/g;
+    const numbers = /[0-9]/g;
+
+    if (this.state.passwordnew !== this.state.passwordnewconfirm) {
+      errorMessage = errorMessage.concat("Your new passwords must match. \n");
+    }
+
+    if (this.state.passwordnew.length < 8) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain at least 8 characters. \n"
+      );
+    }
+
+    if (!lowerCaseLetters.test(this.state.passwordnew)) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain lowercase letters. \n"
+      );
+    }
+
+    if (!upperCaseLetters.test(this.state.passwordnew)) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain uppercase letters. \n"
+      );
+    }
+
+    if (!numbers.test(this.state.passwordnew)) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain numbers. \n"
+      );
+    }
+
+    if (errorMessage) {
+      this.setState({ errorMessagePassword: errorMessage });
+      return false;
+    }
+    return true;
+  };
+
+  onSubmitName(e) {
+    e.preventDefault();
+    this.setState({ nameRedirect: true });
+  }
+
+  onSubmitEmail(e) {
+    e.preventDefault();
+    if (this.validateEmail()) this.setState({ emailRedirect: true });
+  }
+
+  onSubmitPassword(e) {
+    e.preventDefault();
+    if (this.validatePassword()) this.setState({ passwordRedirect: true });
+  }
+
   render() {
     return (
       <div>
@@ -27,14 +191,15 @@ export default class Profile extends Component {
               <Card.Body>
                 <h5>Edit name</h5>
                 <br />
-                <form>
+                <form onSubmit={this.onSubmitName}>
                   <label htmlFor="fname" className="ProfileFormTest">
                     First name
                   </label>
                   <input
                     type="text"
                     name="fname"
-                    value="Firstname"
+                    value={this.state.fname}
+                    onChange={this.onChangeFName}
                     className="ProfileInputBox"
                     required
                   />
@@ -44,7 +209,8 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="lname"
-                    value="Lastname"
+                    value={this.state.lname}
+                    onChange={this.onChangeLName}
                     className="ProfileInputBox"
                     required
                   />
@@ -54,9 +220,14 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordname"
+                    value={this.state.passwordname}
+                    onChange={this.onChangePasswordName}
                     className="ProfileInputBox"
                     required
                   />
+                  <div className="ProfileErrorMessage">
+                    {this.state.errorMessageName}
+                  </div>
                   <Button variant="success" type="submit">
                     Update name
                   </Button>
@@ -78,13 +249,15 @@ export default class Profile extends Component {
               <Card.Body>
                 <h5>Edit email</h5>
                 <br />
-                <form>
+                <form onSubmit={this.onSubmitEmail}>
                   <label htmlFor="email" className="ProfileFormTest">
                     Email
                   </label>
                   <input
                     type="text"
                     name="email"
+                    value={this.state.email}
+                    onChange={this.onChangeEmail}
                     className="ProfileInputBox"
                     required
                   />
@@ -94,6 +267,8 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="emailconfirm"
+                    value={this.state.emailconfirm}
+                    onChange={this.onChangeEmailConfirm}
                     className="ProfileInputBox"
                     required
                   />
@@ -103,9 +278,14 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordemail"
+                    value={this.state.passwordemail}
+                    onChange={this.onChangePasswordEmail}
                     className="ProfileInputBox"
                     required
                   />
+                  <div className="ProfileErrorMessage">
+                    {this.state.errorMessageEmail}
+                  </div>
                   <Button variant="success" type="submit">
                     Update email
                   </Button>
@@ -127,13 +307,15 @@ export default class Profile extends Component {
               <Card.Body>
                 <h5>Edit password</h5>
                 <br />
-                <form>
+                <form onSubmit={this.onSubmitPassword}>
                   <label htmlFor="passwordcurrent" className="ProfileFormTest">
                     Current password
                   </label>
                   <input
                     type="password"
                     name="passwordcurrent"
+                    value={this.state.passwordcurrent}
+                    onChange={this.onChangePasswordCurrent}
                     className="ProfileInputBox"
                     required
                   />
@@ -143,6 +325,8 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordnew"
+                    value={this.state.passwordnew}
+                    onChange={this.onChangePasswordNew}
                     className="ProfileInputBox"
                     required
                   />
@@ -155,30 +339,19 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordnewconfirm"
+                    value={this.state.passwordnewconfirm}
+                    onChange={this.onChangePasswordNewConfirm}
                     className="ProfileInputBox"
                     required
                   />
+                  <div className="ProfileErrorMessage">
+                    {this.state.errorMessagePassword}
+                  </div>
                   <Button variant="success" type="submit">
                     Update password
                   </Button>
                 </form>
               </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-          <Card>
-            <Accordion.Toggle
-              as={Card.Header}
-              eventKey="3"
-              style={{ cursor: "pointer" }}
-            >
-              <div className="ProfileHeaderLeft">Address:</div>
-              <div className="ProfileUserInfo">
-                123 North Main Street, City, State 12345
-              </div>
-              <EditButton />
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="3">
-              <Card.Body>To be replaced</Card.Body>
             </Accordion.Collapse>
           </Card>
         </Accordion>

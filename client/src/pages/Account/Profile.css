@@ -12,6 +12,11 @@
 .ProfileEditLink {
   float: right;
   padding-right: 40px;
+  color: blue;
+}
+
+.ProfileEditLink:hover {
+  text-decoration: underline;
 }
 
 .ProfileInputBox {
@@ -30,4 +35,12 @@
   font-size: 0.8em;
   font-weight: bold;
   margin-bottom: 5px;
+}
+
+.ProfileErrorMessage {
+  color: red;
+  margin: 20px 0px 20px 0px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  font-size: 0.9em;
 }
