@@ -4,11 +4,11 @@ import "./App.css";
 import Data from "./pages/Data";
 import Home from "./pages/Home";
 import Account from "./pages/Account/Account";
+import RestaurantList from "./pages/RestaurantList/RestaurantList";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import RegisterConfirmation from "./components/register/Confirmation";
 import LoginConfirmation from "./components/login/Confirmation";
-
 function App() {
   return (
     <Router>
@@ -29,6 +29,7 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/account" component={Account} />
+          <Route path="/restaurants" component={RestaurantList} />
         </Switch>
       </div>
     </Router>

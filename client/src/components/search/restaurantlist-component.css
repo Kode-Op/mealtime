@@ -1,0 +1,43 @@
+.RestaurantListComponentItem:hover {
+  cursor: pointer;
+  background-color: #eeeeee;
+}
+
+.RestaurantListComponentItem:active {
+  cursor: pointer;
+  background-color: #dddddd;
+}
+
+.RestaurantListComponentImage {
+  margin-right: 20px;
+}
+
+.RestaurantListComponentName {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.RestaurantListComponentRating {
+  display: inline-block;
+  margin-left: 10vw;
+}
+
+.RestaurantListComponentNumReviews {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 0.8em;
+}
+
+.RestaurantListComponentPrice {
+  display: inline-block;
+  margin-left: 10vw;
+}
+
+.RestaurantListComponentDistance {
+  display: inline-block;
+  margin-left: 10vw;
+  font-size: 0.8em;
+  color: grey;
+}

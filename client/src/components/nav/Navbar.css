@@ -88,4 +88,8 @@
     float: right;
     border-radius: 15px !important;
   }
+
+  .navspacer {
+    height: 80px;
+  }
 }
