@@ -59,10 +59,6 @@ function DisplayRating({ rating }) {
 }
 
 export default class RestaurantListComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <ListGroup.Item className="RestaurantListComponentItem">
