@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Splash.css";
-import splashplaceholder from "./splashplaceholdershadow.png";
-import mobilesplash from "./mobilebackground.png";
+import splashplaceholder from "../../assets/images/splash/splashplaceholdershadow.png";
+import mobilesplash from "../../assets/images/splash/mobilebackground.png";
 
 export default class Splash extends Component {
   constructor() {

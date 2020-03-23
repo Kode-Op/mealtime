@@ -1,21 +1,22 @@
 //Import libraries
 import React, { Component } from "react";
 import { ListGroup } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 
 //Import assets
 import RestaurantImagePlaceholder from "./restaurantimageplaceholder.png";
-import ZeroStars from "./zerostars.png";
-import OneStar from "./onestar.png";
-import TwoStars from "./twostars.png";
-import ThreeStars from "./threestars.png";
-import FourStars from "./fourstars.png";
-import FiveStars from "./fivestars.png";
-import ZeroDollars from "./zerodollars.png";
-import OneDollar from "./onedollar.png";
-import TwoDollars from "./twodollars.png";
-import ThreeDollars from "./threedollars.png";
-import FourDollars from "./fourdollars.png";
-import FiveDollars from "./fivedollars.png";
+import ZeroStars from "../../assets/images/restaurantratings/zerostars.png";
+import OneStar from "../../assets/images/restaurantratings/onestar.png";
+import TwoStars from "../../assets/images/restaurantratings/twostars.png";
+import ThreeStars from "../../assets/images/restaurantratings/threestars.png";
+import FourStars from "../../assets/images/restaurantratings/fourstars.png";
+import FiveStars from "../../assets/images/restaurantratings/fivestars.png";
+import ZeroDollars from "../../assets/images/restaurantprices/zerodollars.png";
+import OneDollar from "../../assets/images/restaurantprices/onedollar.png";
+import TwoDollars from "../../assets/images/restaurantprices/twodollars.png";
+import ThreeDollars from "../../assets/images/restaurantprices/threedollars.png";
+import FourDollars from "../../assets/images/restaurantprices/fourdollars.png";
+import FiveDollars from "../../assets/images/restaurantprices/fivedollars.png";
 
 //Import stylesheet
 import "./restaurantlist-component.css";
@@ -97,7 +98,7 @@ export default class RestaurantListComponent extends Component {
         </ListGroup.Item>
       );
     } else {
-      return <div></div>;
+      return <Redirect to={"/restaurant?id=" + this.props.restaurant._id} />;
     }
   }
 }

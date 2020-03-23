@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 
+import Loader from "../../assets/loader/Loader";
+
 export default class LoginConfirmation extends Component {
   constructor(props) {
     super(props);
@@ -86,7 +88,11 @@ export default class LoginConfirmation extends Component {
         );
       }
     } else {
-      return <div></div>;
+      return (
+        <div style={{ height: 140 }}>
+          <Loader />
+        </div>
+      );
     }
   }
 }

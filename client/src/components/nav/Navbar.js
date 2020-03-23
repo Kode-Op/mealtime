@@ -49,9 +49,11 @@ export default class NavBar extends Component {
               className="navbox"
               placeholder="Enter your address..."
             />
-            <Button className="navgo" variant="danger">
-              >
-            </Button>
+            <Link to="/search">
+              <Button className="navgo" variant="danger">
+                >
+              </Button>
+            </Link>
           </div>
           <Navbar.Collapse className="justify-content-end">
             <ButtonToolbar>
