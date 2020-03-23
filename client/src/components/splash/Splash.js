@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import "./Splash.css";
 import splashplaceholder from "./splashplaceholdershadow.png";
 import mobilesplash from "./mobilebackground.png";
@@ -75,9 +76,11 @@ export default class Splash extends Component {
               className="splashbox"
               placeholder="Enter your address..."
             />
-            <Button className="splashgo" variant="danger">
-              >
-            </Button>
+            <Link to="/search">
+              <Button className="splashgo" variant="danger">
+                >
+              </Button>
+            </Link>
           </form>
         </div>
         <div style={{ height: 500 }} />

@@ -4,7 +4,6 @@
 }
 
 .RestaurantListComponentItem:active {
-  cursor: pointer;
   background-color: #dddddd;
 }
 
