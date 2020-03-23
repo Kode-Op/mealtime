@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../../components/nav/Navbar";
 import Loader from "../../assets/loader/Loader";
@@ -38,7 +39,22 @@ export default class Restaurant extends Component {
           </div>
         );
       } else {
-        return <div>Wrong restaurant, buddy.</div>;
+        return (
+          <div>
+            <Navbar />
+            <br />
+            <br />
+            <h3>Oops</h3>
+            <br />
+            <p>
+              We weren't able to find the restaurant you are looking for. Sorry
+              about that!
+            </p>
+            <p>
+              Click <Link to="/search">here</Link> to return to your search.
+            </p>
+          </div>
+        );
       }
     } else {
       return (
