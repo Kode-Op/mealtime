@@ -153,4 +153,29 @@ router.route("/update/:id").post((req, res) => {
   });
 });
 
+router.route("/updateName/:id").post((req, res) => {
+  var password = req.body.password;
+  User.findById(req.params.id).then(users => {
+    if (!users) {
+      // not found
+      return res
+        .status(404)
+        .json("Not Found.")
+        .send();
+    } else if (users.validPassword(password)) {
+      users.firstName = req.body.firstName;
+      users.lastName = req.body.lastName;
+      users
+        .save()
+        .then(() => res.json("User updated."))
+        .catch(err => res.status(400).json("Error: " + err));
+    } else {
+      return res
+        .status(500)
+        .json("Invalid Password")
+        .send();
+    }
+  });
+});
+
 module.exports = router;
