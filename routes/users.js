@@ -9,36 +9,18 @@ router.route("/").get((req, res) => {
 });
 
 router.route("/add").post((req, res) => {
-  const userID = req.body.email;
   const email = req.body.email;
-  const userName = "";
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const password = req.body.password;
-  const creditCardName = "";
-  const creditCardNumber = Number(0);
-  const creditCardCCV = Number(0);
-  const expMonth = Number(0);
-  const expYear = Number(0);
-  const location = { x_coordinate: Number(0), y_coordinate: Number(0) };
-  const preferencesTag = Array([""]);
-  const orderHistory = Array([""]);
+  const address = req.body.address;
 
   const newItem = new User({
-    userID,
     email,
-    userName,
     firstName,
     lastName,
     password,
-    creditCardName,
-    creditCardNumber,
-    creditCardCCV,
-    expMonth,
-    expYear,
-    location,
-    preferencesTag,
-    orderHistory
+    address
   });
 
   newItem.password = newItem.generateHash(password);
@@ -69,13 +51,15 @@ router.post("/login", function(req, res) {
   email = email.toLowerCase();
   var password = req.body.password;
 
-  User.findOne({ email: email}, function(err, user) {
+  User.findOne({ email: email }, function(err, user) {
     if (err) {
       return res.status(500).send();
     }
-    if (!user) {                               // not found
+    if (!user) {
+      // not found
       return res.status(404).send();
-    } else if (user.validPassword(password)) { // found
+    } else if (user.validPassword(password)) {
+      // found
       // if found => create new session
       const userSession = new UserSession();
       userSession.userId = user._id;
@@ -83,18 +67,18 @@ router.post("/login", function(req, res) {
         if (err) {
           return res.send({
             success: false,
-            message: 'Error: server error'
+            message: "Error: server error"
           });
         }
 
         return res.status(200).send({
           success: true,
-          message: 'Valid sign in',
+          message: "Valid sign in",
           token: doc._id
         });
       });
-
-    } else {                                   // incorrect password
+    } else {
+      // incorrect password
       return res.status(404).send();
     }
   });
@@ -103,43 +87,50 @@ router.post("/login", function(req, res) {
 router.get("/verify/:id", function(req, res) {
   const token = req.params.id;
 
-  UserSession.findOne({
-    _id: token,
-    isDeleted: false
-  }, (err, sessions) => {
-    if (err) {
+  UserSession.findOne(
+    {
+      _id: token,
+      isDeleted: false
+    },
+    (err, sessions) => {
+      if (err) {
+        return res.send({
+          success: false,
+          message: "Error: Invalid"
+        });
+      }
       return res.send({
-        success: false,
-        message: 'Error: Invalid'
+        success: true,
+        message: "Good"
       });
     }
-    return res.send({
-      success: true,
-      message: 'Good'
-    });
-  });
+  );
 });
 
 router.get("/logout/:id", function(req, res) {
   const token = req.params.id;
 
-  UserSession.findOneAndUpdate({
-    _id: token,
-    isDeleted: false
-  }, {$set:{isDeleted:true}}, null, 
-  (err, sessions) => {
-    if (err) {
+  UserSession.findOneAndUpdate(
+    {
+      _id: token,
+      isDeleted: false
+    },
+    { $set: { isDeleted: true } },
+    null,
+    (err, sessions) => {
+      if (err) {
+        return res.send({
+          success: false,
+          message: "Error: Server Error"
+        });
+      }
+
       return res.send({
-        success: false,
-        message: 'Error: Server Error'
+        success: true,
+        message: "Good"
       });
     }
-
-    return res.send({
-      success: true,
-      message: 'Good'
-    });
-  });
+  );
 });
 
 router.route("/:id").delete((req, res) => {
@@ -150,20 +141,11 @@ router.route("/:id").delete((req, res) => {
 
 router.route("/update/:id").post((req, res) => {
   User.findById(req.params.id).then(users => {
-    users.userID = "";
     users.email = req.body.email;
-    users.userName = req.body.userName;
     users.firstName = req.body.firstName;
     users.lastName = req.body.lastName;
     users.password = req.body.password;
-    users.creditCardName = req.body.creditCardName;
-    users.creditCardNumber = Number(req.body.creditCardNumber);
-    users.creditCardCCV = Number(req.body.creditCardCCV);
-    users.expMonth = Number(req.body.expMonth);
-    users.expYear = Number(req.body.expYear);
-    users.location = req.body.location;
-    users.preferencesTag = req.body.preferencesTag;
-    users.orderHistory = Array(req.body.orderHistory);
+    users.address = req.body.address;
     users
       .save()
       .then(() => res.json("User updated."))

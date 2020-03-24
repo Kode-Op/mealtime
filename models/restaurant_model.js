@@ -63,7 +63,9 @@ const restaurantSchema = new Schema(
       type: Array,
       items: [
         {
-          type: Number
+          type: Number,
+          min: 0,
+          max: 10
         }
       ]
     },

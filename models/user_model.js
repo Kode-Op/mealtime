@@ -1,85 +1,56 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    userID: {type: String, required: false, trim: true}, //unique: true, minlength: 3
-    email: {type: String, required: true, trim: true, minlength: 6}, //unique: true,
-    userName: {type: String, required: false, trim: true}, //unique: true, , minlength: 3
-    password: {type: String, required: true, minlength: 5},
-    firstName: {type: String, required: true, trim: true, minlength: 1},
-    lastName: {type: String, required: true, trim: true, minlength: 1},
-    creditCardName:{type: String, required: false, trim: true}, //unique: true, minlength: 3
-    creditCardNumber:{type: Number, required: false, trim: true}, 
-    creditCardCCV: {type: Number, required: false, trim: true, maxlength: 4},
-    expMonth: {type: Number, required: false, trim: true, maxlength: 2},
-    expYear: {type: Number, required: false, trim: true, maxlength: 4},
-
-    
-    /*creditCards:{
-        type: Array,
-        items: {
-            type: Array,
-            items: [
-                { type: String, required: true, unique: true, trim: true, minlength: 3 },
-                { type: Number, required: true, trim: true },
-                {type: Number, required: true, trim: true, maxlength: 4 },
-                {type: Number, required: true, trim: true, maxlength: 2 },
-                {type: Number, required: true, trim: true, maxlength: 4 }
-            ]
-        }
-    },*/
-
-    preferencesTag: {
-        type: Array,
-        items: {
-            type: Array,
-            items: [
-                {
-                    type: String,
-                    required: false,
-                    //unique: true
-                },
-                {
-                    type: String,
-                    required: false,
-                    //minimum: 1
-                }
-            ]
-        }
+const userSchema = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 6,
+      unique: true
     },
-    orderHistory: {
-        type: Array,
-        items: {
-            type: String,
-            required: false,
-            unique: true
-        }
+    password: {
+      type: String,
+      required: true,
+      minlength: 5
     },
-    location: {
-        x_coordinate: {
-            type: Number,
-            required: false
-        },
-        y_coordinate: {
-            type: Number,
-            required: false
-        },
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 1
     },
-
-}, {
-    timestamps: true,
-});
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 1
+    },
+    address: {
+      type: String,
+      default: ""
+    },
+    phone: {
+      type: String,
+      default: "5551234567"
+    }
+  },
+  {
+    timestamps: true
+  }
+);
 
 userSchema.methods.generateHash = function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.password);
 };
 
-const user = mongoose.model('user', userSchema);
+const user = mongoose.model("user", userSchema);
 
 module.exports = user;

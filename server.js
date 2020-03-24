@@ -33,6 +33,7 @@ const ordersRouter = require("./routes/orders");
 const apiKeysRouter = require("./routes/apiKeys");
 const reviewRouter = require("./routes/reviews");
 const userRouter = require("./routes/users");
+const creditCardRouter = require("./routes/creditCards");
 
 app.use("/api/menuItems", menuItemsRouter);
 app.use("/api/restaurants", restaurantsRouter);
@@ -40,6 +41,7 @@ app.use("/api/orders", ordersRouter);
 app.use("/api/apiKeys", apiKeysRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/users", userRouter);
+app.use("/api/creditCards", creditCardRouter);
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
