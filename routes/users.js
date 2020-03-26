@@ -1,44 +1,37 @@
 const router = require("express").Router();
 let User = require("../models/user_model");
+let UserSession = require("../models/userSession_model");
 
+// DEPRECATED - DO NOT USE
+// Format: GET /api/users/
+// Required Fields: none
+// Returns: All info on all users
 router.route("/").get((req, res) => {
   User.find()
     .then(users => res.json(users))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
+// Format: POST /api/users/add
+// Required Fields: email, firstName, lastName, password
+// Returns: Status based on successful/unsuccessful account creation
 router.route("/add").post((req, res) => {
-  const userID = req.body.email;
   const email = req.body.email;
-  const userName = "";
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const password = req.body.password;
-  const creditCardName = "";
-  const creditCardNumber = Number(0);
-  const creditCardCCV = Number(0);
-  const expMonth = Number(0);
-  const expYear = Number(0);
-  const location = { x_coordinate: Number(0), y_coordinate: Number(0) };
-  const preferencesTag = Array([""]);
-  const orderHistory = Array([""]);
+  const address = req.body.address;
 
   const newItem = new User({
-    userID,
     email,
-    userName,
     firstName,
     lastName,
     password,
-    creditCardName,
-    creditCardNumber,
-    creditCardCCV,
-    expMonth,
-    expYear,
-    location,
-    preferencesTag,
-    orderHistory
+    address
   });
+
+  newItem.password = newItem.generateHash(password);
+  newItem.email = email.toLowerCase();
 
   newItem
     .save()
@@ -54,53 +47,248 @@ router.route("/add").post((req, res) => {
     });
 });
 
+// Format: GET /api/users/User._id
+// Required Fields: none
+// Returns: All info on a specific user
 router.route("/:id").get((req, res) => {
   User.findById(req.params.id)
     .then(users => res.json(users))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
+// Format: POST /api/users/login
+// Required Fields: email, password
+// Returns: Status on login attempt. If successful, creates a sessions token
 router.post("/login", function(req, res) {
   var email = req.body.email;
+  email = email.toLowerCase();
   var password = req.body.password;
 
-  User.findOne({ email: email, password: password }, function(err, user) {
+  User.findOne({ email: email }, function(err, user) {
     if (err) {
       return res.status(500).send();
     }
     if (!user) {
+      // not found
       return res.status(404).send();
+    } else if (user.validPassword(password)) {
+      // found
+      // if found => create new session
+      const userSession = new UserSession();
+      userSession.userId = user._id;
+      userSession.save((err, doc) => {
+        if (err) {
+          return res.send({
+            success: false,
+            message: "Error: server error"
+          });
+        }
+
+        return res.status(200).send({
+          success: true,
+          message: "Valid sign in",
+          token: doc._id
+        });
+      });
     } else {
-      return res.status(200).send();
+      // incorrect password
+      return res.status(404).send({
+        success: false,
+        message: "invalid password"
+      });
     }
   });
 });
 
+// Format: GET /api/users/verify/token
+// Required Fields: token
+// Returns: success: true/false if valid sessions token
+router.get("/verify/:id", function(req, res) {
+  const token = req.params.id;
+
+  UserSession.findById(token)
+    .then(session => {
+      if (!session) {
+        // not found
+        return res.status(404).send({
+          success: false,
+          message: "No valid token"
+        });
+      } else if (!session.isDeleted) {
+        return res.status(200).send({
+          success: true,
+          message: "Valid token"
+        });
+      } else {
+        return res.status(500).send({
+          success: false,
+          message: "Stale token"
+        });
+      }
+    })
+    .catch(err => res.status(500).json("Error: " + err));
+});
+
+// Format: GET /api/users/logout
+// Required Fields: token
+// Returns: success: true/false if valid sessions token is found + deactivated
+router.get("/logout/:id", function(req, res) {
+  const token = req.params.id;
+
+  UserSession.findById(token).then(session => {
+    session.isDeleted = true;
+    session
+      .save()
+      .then(() => res.json("Token Invalidated."))
+      .catch(err => res.status(400).json("Error: " + err));
+  });
+});
+
+// Format: DELETE /api/users/User._id
+// Returns: Status based on successful/unsuccessful user deletion
+// WARNING: Cannot be undone
 router.route("/:id").delete((req, res) => {
   User.findByIdAndDelete(req.params.id)
     .then(() => res.json("User deleted."))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
+// DEPRECATED - DO NOT USE
+// Format: POST /api/users/update/User._id
+// Required Fields: email, firstName, lastName, password, address
+// Returns: Status based on successful/unsuccessful name update
 router.route("/update/:id").post((req, res) => {
   User.findById(req.params.id).then(users => {
-    users.userID = "";
     users.email = req.body.email;
-    users.userName = req.body.userName;
     users.firstName = req.body.firstName;
     users.lastName = req.body.lastName;
     users.password = req.body.password;
-    users.creditCardName = req.body.creditCardName;
-    users.creditCardNumber = Number(req.body.creditCardNumber);
-    users.creditCardCCV = Number(req.body.creditCardCCV);
-    users.expMonth = Number(req.body.expMonth);
-    users.expYear = Number(req.body.expYear);
-    users.location = req.body.location;
-    users.preferencesTag = req.body.preferencesTag;
-    users.orderHistory = Array(req.body.orderHistory);
+    users.address = req.body.address;
     users
       .save()
       .then(() => res.json("User updated."))
+      .catch(err => res.status(400).json("Error: " + err));
+  });
+});
+
+// Format: POST /api/users/updateName/User._id
+// Required Fields: firstName, lastName, password
+// Returns: Status based on successful/unsuccessful name update
+router.route("/updateName/:id").post((req, res) => {
+  var password = req.body.password;
+  User.findById(req.params.id).then(users => {
+    if (!users) {
+      // not found
+      return res
+        .status(404)
+        .json("Not Found.")
+        .send();
+    } else if (users.validPassword(password)) {
+      users.firstName = req.body.firstName;
+      users.lastName = req.body.lastName;
+      users
+        .save()
+        .then(() => res.json("Name updated."))
+        .catch(err => res.status(400).json("Error: " + err));
+    } else {
+      return res
+        .status(500)
+        .json("Invalid Password")
+        .send();
+    }
+  });
+});
+
+// Format: POST /api/users/updatePassword/User._id
+// Required Fields: oldPassword, newPassword
+// Returns: Status based on successful/unsuccessful password update
+router.route("/updatePassword/:id").post((req, res) => {
+  var oldPassword = req.body.oldPassword;
+  User.findById(req.params.id).then(users => {
+    if (!users) {
+      // not found
+      return res
+        .status(404)
+        .json("Not Found.")
+        .send();
+    } else if (users.validPassword(oldPassword)) {
+      users.password = users.generateHash(req.body.newPassword);
+      users
+        .save()
+        .then(() => res.json("Password updated."))
+        .catch(err => res.status(400).json("Error: " + err));
+    } else {
+      return res
+        .status(500)
+        .json("Invalid Old Password")
+        .send();
+    }
+  });
+});
+
+// Format: POST /api/users/updateEmail/User._id
+// Required Fields: email, password
+// Returns: Status based on successful/unsuccessful name update
+router.route("/updateEmail/:id").post((req, res) => {
+  var password = req.body.password;
+  User.findById(req.params.id).then(users => {
+    if (!users) {
+      // not found
+      return res
+        .status(404)
+        .json("Not Found.")
+        .send();
+    } else if (users.validPassword(password)) {
+      users.email = req.body.email;
+      users
+        .save()
+        .then(() => res.json("Email updated."))
+        .catch(err => res.status(400).json("Error: " + err));
+    } else {
+      return res
+        .status(500)
+        .json("Invalid Password")
+        .send();
+    }
+  });
+});
+
+// Format: POST /api/users/updateEmail/User._id
+// Required Fields: phone (String)
+// Returns: Status based on successful/unsuccessful phone update
+router.route("/updatePhone/:id").post((req, res) => {
+  User.findById(req.params.id).then(users => {
+    if (!users) {
+      // not found
+      return res
+        .status(404)
+        .json("Not Found.")
+        .send();
+    }
+    users.phone = req.body.phone;
+    users
+      .save()
+      .then(() => res.json("Phone number updated."))
+      .catch(err => res.status(400).json("Error: " + err));
+  });
+});
+
+// Format: POST /api/users/updateAddress/User._id
+// Required Fields: address (String)
+// Returns: Status based on successful/unsuccessful address update
+router.route("/updateAddress/:id").post((req, res) => {
+  User.findById(req.params.id).then(users => {
+    if (!users) {
+      // not found
+      return res
+        .status(404)
+        .json("Not Found.")
+        .send();
+    }
+    users.address = req.body.address;
+    users
+      .save()
+      .then(() => res.json("Address updated."))
       .catch(err => res.status(400).json("Error: " + err));
   });
 });

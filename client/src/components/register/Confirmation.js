@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import { setInStorage } from "../../utils/storage";
 
 import Loader from "../../assets/loader/Loader";
 
@@ -26,14 +27,32 @@ export default class RegisterConfirmation extends Component {
         .post("/api/users/add", user)
         .then(() => {
           this.setState({
-            accountCreated: true,
-            isLoaded: true
+            accountCreated: true
           });
         })
         .catch(error => {
           this.setState({
-            isLoaded: true,
             message: JSON.stringify(error.message)
+          });
+        })
+        .then(() => {
+          axios.post("/api/users/login", user).then(response => {
+            console.log(response.data.token);
+            if (response.data.success) {
+              // login successful, token created and saved
+              setInStorage("mealtime", { token: response.data.token });
+              this.setState({});
+            } else {
+              this.setState({
+                // login failed - should not be possible
+                message: JSON.stringify(response.message)
+              });
+            }
+          });
+        })
+        .then(() => {
+          this.setState({
+            isLoaded: true
           });
         });
     } else {

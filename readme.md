@@ -14,6 +14,7 @@ To run the frontend:
 
 * In the command prompt, run the following command:
 
+<<<<<<< HEAD
 `nodemon server`
 
 * In a second command prompt window, navigate to the project directory and run the following commands:
@@ -21,3 +22,9 @@ To run the frontend:
 `cd client`
 `npm run start`
 
+=======
+`cd client`
+`npm run start`
+`cd ..`
+`nodemon server`
+>>>>>>> sessions
