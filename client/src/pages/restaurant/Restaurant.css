@@ -1,0 +1,23 @@
+.RestaurantDescription {
+  text-align: left;
+  padding-top: 30px;
+  padding-left: 20px;
+  /* float: left; */
+  width: 30%;
+  height: 100%;
+}
+.RestaurantFilters {
+  text-align: left;
+  padding-top: 30px;
+  padding-left: 20px;
+  width: 30%;
+  height: 100%;
+}
+.Menu {
+  text-align: left;
+  padding-top: 30px;
+  padding-left: 20px;
+  width: 30%;
+  height: 100%;
+  list-style-type: none;
+}
