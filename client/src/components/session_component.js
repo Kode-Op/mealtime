@@ -18,8 +18,9 @@ export default class Session extends Component {
 
   componentDidMount() {
     const obj = getFromStorage("mealtime");
-    const token = obj.token;
-    if (obj && token) {
+    let token = "";
+    if (obj !== null) {
+      token = obj.token;
       // Verify token
       axios.get("/api/users/verify/" + token).then(response => {
         console.log(response);
