@@ -36,8 +36,13 @@
   width: 33%;
 }
 
+.RestaurantItemContainer {
+  background-color: #f6f6f6;
+  min-height: 80vh;
+}
+
 .RestaurantFilters {
-  padding: 10px 0 20px 0;
+  padding: 30px 0 20px 0;
 }
 
 .RestaurantMenuCollection {
@@ -50,7 +55,7 @@
   height: 200px;
   background-color: lightgray;
   padding: 40px;
-  margin: 10px;
+  margin: 0 10px 10px 0;
   border: 1px solid blue;
   width: 48%;
 }

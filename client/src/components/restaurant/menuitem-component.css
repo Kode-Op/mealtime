@@ -1,0 +1,42 @@
+.MenuItem {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 130px;
+  margin: 0 10px 10px 0;
+  border: 2px solid #dddddd;
+  border-radius: 15px;
+  width: 48%;
+  background-color: white;
+}
+
+.MenuItem:hover {
+  cursor: pointer;
+  border: 2px solid #d5d5d5;
+}
+
+.MenuItem:active {
+  border: 2px solid #cccccc;
+}
+
+.MenuItemText {
+  padding: 15px;
+  float: left;
+  width: 70%;
+}
+
+.MenuItemName {
+  font-weight: bold;
+}
+
+.MenuItemDescription {
+  color: #444444;
+  font-size: 0.9em;
+}
+
+.MenuItemImage {
+  float: right;
+  text-align: right;
+  width: 30%;
+  height: 100%;
+}

@@ -1,102 +1,79 @@
+//Import libraries
 import React, { Component } from "react";
-import Navbar from "../../components/nav/Navbar";
-// import RestaurantViewComponent from "../../components/restaurant/restaurantview - component";
-import RestaurantListComponent from "../../components/search/restaurantlist-component";
-import RestaurantImagePlaceholder from "./restaurantimageplaceholder.png";
-import ZeroStars from "../../assets/images/restaurantratings/zerostars.png";
-import OneStar from "../../assets/images/restaurantratings/onestar.png";
-import TwoStars from "../../assets/images/restaurantratings/twostars.png";
-import ThreeStars from "../../assets/images/restaurantratings/threestars.png";
-import FourStars from "../../assets/images/restaurantratings/fourstars.png";
-import FiveStars from "../../assets/images/restaurantratings/fivestars.png";
-import ZeroDollars from "../../assets/images/restaurantprices/zerodollars.png";
-import OneDollar from "../../assets/images/restaurantprices/onedollar.png";
-import TwoDollars from "../../assets/images/restaurantprices/twodollars.png";
-import ThreeDollars from "../../assets/images/restaurantprices/threedollars.png";
-import FourDollars from "../../assets/images/restaurantprices/fourdollars.png";
-import FiveDollars from "../../assets/images/restaurantprices/fivedollars.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
+
+//Import components
+import Navbar from "../../components/nav/Navbar";
+import MenuItemComponent from "../../components/restaurant/menuitem-component.js";
+
+//Import assets
+import DisplayPrice from "../../assets/displayprice/DisplayPrice";
+import DisplayRating from "../../assets/displayrating/DisplayRating";
+import RestaurantImagePlaceholder from "./restaurantimageplaceholder.png";
 import Loader from "../../assets/loader/Loader";
+
+//Import stylesheet
 import "./Restaurant.css";
-
-//Takes in a value, 0-5, and displays that many dollar signs
-function DisplayPrice({ price }) {
-  switch (price) {
-    case 0:
-      return <img src={ZeroDollars} alt="0/5" />;
-    case 1:
-      return <img src={OneDollar} alt="1/5" />;
-    case 2:
-      return <img src={TwoDollars} alt="2/5" />;
-    case 3:
-      return <img src={ThreeDollars} alt="3/5" />;
-    case 4:
-      return <img src={FourDollars} alt="4/5" />;
-    case 5:
-      return <img src={FiveDollars} alt="5/5" />;
-    default:
-      return <div>No price information found.</div>;
-  }
-}
-
-//Takes in a value, 1-5, and displays that many stars
-function DisplayRating({ rating }) {
-  switch (rating) {
-    case 1:
-      return <img src={OneStar} alt="1/5" />;
-    case 2:
-      return <img src={TwoStars} alt="2/5" />;
-    case 3:
-      return <img src={ThreeStars} alt="3/5" />;
-    case 4:
-      return <img src={FourStars} alt="4/5" />;
-    case 5:
-      return <img src={FiveStars} alt="5/5" />;
-    default:
-      return <img src={ZeroStars} alt="" />;
-  }
-}
 
 export default class Restaurant extends Component {
   constructor(props) {
     super(props);
-    this.state = { isValidRestaurant: false, isLoaded: false };
-  }
-
-  componentDidMount() {
     const query = new URLSearchParams(this.props.location.search);
     const id = query.get("id");
 
-    console.log(id);
+    this.state = {
+      isValidRestaurant: false,
+      isPageLoaded: false,
+      areMenuItemsLoaded: false,
+      id: id,
+      menuItems: []
+    };
+  }
 
+  componentDidMount() {
+    //Get the restaurant data
     axios
-      .get("/api/restaurants/" + id)
+      .get("/api/restaurants/" + this.state.id)
       .then(response => {
         this.setState({
           restaurant: response.data,
           isValidRestaurant: true,
-          isLoaded: true
+          isPageLoaded: true
         });
       })
       .catch(error => {
-        this.setState({ isValidRestaurant: false, isLoaded: true });
+        this.setState({ isValidRestaurant: false, isPageLoaded: true });
+      });
+
+    //Get the menu items
+    axios
+      .get("/api/menuitems/" + this.state.id)
+      .then(response => {
+        this.setState({ menuItems: response.data, areMenuItemsLoaded: true });
+      })
+      .catch(error => {
+        this.setState({ areMenuItemsLoaded: true });
       });
   }
 
-  restaurantView() {
-    return this.state.restaurants.map(currentRestaurant => {
-      return (
-        <RestaurantListComponent
-          restaurant={currentRestaurant}
-          key={currentRestaurant._id}
-        />
-      );
-    });
+  getMenuItems() {
+    if (this.state.areMenuItemsLoaded) {
+      return this.state.menuItems.map(currentMenuItem => {
+        return (
+          <MenuItemComponent
+            menuItem={currentMenuItem}
+            key={currentMenuItem._id}
+          />
+        );
+      });
+    } else {
+      return <Loader />;
+    }
   }
 
   render() {
-    if (this.state.isLoaded) {
+    if (this.state.isPageLoaded) {
       if (this.state.isValidRestaurant) {
         return (
           <div>
@@ -120,29 +97,17 @@ export default class Restaurant extends Component {
                 </div>
                 <div className="RestaurantDistance">xx.xx miles</div>
               </div>
-              <hr />
-              <div className="RestaurantFilters">
-                <h4>All Items</h4>
-              </div>
-              <div className="RestaurantMenuCollection">
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
-                <div className="RestaurantMenuItem">I am a menu item</div>
+            </div>
+            <div className="RestaurantItemContainer">
+              <div className="RestaurantContainer">
+                <div className="RestaurantFilters">
+                  <h4>All Items</h4>
+                </div>
+                <div className="RestaurantMenuCollection">
+                  {this.getMenuItems()}
+                </div>
               </div>
             </div>
-            <div style={{ height: 1200 }} />
           </div>
         );
       } else {
