@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
 //Import pages and components
-import Data from "./pages/Data";
 import Home from "./pages/Home";
 import Account from "./pages/accountsettings/Account";
 import Restaurant from "./pages/restaurant/Restaurant";
@@ -29,7 +28,6 @@ function App() {
             exact
             component={LoginConfirmation}
           />
-          <Route path="/data" component={Data} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/account" component={Account} />
