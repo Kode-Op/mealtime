@@ -43,13 +43,7 @@ router.route("/add").post((req, res) => {
 
   newItem
     .save()
-    .then(() => res.json("Restaurant added!"))
-    .catch(err => res.status(400).json("Error: " + err));
-});
-
-router.route("/:id").get((req, res) => {
-  Restaurant.findById(req.params.id)
-    .then(restaurant => res.json(restaurant))
+    .then(() => res.json("Restaurant added! Id: " + newItem.id))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
