@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { getFromStorage, setInStorage } from "../utils/storage";
+import { getFromStorage } from "../utils/storage";
 
 export default class Session extends Component {
   constructor(props) {
@@ -17,24 +17,25 @@ export default class Session extends Component {
   }
 
   componentDidMount() {
-    const token = getFromStorage("the_main_app");
-    if (token) {
+    const obj = getFromStorage("mealtime");
+    const token = obj.token;
+    if (obj && token) {
       // Verify token
-      axios
-        .get("/api/users/verify" + token)
-        .then(res => res.json())
-        .then(json => {
-          if (json.success) {
-            this.setState({
-              token: token,
-              isLoading: false
-            });
-          } else {
-            this.setState({
-              isLoading: false
-            });
-          }
-        });
+      axios.get("/api/users/verify/" + token).then(response => {
+        console.log(response);
+        if (response.data.success) {
+          console.log("success");
+          this.setState({
+            token: token,
+            isLoading: false
+          });
+        } else {
+          console.log("Error:" + response.data.message);
+          this.setState({
+            isLoading: false
+          });
+        }
+      });
     } else {
       this.setState({
         isLoading: false
@@ -66,7 +67,12 @@ export default class Session extends Component {
     }
     return (
       <div>
-        <p>Account</p>
+        <Link to="/account" className="registerLink">
+          Account
+        </Link>
+        <Link to="/logout" className="logoutLink">
+          Sign Out
+        </Link>
       </div>
     );
   }

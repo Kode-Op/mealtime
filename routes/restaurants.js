@@ -1,12 +1,20 @@
 const router = require("express").Router();
 let Restaurant = require("../models/restaurant_model");
 
-// DEPRECATED - DO NOT USE
 // Format: GET /api/restaurants/
 // Required Fields: none
 // Returns: All info on all restaurants
 router.route("/").get((req, res) => {
   Restaurant.find()
+    .then(restaurants => res.json(restaurants))
+    .catch(err => res.status(400).json("Error: " + err));
+});
+
+// Format: GET /api/restaurants/Restaurant._id
+// Required Fields: none
+// Returns: All info on a specific restaurant
+router.route("/:id").get((req, res) => {
+  User.findById(req.params.id)
     .then(restaurants => res.json(restaurants))
     .catch(err => res.status(400).json("Error: " + err));
 });

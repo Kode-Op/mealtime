@@ -8,7 +8,7 @@ const restaurantSchema = new Schema(
     price: { type: Number, required: true, minimum: 0, maximum: 5 },
     rating: { type: Number, minimum: 0, maximum: 10 },
     description: { type: String, required: true },
-    minorder: { type: Number, default: 0 },
+    minorder: { type: Number, default: 1 },
     address: {
       type: String,
       default: ""

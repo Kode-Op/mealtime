@@ -12,7 +12,7 @@ router.route("/").get((req, res) => {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-// Format: POST /api/add
+// Format: POST /api/users/add
 // Required Fields: email, firstName, lastName, password
 // Returns: Status based on successful/unsuccessful account creation
 router.route("/add").post((req, res) => {
@@ -49,7 +49,7 @@ router.route("/add").post((req, res) => {
 
 // Format: GET /api/users/User._id
 // Required Fields: none
-// Returns: All info on a specific users
+// Returns: All info on a specific user
 router.route("/:id").get((req, res) => {
   User.findById(req.params.id)
     .then(users => res.json(users))
@@ -92,35 +92,41 @@ router.post("/login", function(req, res) {
       });
     } else {
       // incorrect password
-      return res.status(404).send();
+      return res.status(404).send({
+        success: false,
+        message: "invalid password"
+      });
     }
   });
 });
 
-// Format: GET /api/users/verify
+// Format: GET /api/users/verify/token
 // Required Fields: token
 // Returns: success: true/false if valid sessions token
 router.get("/verify/:id", function(req, res) {
   const token = req.params.id;
 
-  UserSession.findOne(
-    {
-      _id: token,
-      isDeleted: false
-    },
-    (err, sessions) => {
-      if (err) {
-        return res.send({
+  UserSession.findById(token)
+    .then(session => {
+      if (!session) {
+        // not found
+        return res.status(404).send({
           success: false,
-          message: "Error: Invalid"
+          message: "No valid token"
+        });
+      } else if (!session.isDeleted) {
+        return res.status(200).send({
+          success: true,
+          message: "Valid token"
+        });
+      } else {
+        return res.status(500).send({
+          success: false,
+          message: "Stale token"
         });
       }
-      return res.send({
-        success: true,
-        message: "Good"
-      });
-    }
-  );
+    })
+    .catch(err => res.status(500).json("Error: " + err));
 });
 
 // Format: GET /api/users/logout
@@ -129,27 +135,13 @@ router.get("/verify/:id", function(req, res) {
 router.get("/logout/:id", function(req, res) {
   const token = req.params.id;
 
-  UserSession.findOneAndUpdate(
-    {
-      _id: token,
-      isDeleted: false
-    },
-    { $set: { isDeleted: true } },
-    null,
-    (err, sessions) => {
-      if (err) {
-        return res.send({
-          success: false,
-          message: "Error: Server Error"
-        });
-      }
-
-      return res.send({
-        success: true,
-        message: "Good"
-      });
-    }
-  );
+  UserSession.findById(token).then(session => {
+    session.isDeleted = true;
+    session
+      .save()
+      .then(() => res.json("Token Invalidated."))
+      .catch(err => res.status(400).json("Error: " + err));
+  });
 });
 
 // Format: DELETE /api/users/User._id
