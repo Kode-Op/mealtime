@@ -1,12 +1,7 @@
 import React, { Component } from "react";
-<<<<<<< HEAD
 import Splash from "../components/splash/Splash";
 import Navbar from "../components/nav/NavbarHomepage";
-=======
-import Splash from "../components/splash/Splash"
-import Navbar from "../components/nav/NavbarHomepage"
-import Session from "../components/session_component"
->>>>>>> sessions
+import Session from "../components/session_component";
 
 export default class Home extends Component {
   render() {
@@ -14,15 +9,8 @@ export default class Home extends Component {
       <div>
         <Navbar />
         <Splash />
-<<<<<<< HEAD
-        <div style={{ height: 1200 }} />
-=======
-        <br /><br /><br /><br /><br /><br />
         <Session />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
->>>>>>> sessions
+        <div style={{ height: 1200 }} />
       </div>
     );
   }
