@@ -1,8 +1,13 @@
 import React, { Component } from "react";
+import { ListGroup } from "react-bootstrap";
+import Navbar from "../../components/nav/Navbar";
+// import RestaurantViewComponent from "../../components/restaurant/restaurantview - component";
+import RestaurantListComponent from "../../components/search/restaurantlist-component";
+import RestaurantImagePlaceholder from "./restaurantimageplaceholder.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Navbar from "../../components/nav/Navbar";
 import Loader from "../../assets/loader/Loader";
+import "./Restaurant.css";
 
 export default class Restaurant extends Component {
   constructor(props) {
@@ -28,13 +33,76 @@ export default class Restaurant extends Component {
       });
   }
 
+  restaurantView() {
+    return this.state.restaurants.map(currentRestaurant => {
+      return (
+        <RestaurantListComponent
+          restaurant={currentRestaurant}
+          key={currentRestaurant._id}
+        />
+      );
+    });
+  }
+
   render() {
     if (this.state.isLoaded) {
       if (this.state.isValidRestaurant) {
         return (
-          <div>
+          <div className="RestaurantViewContainer">
             <Navbar />
-            <h4>You are on a restaurant page</h4>
+            <div className="RestaurantDescription">
+              <img
+                src={RestaurantImagePlaceholder}
+                className="RestaurantViewComponentImage"
+                alt=""
+              />
+              <h2 className="RestaurantName">{this.state.restaurant.name}</h2>
+              <p className="RestaurantRating">Rating: {this.state.restaurant.rating} stars</p>
+              <p className="RestaurantPrice">Price: {this.state.restaurant.price} dollar sign(s)</p>
+              <p className="RestaurantDistance">xx.xx miles</p>
+            </div>
+            <div className="RestaurantFilters" width="545">
+              <h4>All Items</h4>
+            </div>
+            <div className="RestaurantMenu">
+              <ul className="Menu">
+                <li>
+                  <button>
+                    Menu Item #1
+                    <img
+                      src={RestaurantImagePlaceholder}
+                      className="RestaurantViewComponentImage"
+                      alt=""
+                    />
+                    Price
+                  </button>
+                </li>
+                <br></br>
+                <li>
+                  <button>
+                    Menu Item #2
+                    <img
+                      src={RestaurantImagePlaceholder}
+                      className="RestaurantViewComponentImage"
+                      alt=""
+                    />
+                    Price
+                  </button>
+                </li>
+                <br></br>
+                <li>
+                  <button>
+                    Menu Item #3
+                    <img
+                      src={RestaurantImagePlaceholder}
+                      className="RestaurantViewComponentImage"
+                      alt=""
+                    />
+                    Price
+                  </button>
+                </li>
+              </ul>
+            </div>
             <div style={{ height: 1200 }} />
           </div>
         );
