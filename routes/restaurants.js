@@ -14,7 +14,7 @@ router.route("/").get((req, res) => {
 // Required Fields: none
 // Returns: All info on a specific restaurant
 router.route("/:id").get((req, res) => {
-  User.findById(req.params.id)
+  Restaurant.findById(req.params.id)
     .then(restaurants => res.json(restaurants))
     .catch(err => res.status(400).json("Error: " + err));
 });

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ListGroup } from "react-bootstrap";
+//import { ListGroup } from "react-bootstrap";
 import Navbar from "../../components/nav/Navbar";
 // import RestaurantViewComponent from "../../components/restaurant/restaurantview - component";
 import RestaurantListComponent from "../../components/search/restaurantlist-component";
@@ -18,6 +18,8 @@ export default class Restaurant extends Component {
   componentDidMount() {
     const query = new URLSearchParams(this.props.location.search);
     const id = query.get("id");
+
+    console.log(id);
 
     axios
       .get("/api/restaurants/" + id)
@@ -57,8 +59,12 @@ export default class Restaurant extends Component {
                 alt=""
               />
               <h2 className="RestaurantName">{this.state.restaurant.name}</h2>
-              <p className="RestaurantRating">Rating: {this.state.restaurant.rating} stars</p>
-              <p className="RestaurantPrice">Price: {this.state.restaurant.price} dollar sign(s)</p>
+              <p className="RestaurantRating">
+                Rating: {this.state.restaurant.rating} stars
+              </p>
+              <p className="RestaurantPrice">
+                Price: {this.state.restaurant.price} dollar sign(s)
+              </p>
               <p className="RestaurantDistance">xx.xx miles</p>
             </div>
             <div className="RestaurantFilters" width="545">
