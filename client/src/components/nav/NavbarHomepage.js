@@ -10,13 +10,18 @@ export default class NavbarHomepage extends Component {
   constructor(props) {
     super(props);
     if (window.innerWidth < 1024)
-      this.state = { mobileview: true, opacity: 0, isLoaded: false, token: "" };
+      this.state = {
+        mobileview: true,
+        opacity: 0,
+        isLoaded: false,
+        user: []
+      };
     else
       this.state = {
         mobileview: false,
         opacity: 0,
         isLoaded: false,
-        token: ""
+        user: []
       };
   }
 
@@ -45,22 +50,38 @@ export default class NavbarHomepage extends Component {
     if (obj !== null) {
       token = obj.token;
       // Verify token
-      axios.get("/api/users/verify/" + token).then(response => {
-        if (response.data.success) {
-          this.setState({
-            token: token,
-            isLoaded: true
-          });
+      axios.get("/api/users/verify/" + token).then(tokenResponse => {
+        if (tokenResponse.data.success) {
+          axios
+            .get("/api/users/getUser/" + token)
+            .then(userResponse => {
+              axios
+                .get("/api/users/" + userResponse.data.userId)
+                .then(idResponse => {
+                  console.log(idResponse.data);
+                  this.setState({ user: idResponse.data, isLoaded: true });
+                })
+                .catch(error => {
+                  this.setState({ isLoaded: true });
+                  console.log("Error in getting /api/users: " + error);
+                });
+            })
+            .catch(error => {
+              this.setState({ isLoaded: true });
+              console.log("Error in getting /api/users/getUser: " + error);
+            });
         } else {
           this.setState({
             isLoaded: true
           });
+          console.log("Error in getting /api/users/verify");
         }
       });
     } else {
       this.setState({
         isLoaded: true
       });
+      console.log("User isn't logged in");
     }
   }
 
@@ -72,7 +93,7 @@ export default class NavbarHomepage extends Component {
 
   getLogin() {
     if (this.state.isLoaded) {
-      if (!this.state.token) {
+      if (!this.state.user) {
         return (
           <ButtonToolbar>
             <Nav.Link>
@@ -90,12 +111,9 @@ export default class NavbarHomepage extends Component {
       } else {
         return (
           <ButtonToolbar>
-            <div>Welcome!</div>
-            <Nav.Link>
-              <Link to="/register">
-                <div className="registerbutton">Register</div>
-              </Link>
-            </Nav.Link>
+            <div style={{ color: "white" }}>
+              Welcome, {this.state.user.firstName}
+            </div>
           </ButtonToolbar>
         );
       }
