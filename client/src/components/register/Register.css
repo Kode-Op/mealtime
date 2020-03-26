@@ -16,18 +16,18 @@
 }
 
 .registerHeader {
-  font-size: 38px;
+  font-size: 31px;
   margin-bottom: 30px;
 }
 
 .registerDivSplitLeft {
-  width: 48%;
+  width: 47%;
   float: left;
   margin-right: 7px;
 }
 
 .registerDivSplitRight {
-  width: 48%;
+  width: 47%;
   float: right;
   margin-left: 7px;
 }
@@ -61,5 +61,17 @@
 @media only screen and (min-width: 700px) {
   .registerContainer {
     width: 420px;
+  }
+
+  .registerHeader {
+    font-size: 38px;
+  }
+
+  .registerDivSplitLeft {
+    width: 48%;
+  }
+
+  .registerDivSplitRight {
+    width: 48%;
   }
 }

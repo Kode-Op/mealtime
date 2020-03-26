@@ -1,0 +1,27 @@
+.RestaurantListContainer {
+  height: 92vh;
+}
+
+.RestaurantListLeftPane {
+  text-align: left;
+  padding-top: 30px;
+  padding-left: 20px;
+  float: left;
+  width: 30%;
+  height: 100%;
+  border-right: 1px solid #b5b5b5;
+}
+
+.RestaurantListRightPane {
+  float: right;
+  width: 70%;
+  padding-top: 10px;
+}
+
+.RestaurantListAppliedFilters {
+  padding: 20px 0 20px 0;
+}
+
+.RestaurantListGroup {
+  text-align: left;
+}

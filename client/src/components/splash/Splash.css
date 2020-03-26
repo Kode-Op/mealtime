@@ -11,21 +11,56 @@
   z-index: -1;
 }
 
-.splashzone {
-  font-family: "Catamaran", sans-serif;
-  color: black;
+.splashcontainermobile {
+  display: flex;
+  overflow: hidden;
   width: 100%;
-  margin-top: 33vw;
+  height: 388px;
+  top: 0px;
+  position: absolute;
+  justify-content: center;
+  z-index: -1;
+}
+
+.splashcontainermobile img {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.splashzonesticky {
+  position: absolute;
+  font-family: "Catamaran", sans-serif;
+  color: white;
+  width: 100%;
+  top: 140px;
+  z-index: 2;
+}
+
+.splashzonesticky h1 {
+  font-weight: bolder;
+  font-size: 1.7em;
+  color: white;
+}
+
+.splashzone {
+  position: absolute;
+  font-family: "Catamaran", sans-serif;
+  color: white;
+  width: 100%;
+  top: 140px;
 }
 
 .splashzone h1 {
   font-weight: bolder;
-  font-size: 2em;
+  font-size: 1.7em;
+  color: white;
+  padding-top: 0px;
 }
 
 .splashbox {
   height: 45px;
-  width: 76%;
+  width: 74%;
   float: left;
   margin-top: 20px;
   margin-left: 10px;
@@ -35,7 +70,7 @@
 }
 
 .splashgo {
-  width: 18%;
+  width: 16%;
   height: 45px;
   float: right;
   margin-top: 20px;
@@ -43,16 +78,94 @@
   border-radius: 15px !important;
 }
 
-@media only screen and (min-width: 1024px) {
-  .splashzone {
-    margin-top: 10vw;
-    margin-left: 10vw;
-    color: white;
-    width: auto;
+@media only screen and (min-width: 435px) {
+  .splashbox {
+    width: 76%;
+  }
+
+  .splashgo {
+    width: 18%;
   }
 
   .splashzone h1 {
+    font-size: 2.2em;
+  }
+
+  .splashzonesticky h1 {
+    font-size: 2.2em;
+  }
+
+  .splashzone {
+    top: 135px;
+  }
+
+  .splashzonesticky {
+    top: 135px;
+  }
+}
+
+@media only screen and (min-width: 595px) {
+  .splashzone h1 {
+    font-size: 2.5em;
+  }
+
+  .splashzonesticky h1 {
+    font-size: 2.5em;
+  }
+
+  .splashzone {
+    top: 130px;
+  }
+
+  .splashzonesticky {
+    top: 130px;
+  }
+}
+
+@media only screen and (min-width: 780px) {
+  .splashzone h1 {
+    font-size: 3em;
+  }
+
+  .splashzonesticky h1 {
+    font-size: 3em;
+  }
+
+  .splashzone {
+    top: 125px;
+  }
+
+  .splashzonesticky {
+    top: 125px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .splashcontainer {
+    display: flex;
+    overflow: hidden;
+  }
+
+  .splashzone {
+    width: 450px;
+    top: 8vw;
+    left: 12vw;
+  }
+
+  .splashzone h1 {
+    padding-top: 23px;
     font-size: 2.3em;
+  }
+
+  .splashzonesticky {
+    width: 450px;
+    position: fixed;
+    top: -10px;
+    left: 12vw;
+  }
+
+  .splashzonesticky h1 {
+    font-size: 0px;
   }
 
   .splashbox {
@@ -67,25 +180,54 @@
 }
 
 @media only screen and (min-width: 1140px) {
+  .splashzone {
+    width: 500px;
+  }
   .splashzone h1 {
     font-size: 2.7em;
+    padding-top: 15px;
+  }
+  .splashzonesticky {
+    width: 500px;
   }
 }
 
 @media only screen and (min-width: 1366px) {
+  .splashzone {
+    width: 575px;
+    top: 10vw;
+  }
   .splashzone h1 {
     font-size: 3em;
+    padding-top: 10px;
+  }
+  .splashzonesticky {
+    width: 575px;
   }
 }
 
 @media only screen and (min-width: 1480px) {
+  .splashzone {
+    width: 625px;
+  }
   .splashzone h1 {
     font-size: 3.3em;
+    padding-top: 3px;
+  }
+  .splashzonesticky {
+    width: 625px;
   }
 }
 
 @media only screen and (min-width: 1600px) {
+  .splashzone {
+    width: 650px;
+  }
   .splashzone h1 {
     font-size: 3.5em;
+    padding-top: 0px;
+  }
+  .splashzonesticky {
+    width: 650px;
   }
 }

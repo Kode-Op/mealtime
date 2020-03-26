@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import axios from "axios";
 
 //Import Components
-import ApiComponent from "../components/api-component";
-import MenuItemComponent from "../components/menuitem-component";
-import OrderComponent from "../components/order-component";
-import RestaurantComponent from "../components/restaurant-component";
-import ReviewComponent from "../components/review-component";
-import UserComponent from "../components/user-component";
+import ApiComponent from "../components/datacomponents/api-component";
+import MenuItemComponent from "../components/datacomponents/menuitem-component";
+import OrderComponent from "../components/datacomponents/order-component";
+import RestaurantComponent from "../components/datacomponents/restaurant-component";
+import ReviewComponent from "../components/datacomponents/review-component";
+import UserComponent from "../components/datacomponents/user-component";
 import Navbar from "../components/nav/Navbar";
 
 export default class Data extends Component {

@@ -1,9 +1,14 @@
+.navspacer {
+  height: 74px;
+}
+
 .linkstyle {
   color: white;
-  font-size: 1.05em;
+  font-size: 0.95em;
   font-weight: bolder;
   padding-top: 8px;
   display: inline-block;
+  margin: 0 -10px 0 -10px;
 }
 
 .linkstyle:hover {
@@ -16,7 +21,7 @@
   border-radius: 12px;
   background-color: white;
   color: black;
-  font-size: 1.05em;
+  font-size: 0.95em;
   font-weight: bolder;
   padding: 8px 16px 8px 16px;
   text-align: center;
@@ -26,4 +31,65 @@
 
 .registerbutton:hover {
   text-decoration: underline;
+}
+
+.navheader {
+  position: fixed;
+  top: 0;
+  height: 80px;
+  width: 100%;
+}
+
+.navzone {
+  display: none;
+}
+
+.navbox {
+  display: none;
+}
+
+.navgo {
+  display: none;
+}
+
+@media only screen and (min-width: 435px) {
+  .linkstyle {
+    font-size: 1.05em;
+    margin: 0;
+  }
+
+  .registerbutton {
+    font-size: 1.05em;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .navzone {
+    margin-left: 50px;
+    display: block;
+    width: 50vw;
+    height: 40px;
+  }
+
+  .navbox {
+    display: inline-block;
+    width: 78%;
+    height: 100%;
+    margin-left: 10px;
+    border-radius: 15px;
+    padding: 5px 20px 0 20px;
+    font-size: 1.05em;
+  }
+
+  .navgo {
+    display: inline-block;
+    width: 16%;
+    height: 100%;
+    float: right;
+    border-radius: 15px !important;
+  }
+
+  .navspacer {
+    height: 80px;
+  }
 }

@@ -1,0 +1,39 @@
+.accountcontainer {
+  height: 92vh;
+}
+
+.accountleftpane {
+  text-align: left;
+  padding-top: 30px;
+  padding-left: 20px;
+  float: left;
+  width: 30%;
+  height: 100%;
+  border-right: 1px solid #b5b5b5;
+}
+
+.accountleftpane h2 {
+  font-weight: bold;
+  font-size: 1.8em;
+}
+
+.accountleftpane li {
+  list-style-type: none;
+  padding-top: 20px;
+  margin-left: -20px;
+}
+
+.accountrightpane {
+  float: right;
+  width: 70%;
+  height: 100%;
+  text-align: left;
+  padding-top: 30px;
+  padding-left: 20px;
+}
+
+.accountrightpane h2 {
+  font-weight: bold;
+  font-size: 1.4em;
+  padding-bottom: 15px;
+}
