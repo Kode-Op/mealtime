@@ -33,18 +33,22 @@ export default class Restaurant extends Component {
 
   componentDidMount() {
     //Get the restaurant data
-    axios
-      .get("/api/restaurants/" + this.state.id)
-      .then(response => {
-        this.setState({
-          restaurant: response.data,
-          isValidRestaurant: true,
-          isPageLoaded: true
+    if (this.state.id !== "") {
+      axios
+        .get("/api/restaurants/" + this.state.id)
+        .then(response => {
+          this.setState({
+            restaurant: response.data,
+            isValidRestaurant: true,
+            isPageLoaded: true
+          });
+        })
+        .catch(error => {
+          this.setState({ isValidRestaurant: false, isPageLoaded: true });
         });
-      })
-      .catch(error => {
-        this.setState({ isValidRestaurant: false, isPageLoaded: true });
-      });
+    } else {
+      this.setState({ isPageLoaded: true, isValidRestaurant: false });
+    }
 
     //Get the menu items
     axios
