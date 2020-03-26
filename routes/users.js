@@ -12,6 +12,35 @@ router.route("/").get((req, res) => {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
+// Format: GET /api/users/getUser/:token
+// Required Fields: :token in call
+// Returns: User._id
+router.route("/getUser/:id").get((req, res) => {
+  const token = req.params.id;
+  UserSession.findById(token)
+    .then(session => {
+      if (!session) {
+        // not found
+        return res.status(404).send({
+          success: false,
+          message: "Invalid token"
+        });
+      } else if (!session.isDeleted) {
+        return res.status(200).send({
+          success: true,
+          message: "Valid token",
+          userId: session.userId
+        });
+      } else {
+        return res.status(500).send({
+          success: false,
+          message: "Stale token"
+        });
+      }
+    })
+    .catch(err => res.status(500).json("Error: " + err));
+});
+
 // Format: POST /api/users/add
 // Required Fields: email, firstName, lastName, password
 // Returns: Status based on successful/unsuccessful account creation

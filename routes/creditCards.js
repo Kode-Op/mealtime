@@ -47,7 +47,7 @@ router.get("/:id", function(req, res) {
 });
 
 // Format: DELETE /api/creditCards/CreditCard._id
-// Returns: Status based on successful/unsuccessful adding of Credit Card
+// Returns: Status based on successful/unsuccessful deletion of Credit Card
 router.route("/:id").delete((req, res) => {
   CreditCard.findById(req.params.id).then(creditCard => {
     creditCard.isDeleted = true;
