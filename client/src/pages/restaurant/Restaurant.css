@@ -1,23 +1,56 @@
-.RestaurantDescription {
+.RestaurantContainer {
   text-align: left;
-  padding-top: 30px;
-  padding-left: 20px;
-  /* float: left; */
-  width: 30%;
-  height: 100%;
+  width: 1200px;
+  margin: 30px auto;
 }
+
+.RestaurantTitleContainer {
+  width: 100%;
+}
+
+.RestaurantImage {
+  padding-bottom: 20px;
+}
+
+.RestaurantName {
+  font-weight: bold;
+}
+
+.RestaurantFlexContainer {
+  display: flex;
+  text-align: center;
+}
+
+.RestaurantRating {
+  width: 33%;
+  border-right: 1px solid lightgrey;
+}
+
+.RestaurantPrice {
+  width: 33%;
+  border-right: 1px solid lightgrey;
+}
+
+.RestaurantDistance {
+  color: grey;
+  width: 33%;
+}
+
 .RestaurantFilters {
-  text-align: left;
-  padding-top: 30px;
-  padding-left: 20px;
-  width: 30%;
-  height: 100%;
+  padding: 10px 0 20px 0;
 }
-.Menu {
-  text-align: left;
-  padding-top: 30px;
-  padding-left: 20px;
-  width: 30%;
-  height: 100%;
-  list-style-type: none;
+
+.RestaurantMenuCollection {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.RestaurantMenuItem {
+  height: 200px;
+  background-color: lightgray;
+  padding: 40px;
+  margin: 10px;
+  border: 1px solid blue;
+  width: 48%;
 }
