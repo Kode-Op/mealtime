@@ -57,8 +57,8 @@ export default class Restaurant extends Component {
                 alt=""
               />
               <h2 className="RestaurantName">{this.state.restaurant.name}</h2>
-              <p className="RestaurantRating">{this.state.restaurant.rating}</p>
-              <p className="RestaurantPrice">{this.state.restaurant.price}</p>
+              <p className="RestaurantRating">Rating: {this.state.restaurant.rating} stars</p>
+              <p className="RestaurantPrice">Price: {this.state.restaurant.price} dollar sign(s)</p>
               <p className="RestaurantDistance">xx.xx miles</p>
             </div>
             <div className="RestaurantFilters" width="545">
@@ -77,6 +77,7 @@ export default class Restaurant extends Component {
                     Price
                   </button>
                 </li>
+                <br></br>
                 <li>
                   <button>
                     Menu Item #2
@@ -88,6 +89,7 @@ export default class Restaurant extends Component {
                     Price
                   </button>
                 </li>
+                <br></br>
                 <li>
                   <button>
                     Menu Item #3
