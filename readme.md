@@ -12,19 +12,11 @@ To run the frontend:
 
 ## Run the virtual web server and connect to MongoDB Atlas
 
-* In the command prompt, run the following command:
+- In the command prompt, run the following command:
 
-<<<<<<< HEAD
 `nodemon server`
 
-* In a second command prompt window, navigate to the project directory and run the following commands:
+- In a second command prompt window, navigate to the project directory and run the following commands:
 
 `cd client`
 `npm run start`
-
-=======
-`cd client`
-`npm run start`
-`cd ..`
-`nodemon server`
->>>>>>> sessions
