@@ -1,13 +1,23 @@
 import React, { Component } from "react";
 import { Navbar, Nav, ButtonToolbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { getFromStorage } from "../../utils/storage";
+import axios from "axios";
+import Loader from "../../assets/loader/Loader";
 import "./Navbar.css";
 
 export default class NavbarHomepage extends Component {
   constructor(props) {
     super(props);
-    if (window.innerWidth < 1024) this.state = { mobileview: true, opacity: 0 };
-    else this.state = { mobileview: false, opacity: 0 };
+    if (window.innerWidth < 1024)
+      this.state = { mobileview: true, opacity: 0, isLoaded: false, token: "" };
+    else
+      this.state = {
+        mobileview: false,
+        opacity: 0,
+        isLoaded: false,
+        token: ""
+      };
   }
 
   getOpacity = () => {
@@ -25,13 +35,77 @@ export default class NavbarHomepage extends Component {
   };
 
   componentDidMount() {
+    //Add event listeners
     window.addEventListener("scroll", this.getOpacity, false);
     window.addEventListener("resize", this.getOpacity, false);
+
+    //Check to see if logged in
+    const obj = getFromStorage("mealtime");
+    let token = "";
+    if (obj !== null) {
+      token = obj.token;
+      // Verify token
+      axios.get("/api/users/verify/" + token).then(response => {
+        if (response.data.success) {
+          this.setState({
+            token: token,
+            isLoaded: true
+          });
+        } else {
+          this.setState({
+            isLoaded: true
+          });
+        }
+      });
+    } else {
+      this.setState({
+        isLoaded: true
+      });
+    }
   }
 
   componentWillUnmount() {
+    //Remove event listeners
     window.removeEventListener("scroll", this.getOpacity);
     window.removeEventListener("resize", this.getOpacity);
+  }
+
+  getLogin() {
+    if (this.state.isLoaded) {
+      if (!this.state.token) {
+        return (
+          <ButtonToolbar>
+            <Nav.Link>
+              <Link to="/login" className="linkstyle">
+                Log In
+              </Link>
+            </Nav.Link>
+            <Nav.Link>
+              <Link to="/register">
+                <div className="registerbutton">Register</div>
+              </Link>
+            </Nav.Link>
+          </ButtonToolbar>
+        );
+      } else {
+        return (
+          <ButtonToolbar>
+            <div>Welcome!</div>
+            <Nav.Link>
+              <Link to="/register">
+                <div className="registerbutton">Register</div>
+              </Link>
+            </Nav.Link>
+          </ButtonToolbar>
+        );
+      }
+    } else {
+      return (
+        <div style={{ float: "right" }}>
+          <Loader />
+        </div>
+      );
+    }
   }
 
   render() {
@@ -48,18 +122,7 @@ export default class NavbarHomepage extends Component {
             </Link>
           </Nav.Link>
           <Navbar.Collapse className="justify-content-end">
-            <ButtonToolbar>
-              <Nav.Link>
-                <Link to="/login" className="linkstyle">
-                  Log In
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link to="/register">
-                  <div className="registerbutton">Register</div>
-                </Link>
-              </Nav.Link>
-            </ButtonToolbar>
+            {this.getLogin()}
           </Navbar.Collapse>
         </Navbar>
       </div>
