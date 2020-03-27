@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
-import "./Profile.css";
 import axios from "axios";
 
 function EditButton() {
   return <div className="ProfileEditLink">Edit</div>;
 }
 
-const initialState = {
-  fname: "Firstname",
-  lname: "Lastname",
+let initialState = {
+  userID: "",
+  fName: "",
+  lName: "",
   passwordname: "",
   email: "",
   emailconfirm: "",
@@ -17,12 +17,12 @@ const initialState = {
   passwordcurrent: "",
   passwordnew: "",
   passwordnewconfirm: "",
+  successMessageName: "",
+  successMessageEmail: "",
+  successMessagePassword: "",
   errorMessageName: "",
   errorMessageEmail: "",
-  errorMessagePassword: "",
-  nameRedirect: false,
-  emailRedirect: false,
-  passwordRedirect: false
+  errorMessagePassword: ""
 };
 
 export default class Profile extends Component {
@@ -45,16 +45,22 @@ export default class Profile extends Component {
     this.onSubmitPassword = this.onSubmitPassword.bind(this);
 
     this.state = initialState;
+    this.state = {
+      userID: this.props.user.data._id,
+      fName: this.props.user.data.firstName,
+      lName: this.props.user.data.lastName,
+      email: this.props.user.data.email
+    };
   }
 
   onChangeFName(e) {
     this.setState({
-      fname: e.target.value
+      fName: e.target.value
     });
   }
   onChangeLName(e) {
     this.setState({
-      lname: e.target.value
+      lName: e.target.value
     });
   }
   onChangePasswordName(e) {
@@ -114,6 +120,7 @@ export default class Profile extends Component {
       this.setState({ errorMessageEmail: errorMessage });
       return false;
     }
+    this.setState({ errorMessageEmail: "" });
     return true;
   };
 
@@ -159,91 +166,122 @@ export default class Profile extends Component {
   };
 
   onSubmitName(e) {
-    console.log("Calling updateName");
-    let userId = "5e7cefead6465054f8dc9d9f"; //this.state.userId;
     let pkg = {
-      firstName: "Rachelle", //this.state.fname,
-      lastName: "Sharer", //this.state.lname,
-      password: "P@ssword1" //this.state.passwordname
+      firstName: this.state.fName,
+      lastName: this.state.lName,
+      password: this.state.passwordname
     };
     axios
-      .post("/api/users/updateName/" + userId, pkg)
+      .post("/api/users/updateName/" + this.state.userID, pkg)
       .then(response => {
-        if (response.status === 200) {
-          console.log("Successful Name Change");
-        } else if (response.status === 404) {
-          console.log("404: User not found. Check userId");
-        } else if (response.status === 500) {
-          console.log("500: Invalid Password");
-        } else {
-          console.log("400: Error saving name (server error)");
-        }
-        this.setState({ isLoaded: true });
+        this.setState({
+          errorMessageName: "",
+          successMessageName: "Successfully updated name!",
+          isLoaded: true
+        });
       })
       .catch(error => {
-        console.log("Error: " + error);
+        if (error.response.status === 404) {
+          this.setState({
+            errorMessageName:
+              "404 user not found. Please refresh page and try again.",
+            successMessageName: ""
+          });
+        } else if (error.response.status === 500) {
+          this.setState({
+            errorMessageName: "Error! Invalid password",
+            successMessageName: ""
+          });
+        } else {
+          this.setState({
+            errorMessageName:
+              "400 internal server error. Please try again later.",
+            successMessageName: ""
+          });
+        }
         this.setState({ isLoaded: true });
       });
     e.preventDefault();
-    this.setState({ nameRedirect: true });
   }
 
   onSubmitEmail(e) {
-    console.log("Calling updateEmail");
-    let userId = "5e7cefead6465054f8dc9d9f"; //this.state.userId;
-    let pkg = {
-      email: "testuser25@gmail.com", //this.state.email,
-      password: "P@ssword1" //this.state.passwordemail
-    };
-    axios
-      .post("/api/users/updateEmail/" + userId, pkg)
-      .then(response => {
-        if (response.status === 200) {
-          console.log("Successful Email Change");
-        } else if (response.status === 404) {
-          console.log("404: User not found. Check userId");
-        } else if (response.status === 500) {
-          console.log("500: Invalid Password");
-        } else {
-          console.log("400: Error saving email (server error)");
-        }
-        this.setState({ isLoaded: true });
-      })
-      .catch(error => {
-        console.log("Error: " + error);
-        this.setState({ isLoaded: true });
-      });
+    if (this.validateEmail()) {
+      let pkg = {
+        email: this.state.email,
+        password: this.state.passwordemail
+      };
+      axios
+        .post("/api/users/updateEmail/" + this.state.userID, pkg)
+        .then(response => {
+          this.setState({
+            errorMessageEmail: "",
+            successMessageEmail: "Successfully updated email!",
+            isLoaded: true
+          });
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.setState({
+              errorMessageEmail:
+                "404 user not found. Please refresh page and try again.",
+              successMessageEmail: ""
+            });
+          } else if (error.response.status === 500) {
+            this.setState({
+              errorMessageEmail: "Error! Invalid password",
+              successMessageEmail: ""
+            });
+          } else {
+            this.setState({
+              errorMessageEmail:
+                "400 internal server error. Please try again later.",
+              successMessageEmail: ""
+            });
+          }
+          this.setState({ isLoaded: true });
+        });
+    }
     e.preventDefault();
-    if (this.validateEmail()) this.setState({ emailRedirect: true });
   }
 
   onSubmitPassword(e) {
-    console.log("Calling updatePassword");
-    let userId = "5e7cefead6465054f8dc9d9f"; //this.state.userId;
-    let pkg = {
-      oldPassword: "P@ssword2", //this.state.passwordcurrent,
-      newPassword: "P@ssword1" //this.state.passwordnew
-    };
-    axios
-      .post("/api/users/updatePassword/" + userId, pkg)
-      .then(response => {
-        if (response.status === 200) {
-          console.log("Successful Password Change");
-        } else if (response.status === 404) {
-          console.log("404: User not found. Check userId");
-        } else if (response.status === 500) {
-          console.log("500: Invalid Current Password");
-        } else {
-          console.log("400: Error saving password (server error)");
-        }
-        this.setState({ isLoaded: true });
-      })
-      .catch(error => {
-        console.log("Error: " + error);
-        this.setState({ isLoaded: true });
-      });
+    if (this.validatePassword()) {
+      let pkg = {
+        oldPassword: this.state.passwordcurrent,
+        newPassword: this.state.passwordnew
+      };
+      axios
+        .post("/api/users/updatePassword/" + this.state.userID, pkg)
+        .then(response => {
+          this.setState({
+            errorMessagePassword: "",
+            successMessagePassword: "Successfully updated password!",
+            isLoaded: true
+          });
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.setState({
+              errorMessagePassword:
+                "404 user not found. Please refresh page and try again.",
+              successMessagePassword: ""
+            });
+          } else if (error.response.status === 500) {
+            this.setState({
+              errorMessagePassword: "Error! Invalid current password",
+              successMessagePassword: ""
+            });
+          } else {
+            this.setState({
+              errorMessagePassword:
+                "400 internal server error. Please try again later.",
+              successMessagePassword: ""
+            });
+          }
+          this.setState({ isLoaded: true });
+        });
+    }
     e.preventDefault();
-    if (this.validatePassword()) this.setState({ passwordRedirect: true });
   }
 
   render() {
@@ -258,7 +296,9 @@ export default class Profile extends Component {
               style={{ cursor: "pointer" }}
             >
               <div className="ProfileHeaderLeft">Name:</div>
-              <div className="ProfileUserInfo">Firstname Lastname</div>
+              <div className="ProfileUserInfo">
+                {this.state.fName} {this.state.lName}
+              </div>
               <EditButton />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
@@ -272,7 +312,7 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="fname"
-                    value={this.state.fname}
+                    value={this.state.fName}
                     onChange={this.onChangeFName}
                     className="ProfileInputBox"
                     required
@@ -283,7 +323,7 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="lname"
-                    value={this.state.lname}
+                    value={this.state.lName}
                     onChange={this.onChangeLName}
                     className="ProfileInputBox"
                     required
@@ -302,6 +342,9 @@ export default class Profile extends Component {
                   <div className="ProfileErrorMessage">
                     {this.state.errorMessageName}
                   </div>
+                  <div className="ProfileSuccessMessage">
+                    {this.state.successMessageName}
+                  </div>
                   <Button variant="success" type="submit">
                     Update name
                   </Button>
@@ -316,7 +359,7 @@ export default class Profile extends Component {
               style={{ cursor: "pointer" }}
             >
               <div className="ProfileHeaderLeft">Email:</div>
-              <div className="ProfileUserInfo">example@email.com</div>
+              <div className="ProfileUserInfo">{this.state.email}</div>
               <EditButton />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="1">
@@ -359,6 +402,9 @@ export default class Profile extends Component {
                   />
                   <div className="ProfileErrorMessage">
                     {this.state.errorMessageEmail}
+                  </div>
+                  <div className="ProfileSuccessMessage">
+                    {this.state.successMessageEmail}
                   </div>
                   <Button variant="success" type="submit">
                     Update email
@@ -420,6 +466,9 @@ export default class Profile extends Component {
                   />
                   <div className="ProfileErrorMessage">
                     {this.state.errorMessagePassword}
+                  </div>
+                  <div className="ProfileSuccessMessage">
+                    {this.state.successMessagePassword}
                   </div>
                   <Button variant="success" type="submit">
                     Update password
