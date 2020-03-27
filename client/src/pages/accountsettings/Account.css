@@ -37,3 +37,58 @@
   font-size: 1.4em;
   padding-bottom: 15px;
 }
+
+.ProfileHeaderLeft {
+  float: left;
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+.ProfileUserInfo {
+  display: inline;
+  font-size: 0.8em;
+}
+
+.ProfileEditLink {
+  float: right;
+  padding-right: 40px;
+  color: blue;
+}
+
+.ProfileEditLink:hover {
+  text-decoration: underline;
+}
+
+.ProfileInputBox {
+  display: block;
+  width: 30%;
+  height: 40px;
+  border: 1px solid grey;
+  margin-bottom: 20px;
+  padding: 0 10px 0 10px;
+  border-radius: 5px;
+}
+
+.ProfileFormTest {
+  display: block;
+  color: #434343;
+  font-size: 0.8em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.ProfileErrorMessage {
+  color: red;
+  margin: 20px 0px 20px 0px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  font-size: 0.9em;
+}
+
+.ProfileSuccessMessage {
+  color: green;
+  margin: 20px 0px 20px 0px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  font-size: 0.9em;
+}
