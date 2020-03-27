@@ -36,7 +36,7 @@ const userSchema = new Schema(
     },
     phone: {
       type: String,
-      default: "5551234567"
+      default: ""
     }
   },
   {
