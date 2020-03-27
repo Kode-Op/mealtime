@@ -89,7 +89,9 @@ export default class RestaurantListComponent extends Component {
             <DisplayRating rating={this.props.restaurant.rating} />
           </div>
           <div className="RestaurantListComponentNumReviews">
-            {this.props.restaurant.review.length} reviews
+            {
+              //this.props.restaurant.review.length} reviews
+            }
           </div>
           <div className="RestaurantListComponentPrice">
             <DisplayPrice price={this.props.restaurant.price} />

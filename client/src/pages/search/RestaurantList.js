@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { ListGroup } from "react-bootstrap";
 import Navbar from "../../components/nav/Navbar";
 import RestaurantListComponent from "../../components/search/restaurantlist-component";
+import Loader from "../../assets/loader/Loader";
 import axios from "axios";
 import "./RestaurantList.css";
 
@@ -10,6 +11,7 @@ export default class RestaurantList extends Component {
     super(props);
 
     this.state = {
+      isLoaded: false,
       restaurants: []
     };
   }
@@ -17,22 +19,26 @@ export default class RestaurantList extends Component {
     axios
       .get("/api/restaurants")
       .then(response => {
-        this.setState({ restaurants: response.data });
+        this.setState({ restaurants: response.data, isLoaded: true });
       })
       .catch(error => {
-        console.log(error);
+        this.setState({ isLoaded: true });
       });
   }
 
   restaurantList() {
-    return this.state.restaurants.map(currentRestaurant => {
-      return (
-        <RestaurantListComponent
-          restaurant={currentRestaurant}
-          key={currentRestaurant._id}
-        />
-      );
-    });
+    if (this.state.isLoaded) {
+      return this.state.restaurants.map(currentRestaurant => {
+        return (
+          <RestaurantListComponent
+            restaurant={currentRestaurant}
+            key={currentRestaurant._id}
+          />
+        );
+      });
+    } else {
+      return <Loader />;
+    }
   }
   render() {
     return (

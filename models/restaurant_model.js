@@ -4,68 +4,14 @@ const Schema = mongoose.Schema;
 
 const restaurantSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      minlength: 3
-    },
+    name: { type: String, required: true },
     price: { type: Number, required: true, minimum: 0, maximum: 5 },
-    rating: { type: Number, minimum: 1, maximum: 5 },
+    rating: { type: Number, minimum: 0, maximum: 10 },
     description: { type: String, required: true },
-    minorder: { type: Number, required: true, minimum: 0 },
-    tag: {
-      type: Array,
-      items: {
-        type: Array,
-        items: [
-          {
-            type: String,
-            required: true,
-            unique: true
-          },
-          {
-            type: String,
-            required: true,
-            minimum: 1
-          }
-        ]
-      }
-    },
-    menuitem: {
-      type: Array,
-      items: {
-        type: String,
-        required: true,
-        unique: true
-      }
-    },
-    order: {
-      type: Array,
-      items: {
-        type: String,
-        required: true,
-        unique: true
-      }
-    },
-    location: {
-      x_coordinate: {
-        type: Number,
-        required: true
-      },
-      y_coordinate: {
-        type: Number,
-        required: true
-      }
-    },
-    review: {
-      type: Array,
-      items: [
-        {
-          type: Number
-        }
-      ]
+    minorder: { type: Number, default: 1 },
+    address: {
+      type: String,
+      default: ""
     },
     hoursofoperation: {
       type: Array,

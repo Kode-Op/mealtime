@@ -52,6 +52,38 @@
   display: none;
 }
 
+.NavWelcome {
+  color: white;
+  font-weight: bold;
+  font-size: 1.05em;
+  padding-right: 10px;
+}
+
+.NavSettings {
+  padding: 0 10px 0 10px;
+  color: #eeeeee;
+  font-weight: bold;
+  font-size: 1em;
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+}
+
+.NavLogout {
+  padding-left: 10px;
+  color: #eeeeee;
+  font-size: 1em;
+}
+
+.NavSettings:hover {
+  text-decoration: underline;
+  text-decoration-color: white;
+}
+
+.NavLogout:hover {
+  text-decoration: underline;
+  text-decoration-color: grey;
+}
+
 @media only screen and (min-width: 435px) {
   .linkstyle {
     font-size: 1.05em;

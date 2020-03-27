@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
 import "./Profile.css";
+import axios from "axios";
 
 function EditButton() {
   return <div className="ProfileEditLink">Edit</div>;
@@ -158,16 +159,89 @@ export default class Profile extends Component {
   };
 
   onSubmitName(e) {
+    console.log("Calling updateName");
+    let userId = "5e7cefead6465054f8dc9d9f"; //this.state.userId;
+    let pkg = {
+      firstName: "Rachelle", //this.state.fname,
+      lastName: "Sharer", //this.state.lname,
+      password: "P@ssword1" //this.state.passwordname
+    };
+    axios
+      .post("/api/users/updateName/" + userId, pkg)
+      .then(response => {
+        if (response.status === 200) {
+          console.log("Successful Name Change");
+        } else if (response.status === 404) {
+          console.log("404: User not found. Check userId");
+        } else if (response.status === 500) {
+          console.log("500: Invalid Password");
+        } else {
+          console.log("400: Error saving name (server error)");
+        }
+        this.setState({ isLoaded: true });
+      })
+      .catch(error => {
+        console.log("Error: " + error);
+        this.setState({ isLoaded: true });
+      });
     e.preventDefault();
     this.setState({ nameRedirect: true });
   }
 
   onSubmitEmail(e) {
+    console.log("Calling updateEmail");
+    let userId = "5e7cefead6465054f8dc9d9f"; //this.state.userId;
+    let pkg = {
+      email: "testuser25@gmail.com", //this.state.email,
+      password: "P@ssword1" //this.state.passwordemail
+    };
+    axios
+      .post("/api/users/updateEmail/" + userId, pkg)
+      .then(response => {
+        if (response.status === 200) {
+          console.log("Successful Email Change");
+        } else if (response.status === 404) {
+          console.log("404: User not found. Check userId");
+        } else if (response.status === 500) {
+          console.log("500: Invalid Password");
+        } else {
+          console.log("400: Error saving email (server error)");
+        }
+        this.setState({ isLoaded: true });
+      })
+      .catch(error => {
+        console.log("Error: " + error);
+        this.setState({ isLoaded: true });
+      });
     e.preventDefault();
     if (this.validateEmail()) this.setState({ emailRedirect: true });
   }
 
   onSubmitPassword(e) {
+    console.log("Calling updatePassword");
+    let userId = "5e7cefead6465054f8dc9d9f"; //this.state.userId;
+    let pkg = {
+      oldPassword: "P@ssword2", //this.state.passwordcurrent,
+      newPassword: "P@ssword1" //this.state.passwordnew
+    };
+    axios
+      .post("/api/users/updatePassword/" + userId, pkg)
+      .then(response => {
+        if (response.status === 200) {
+          console.log("Successful Password Change");
+        } else if (response.status === 404) {
+          console.log("404: User not found. Check userId");
+        } else if (response.status === 500) {
+          console.log("500: Invalid Current Password");
+        } else {
+          console.log("400: Error saving password (server error)");
+        }
+        this.setState({ isLoaded: true });
+      })
+      .catch(error => {
+        console.log("Error: " + error);
+        this.setState({ isLoaded: true });
+      });
     e.preventDefault();
     if (this.validatePassword()) this.setState({ passwordRedirect: true });
   }

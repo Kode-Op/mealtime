@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import { setInStorage } from "../../utils/storage";
 
 import Loader from "../../assets/loader/Loader";
 
@@ -10,6 +11,7 @@ export default class LoginConfirmation extends Component {
 
     this.state = {
       accountConfirmed: false,
+      token: "",
       isLoaded: false,
       redirect: false,
       message: ""
@@ -21,17 +23,22 @@ export default class LoginConfirmation extends Component {
         password: this.props.location.state.password
       };
 
-      axios
-        .post("/api/users/login", user)
-        .then(() => {
-          this.setState({ accountConfirmed: true, isLoaded: true });
-        })
-        .catch(error => {
+      axios.post("/api/users/login", user).then(response => {
+        if (response.data.success) {
+          // login successful, token created and saved
+          setInStorage("mealtime", { token: response.data.token });
           this.setState({
             isLoaded: true,
-            message: JSON.stringify(error.message)
+            accountConfirmed: true
           });
-        });
+        } else {
+          this.setState({
+            // login failed
+            isLoaded: true,
+            message: JSON.stringify(response.message)
+          });
+        }
+      });
     } else {
       this.state = {
         isLoaded: true,
@@ -50,7 +57,19 @@ export default class LoginConfirmation extends Component {
 
   render() {
     if (this.state.isLoaded) {
-      if (this.state.accountConfirmed || this.state.redirect) {
+      if (this.state.accountConfirmed) {
+        return (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: {
+                email: this.state.email,
+                token: this.state.token
+              }
+            }}
+          />
+        );
+      } else if (this.state.redirect) {
         return <Redirect to="/" />;
       } else if (
         this.state.message === '"Request failed with status code 404"'
