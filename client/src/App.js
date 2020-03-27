@@ -8,6 +8,7 @@ import Account from "./pages/accountsettings/Account";
 import Restaurant from "./pages/restaurant/Restaurant";
 import RestaurantList from "./pages/search/RestaurantList";
 import Login from "./components/login/Login";
+import Logout from "./components/logout/Logout";
 import Register from "./components/register/Register";
 import RegisterConfirmation from "./components/register/Confirmation";
 import LoginConfirmation from "./components/login/Confirmation";
@@ -29,6 +30,7 @@ function App() {
             component={LoginConfirmation}
           />
           <Route path="/login" component={Login} />
+          <Route path="/logout" component={Logout} />
           <Route path="/register" component={Register} />
           <Route path="/account" component={Account} />
           <Route path="/search" component={RestaurantList} />

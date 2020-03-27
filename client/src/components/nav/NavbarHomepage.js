@@ -14,6 +14,7 @@ export default class NavbarHomepage extends Component {
         mobileview: true,
         opacity: 0,
         isLoaded: false,
+        loggedin: false,
         user: []
       };
     else
@@ -21,6 +22,7 @@ export default class NavbarHomepage extends Component {
         mobileview: false,
         opacity: 0,
         isLoaded: false,
+        loggedin: false,
         user: []
       };
   }
@@ -50,37 +52,42 @@ export default class NavbarHomepage extends Component {
     if (obj !== null) {
       token = obj.token;
       // Verify token
-      axios.get("/api/users/verify/" + token).then(tokenResponse => {
-        if (tokenResponse.data.success) {
-          axios
-            .get("/api/users/getUser/" + token)
-            .then(userResponse => {
-              axios
-                .get("/api/users/" + userResponse.data.userId)
-                .then(idResponse => {
-                  console.log(idResponse.data);
-                  this.setState({ user: idResponse.data, isLoaded: true });
-                })
-                .catch(error => {
-                  this.setState({ isLoaded: true });
-                  console.log("Error in getting /api/users: " + error);
-                });
-            })
-            .catch(error => {
-              this.setState({ isLoaded: true });
-              console.log("Error in getting /api/users/getUser: " + error);
-            });
-        } else {
-          this.setState({
-            isLoaded: true
-          });
-          console.log("Error in getting /api/users/verify");
-        }
-      });
+      axios
+        .get("/api/users/verify/" + token)
+        .then(tokenResponse => {
+          if (tokenResponse.data.success) {
+            axios
+              .get("/api/users/getUser/" + token)
+              .then(userResponse => {
+                axios
+                  .get("/api/users/" + userResponse.data.userId)
+                  .then(idResponse => {
+                    this.setState({
+                      user: idResponse.data,
+                      loggedin: true,
+                      isLoaded: true
+                    });
+                  })
+                  .catch(error => {
+                    this.setState({ isLoaded: true, loggedin: false });
+                    console.log("Error in getting /api/users: " + error);
+                  });
+              })
+              .catch(error => {
+                this.setState({ isLoaded: true, loggedin: false });
+                console.log("Error in getting /api/users/getUser: " + error);
+              });
+          } else {
+            this.setState({ isLoaded: true, loggedin: false });
+            console.log("Error in getting /api/users/verify");
+          }
+        })
+        .catch(error => {
+          this.setState({ isLoaded: true, loggedin: false });
+          console.log(error);
+        });
     } else {
-      this.setState({
-        isLoaded: true
-      });
+      this.setState({ isLoaded: true, loggedin: false });
       console.log("User isn't logged in");
     }
   }
@@ -93,7 +100,7 @@ export default class NavbarHomepage extends Component {
 
   getLogin() {
     if (this.state.isLoaded) {
-      if (!this.state.user) {
+      if (!this.state.loggedin) {
         return (
           <ButtonToolbar>
             <Nav.Link>
@@ -111,9 +118,15 @@ export default class NavbarHomepage extends Component {
       } else {
         return (
           <ButtonToolbar>
-            <div style={{ color: "white" }}>
-              Welcome, {this.state.user.firstName}
+            <div className="NavWelcome">
+              Welcome, {this.state.user.firstName}!
             </div>
+            <Link to="/account/settings">
+              <div className="NavSettings">Settings</div>
+            </Link>
+            <Link to="/logout">
+              <div className="NavLogout">Logout</div>
+            </Link>
           </ButtonToolbar>
         );
       }
@@ -133,7 +146,14 @@ export default class NavbarHomepage extends Component {
           style={{ opacity: this.state.opacity, backgroundColor: "#2b1d0e" }}
           className="navheader"
         />
-        <Navbar fixed={this.state.mobileview ? "top" : ""}>
+        <Navbar
+          fixed={this.state.mobileview ? "top" : ""}
+          style={
+            this.state.user === "undefined"
+              ? { paddingTop: 0 }
+              : { paddingTop: 16 }
+          }
+        >
           <Nav.Link>
             <Link to="/" className="linkstyle" style={{ paddingTop: 0 }}>
               MealTime
