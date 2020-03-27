@@ -14,7 +14,7 @@ export default class LoginConfirmation extends Component {
       token: "",
       isLoaded: false,
       redirect: false,
-      message: ""
+      undefinedVars: false
     };
 
     if (typeof this.props.location.state !== "undefined") {
@@ -23,27 +23,31 @@ export default class LoginConfirmation extends Component {
         password: this.props.location.state.password
       };
 
-      axios.post("/api/users/login", user).then(response => {
-        if (response.data.success) {
+      axios
+        .post("/api/users/login", user)
+        .then(response => {
           // login successful, token created and saved
           setInStorage("mealtime", { token: response.data.token });
           this.setState({
             isLoaded: true,
-            accountConfirmed: true
+            accountConfirmed: true,
+            undefinedVars: false
           });
-        } else {
+        })
+        .catch(() => {
           this.setState({
             // login failed
             isLoaded: true,
-            message: JSON.stringify(response.message)
+            accountConfirmed: false,
+            undefinedVars: false
           });
-        }
-      });
+        });
     } else {
-      this.state = {
+      this.setState({
         isLoaded: true,
-        message: "An unexpected error has occured"
-      };
+        undefinedVars: true,
+        accountConfirmed: false
+      });
     }
   }
 
@@ -57,23 +61,26 @@ export default class LoginConfirmation extends Component {
 
   render() {
     if (this.state.isLoaded) {
-      if (this.state.accountConfirmed) {
+      if (this.state.undefinedVars) {
         return (
           <Redirect
             to={{
-              pathname: "/",
+              pathname: "/login",
               state: {
-                email: this.state.email,
-                token: this.state.token
+                errorMessage: "An unexpected error has occurred. \n"
               }
             }}
           />
         );
-      } else if (this.state.redirect) {
-        return <Redirect to="/" />;
-      } else if (
-        this.state.message === '"Request failed with status code 404"'
-      ) {
+      } else if (this.state.accountConfirmed) {
+        return (
+          <Redirect
+            to={{
+              pathname: "/"
+            }}
+          />
+        );
+      } else {
         return (
           <Redirect
             to={{
@@ -84,34 +91,26 @@ export default class LoginConfirmation extends Component {
             }}
           />
         );
-      } else if (
-        this.state.message === '"Request failed with status code 500"'
-      ) {
+      }
+    } else if (!this.state.isLoaded) {
+      if (this.state.redirect) {
         return (
-          <div>
-            <br />
-            <br />
-            <p>
-              Error connecting to server. Please try again later. Redirecting in
-              3 seconds...
-            </p>
-          </div>
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: {
+                errorMessage: "An unexpected error has occurred. \n"
+              }
+            }}
+          />
         );
       } else {
         return (
-          <div>
-            <br />
-            <br />
-            <p>{this.state.message}. Redirecting in 3 seconds...</p>
+          <div style={{ height: 140 }}>
+            <Loader />
           </div>
         );
       }
-    } else {
-      return (
-        <div style={{ height: 140 }}>
-          <Loader />
-        </div>
-      );
     }
   }
 }
