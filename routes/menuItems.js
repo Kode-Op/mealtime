@@ -10,7 +10,7 @@ router.route("/").get((req, res) => {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-// Format: GET /api/menuItems/Restaurant._id
+// Format: GET /api/menuItems/
 // Returns: Returns JSON packages of all menu items associated with a restaurant
 router.get("/:id", function(req, res) {
   const restaurant = req.params.id;
