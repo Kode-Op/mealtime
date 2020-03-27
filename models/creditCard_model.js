@@ -24,8 +24,7 @@ const creditCardSchema = new Schema(
       type: String,
       default: "0000000000000000",
       minlength: 16,
-      maxlength: 16,
-      unique: true
+      maxlength: 16
     },
     exMonth: {
       type: Number,

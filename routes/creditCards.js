@@ -1,4 +1,5 @@
 const router = require("express").Router();
+let User = require("../models/user_model");
 let CreditCard = require("../models/creditCard_model");
 
 // Format: POST /api/creditCards/add
@@ -55,6 +56,51 @@ router.route("/:id").delete((req, res) => {
       .save()
       .then(() => res.json("Credit Card deleted."))
       .catch(err => res.status(400).json("Error: " + err));
+  });
+});
+
+// Format: POST /api/creditCards/updateCard/CreditCard._id
+// Required Fields: firstName, lastName, number, exMonth, exYear, ccv, address, password
+// Returns: Status based on successful/unsuccessful card update
+router.route("/updateCard/:id").post((req, res) => {
+  var password = req.body.password;
+  let userId = "";
+  CreditCard.findById(req.params.id).then(card => {
+    if (!card) {
+      return res
+        .status(404)
+        .json("Card Not Found.")
+        .send();
+    } else {
+      userId = card.userId;
+    }
+    User.findById(userId).then(users => {
+      if (!users) {
+        // not found
+        return res
+          .status(404)
+          .json("User Not Found.")
+          .send();
+      } else if (users.validPassword(password)) {
+        card.firstName = req.body.firstName;
+        card.lastName = req.body.lastName;
+        card.number = req.body.number;
+        card.exMonth = req.body.exMonth;
+        card.exYear = req.body.exYear;
+        card.ccv = req.body.ccv;
+        card.address = req.body.address;
+
+        card
+          .save()
+          .then(() => res.json("Card updated."))
+          .catch(err => res.status(400).json("Error: " + err));
+      } else {
+        return res
+          .status(500)
+          .json("Invalid Password")
+          .send();
+      }
+    });
   });
 });
 
