@@ -282,10 +282,11 @@ router.route("/updateEmail/:id").post((req, res) => {
   });
 });
 
-// Format: POST /api/users/updateEmail/User._id
-// Required Fields: phone (String)
+// Format: POST /api/users/updatePhone/User._id
+// Required Fields: phone (String), password
 // Returns: Status based on successful/unsuccessful phone update
 router.route("/updatePhone/:id").post((req, res) => {
+  var password = req.body.password;
   User.findById(req.params.id).then(users => {
     if (!users) {
       // not found
@@ -293,19 +294,26 @@ router.route("/updatePhone/:id").post((req, res) => {
         .status(404)
         .json("Not Found.")
         .send();
+    } else if (users.validPassword(password)) {
+      users.phone = req.body.phone;
+      users
+        .save()
+        .then(() => res.json("Phone number updated."))
+        .catch(err => res.status(400).json("Error: " + err));
+    } else {
+      return res
+        .status(500)
+        .json("Invalid Password")
+        .send();
     }
-    users.phone = req.body.phone;
-    users
-      .save()
-      .then(() => res.json("Phone number updated."))
-      .catch(err => res.status(400).json("Error: " + err));
   });
 });
 
 // Format: POST /api/users/updateAddress/User._id
-// Required Fields: address (String)
+// Required Fields: address (String), password
 // Returns: Status based on successful/unsuccessful address update
 router.route("/updateAddress/:id").post((req, res) => {
+  var password = req.body.password;
   User.findById(req.params.id).then(users => {
     if (!users) {
       // not found
@@ -313,12 +321,18 @@ router.route("/updateAddress/:id").post((req, res) => {
         .status(404)
         .json("Not Found.")
         .send();
+    } else if (users.validPassword(password)) {
+      users.address = req.body.address;
+      users
+        .save()
+        .then(() => res.json("Address updated."))
+        .catch(err => res.status(400).json("Error: " + err));
+    } else {
+      return res
+        .status(500)
+        .json("Invalid Password")
+        .send();
     }
-    users.address = req.body.address;
-    users
-      .save()
-      .then(() => res.json("Address updated."))
-      .catch(err => res.status(400).json("Error: " + err));
   });
 });
 

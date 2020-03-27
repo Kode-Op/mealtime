@@ -19,8 +19,7 @@ export default class CreditCard extends Component {
       ccaddress: "",
       ccpassword: "",
       successmessage: "",
-      errormessage: "",
-      deletemessage: ""
+      errormessage: ""
     };
   }
 
@@ -134,7 +133,6 @@ export default class CreditCard extends Component {
 
   onAddCard(e) {
     //TODO - form validation
-    this.setState({ deletemessage: "" });
     let pkg = {
       userId: this.props.user.data._id,
       firstName: this.state.ccfname,
@@ -182,10 +180,9 @@ export default class CreditCard extends Component {
       axios
         .delete("/api/creditCards/" + cardID)
         .then(() => {
-          this.setState({ deletemessage: "Card successfully deleted!" });
+          window.location.reload(false);
         })
         .catch(error => {
-          this.setState({ deletemessage: "" });
           console.log(error);
         });
     };
@@ -195,7 +192,6 @@ export default class CreditCard extends Component {
     return (
       <div>
         <h2>Credit Card Info</h2>
-        <div className="ProfileSuccessMessage">{this.state.deletemessage}</div>
         <Accordion>
           {this.creditCardList()}
           <Card>
