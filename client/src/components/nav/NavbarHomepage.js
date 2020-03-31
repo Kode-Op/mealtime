@@ -121,7 +121,7 @@ export default class NavbarHomepage extends Component {
             <div className="NavWelcome">
               Welcome, {this.state.user.firstName}!
             </div>
-            <Link to="/account/settings">
+            <Link to="/account/profile">
               <div className="NavSettings">Settings</div>
             </Link>
             <Link to="/logout">
