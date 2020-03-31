@@ -8,7 +8,7 @@ import mobilesplash from "../../assets/images/splash/mobilebackground.png";
 import splashcontentplaceholder from "./splashcontentplaceholder.png";
 import splashcontentplaceholder500x375 from "./splashcontentplaceholder500x375.png";
 
-export default class Splash extends Component {
+export default class Home extends Component {
   constructor() {
     super();
     this.state = {
@@ -56,7 +56,7 @@ export default class Splash extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div>
         <Navbar />
         <div
           className={
@@ -170,7 +170,7 @@ export default class Splash extends Component {
             </a>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
