@@ -82,12 +82,14 @@
   position: absolute;
   top: 388px;
   width: 100%;
+  z-index: -1;
 }
 
 .splashcontent {
   position: absolute;
   top: 30.22vw;
   width: 100%;
+  z-index: -1;
 }
 
 .splashcenterdiv {

@@ -25,23 +25,22 @@ export default class RegisterConfirmation extends Component {
       };
       axios
         .post("/api/users/add", user)
-        .then(() => {
-          this.setState({
-            accountCreated: true
-          });
-        })
+        .then()
         .catch(error => {
           this.setState({
             message: JSON.stringify(error.message)
           });
         })
         .then(() => {
-          axios.post("/api/users/login", user).then(response => {
-            console.log(response.data.token);
+          let userLogin = {
+            email: this.props.location.state.email,
+            password: this.props.location.state.password
+          };
+          axios.post("/api/users/login", userLogin).then(response => {
             if (response.data.success) {
               // login successful, token created and saved
               setInStorage("mealtime", { token: response.data.token });
-              this.setState({});
+              this.setState({ accountCreated: true });
             } else {
               this.setState({
                 // login failed - should not be possible

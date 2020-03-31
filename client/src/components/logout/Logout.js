@@ -17,10 +17,10 @@ export default class Logout extends Component {
       token = obj.token;
       axios
         .get("/api/users/logout/" + token)
-        .then(response => {
+        .then(() => {
           this.setState({ isLoaded: true });
         })
-        .catch(error => {
+        .catch(() => {
           this.setState({ isLoaded: true });
         });
     } else {
