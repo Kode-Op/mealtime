@@ -37,18 +37,15 @@ export default class RestaurantListComponent extends Component {
           <div className="RestaurantListComponentName">
             {this.props.restaurant.name}
           </div>
-          <div className="RestaurantListComponentRating">
-            <DisplayRating rating={this.props.restaurant.rating} />
+          <div className="RestaurantListGrouping">
+            <div className="RestaurantListComponentRating">
+              <DisplayRating rating={this.props.restaurant.rating} />
+            </div>
+            <div className="RestaurantListComponentPrice">
+              <DisplayPrice price={this.props.restaurant.price} />
+            </div>
+            <div className="RestaurantListComponentDistance">xx.xx miles</div>
           </div>
-          <div className="RestaurantListComponentNumReviews">
-            {
-              //this.props.restaurant.review.length} reviews
-            }
-          </div>
-          <div className="RestaurantListComponentPrice">
-            <DisplayPrice price={this.props.restaurant.price} />
-          </div>
-          <div className="RestaurantListComponentDistance">xx.xx miles</div>
         </ListGroup.Item>
       );
     } else {

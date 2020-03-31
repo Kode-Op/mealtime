@@ -176,8 +176,7 @@ export default class Profile extends Component {
       .then(response => {
         this.setState({
           errorMessageName: "",
-          successMessageName: "Successfully updated name!",
-          isLoaded: true
+          successMessageName: "Successfully updated name!"
         });
       })
       .catch(error => {
@@ -199,7 +198,6 @@ export default class Profile extends Component {
             successMessageName: ""
           });
         }
-        this.setState({ isLoaded: true });
       });
     e.preventDefault();
   }
@@ -215,8 +213,7 @@ export default class Profile extends Component {
         .then(response => {
           this.setState({
             errorMessageEmail: "",
-            successMessageEmail: "Successfully updated email!",
-            isLoaded: true
+            successMessageEmail: "Successfully updated email!"
           });
         })
         .catch(error => {
@@ -238,7 +235,6 @@ export default class Profile extends Component {
               successMessageEmail: ""
             });
           }
-          this.setState({ isLoaded: true });
         });
     }
     e.preventDefault();
@@ -255,8 +251,7 @@ export default class Profile extends Component {
         .then(response => {
           this.setState({
             errorMessagePassword: "",
-            successMessagePassword: "Successfully updated password!",
-            isLoaded: true
+            successMessagePassword: "Successfully updated password!"
           });
         })
         .catch(error => {
@@ -278,7 +273,6 @@ export default class Profile extends Component {
               successMessagePassword: ""
             });
           }
-          this.setState({ isLoaded: true });
         });
     }
     e.preventDefault();

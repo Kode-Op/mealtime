@@ -49,7 +49,6 @@ export default class Address extends Component {
   }
 
   onSubmitAddress(e) {
-    //TODO: Form validation
     let pkg = {
       address: this.state.address,
       password: this.state.password
@@ -85,41 +84,52 @@ export default class Address extends Component {
     e.preventDefault();
   }
 
-  onSubmitPhone(e) {
-    //TODO: Form validation
-    let pkg = {
-      phone: this.state.phone,
-      password: this.state.passwordphone
-    };
-    axios
-      .post("/api/users/updatePhone/" + this.props.user.data._id, pkg)
-      .then(() => {
-        this.setState({
-          errorMessagePhone: "",
-          successMessagePhone: "Successfully updated phone!"
-        });
-      })
-      .catch(error => {
-        if (error.response.status === 404) {
-          this.setState({
-            errorMessagePhone:
-              "404 user not found. Please refresh page and try again.",
-            successMessagePhone: ""
-          });
-        } else if (error.response.status === 500) {
-          this.setState({
-            errorMessagePhone: "Error! Invalid password",
-            successMessagePhone: ""
-          });
-        } else {
-          this.setState({
-            errorMessagePhone:
-              "400 internal server error. Please try again later.",
-            successMessagePhone: ""
-          });
-        }
+  phoneValidation = () => {
+    if (this.state.phone.length !== 10) {
+      this.setState({
+        errorMessagePhone: "Your phone must be 10 characters in length. \n"
       });
-    this.setState({ passwordphone: "" });
+      return false;
+    }
+    return true;
+  };
+
+  onSubmitPhone(e) {
+    if (this.phoneValidation()) {
+      let pkg = {
+        phone: this.state.phone,
+        password: this.state.passwordphone
+      };
+      axios
+        .post("/api/users/updatePhone/" + this.props.user.data._id, pkg)
+        .then(() => {
+          this.setState({
+            errorMessagePhone: "",
+            successMessagePhone: "Successfully updated phone!"
+          });
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.setState({
+              errorMessagePhone:
+                "404 user not found. Please refresh page and try again.",
+              successMessagePhone: ""
+            });
+          } else if (error.response.status === 500) {
+            this.setState({
+              errorMessagePhone: "Error! Invalid password",
+              successMessagePhone: ""
+            });
+          } else {
+            this.setState({
+              errorMessagePhone:
+                "400 internal server error. Please try again later.",
+              successMessagePhone: ""
+            });
+          }
+        });
+      this.setState({ passwordphone: "" });
+    }
     e.preventDefault();
   }
 
@@ -195,6 +205,7 @@ export default class Address extends Component {
                   <input
                     type="phone"
                     name="address"
+                    maxLength="10"
                     value={this.state.phone}
                     onChange={this.onChangePhone}
                     className="ProfileInputBox"

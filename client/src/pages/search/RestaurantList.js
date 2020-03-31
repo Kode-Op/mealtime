@@ -4,6 +4,7 @@ import Navbar from "../../components/nav/Navbar";
 import RestaurantListComponent from "../../components/search/restaurantlist-component";
 import Loader from "../../assets/loader/Loader";
 import axios from "axios";
+import MenuItemTypePlaceholder from "./menuitemtypeplaceholder.png";
 import "./RestaurantList.css";
 
 export default class RestaurantList extends Component {
@@ -40,6 +41,32 @@ export default class RestaurantList extends Component {
       return <Loader />;
     }
   }
+
+  getPopularMenuItemTypes = () => {
+    let rows = [];
+    for (let i = 0; i < 7; i++) {
+      rows.push(
+        <div className="RestaurantMenuItemType">
+          <img src={MenuItemTypePlaceholder} alt="" />
+          <div className="RestaurantMenuItemTypeDescription">Type {i + 1}</div>
+        </div>
+      );
+    }
+    return rows;
+  };
+
+  getAppliedFilters = numFilters => {
+    let rows = [];
+    for (let i = 0; i < numFilters; i++) {
+      rows.push(
+        <div className="RestaurantListAppliedFilter">
+          <div style={{ margin: "0 auto" }}>Filter {i + 1}</div>
+        </div>
+      );
+    }
+    return rows;
+  };
+
   render() {
     return (
       <div className="RestaurantListContainer">
@@ -48,8 +75,17 @@ export default class RestaurantList extends Component {
           Filters selection will go here
         </div>
         <div className="RestaurantListRightPane">
+          <div className="RestaurantListMostPopular">
+            <h5>Most popular near you</h5>
+            <div className="RestaurantMenuItemTypeContainer">
+              {this.getPopularMenuItemTypes()}
+            </div>
+          </div>
           <div className="RestaurantListAppliedFilters">
-            Applied filters will go here.
+            <h5>Applied filters:</h5>
+            <div className="RestaurantListAppliedFilterContainer">
+              {this.getAppliedFilters(4)} (example)
+            </div>
           </div>
           <ListGroup className="RestaurantListGroup">
             {this.restaurantList()}

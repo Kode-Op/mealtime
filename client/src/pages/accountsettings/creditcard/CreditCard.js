@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Accordion, Card, Button } from "react-bootstrap";
 import Loader from "../../../assets/loader/Loader";
+import "./CreditCard.css";
 
 export default class CreditCard extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ export default class CreditCard extends Component {
       .then(response => {
         this.setState({ creditCards: response.data, isLoaded: true });
       })
-      .catch(error => {
+      .catch(() => {
         this.setState({ isLoaded: true });
       });
   }
@@ -72,6 +73,7 @@ export default class CreditCard extends Component {
     this.setState({
       ccmonth: e.target.value
     });
+    console.log(this.state.ccmonth);
   }
 
   onChangeYear(e) {
@@ -96,7 +98,7 @@ export default class CreditCard extends Component {
     if (this.state.isLoaded) {
       return this.state.creditCards.map(currentCard => {
         return (
-          <Card>
+          <Card key={currentCard._id}>
             <Accordion.Toggle
               as={Card.Header}
               eventKey={currentCard._id}
@@ -131,47 +133,75 @@ export default class CreditCard extends Component {
     }
   }
 
-  onAddCard(e) {
-    //TODO - form validation
-    let pkg = {
-      userId: this.props.user.data._id,
-      firstName: this.state.ccfname,
-      lastName: this.state.cclname,
-      number: this.state.ccnumber,
-      exMonth: this.state.ccmonth,
-      exYear: this.state.ccyear,
-      ccv: this.state.ccv,
-      address: this.state.ccaddress,
-      isDeleted: false
-    };
+  validateCard = () => {
+    let errorMessage = "";
 
-    axios
-      .post("/api/creditCards/add", pkg)
-      .then(() => {
-        this.setState({
-          successmessage: "Successfully added card!",
-          errormessage: ""
+    if (this.state.ccnumber.length !== 16) {
+      errorMessage = errorMessage.concat(
+        "Your credit card must have 16 characters. \n"
+      );
+    }
+    if (this.state.ccv.length !== 3) {
+      errorMessage = errorMessage.concat("Your CCV must have 3 characters. \n");
+    }
+    if (this.state.ccmonth === "blankmonth" || this.state.ccmonth === "") {
+      errorMessage = errorMessage.concat("You must enter a month. \n");
+    }
+    if (this.state.ccyear === "blankyear" || this.state.ccyear === "") {
+      errorMessage = errorMessage.concat("You must enter a year. \n");
+    }
+
+    if (errorMessage) {
+      this.setState({ errormessage: errorMessage });
+      return false;
+    }
+    return true;
+  };
+
+  onAddCard(e) {
+    e.preventDefault();
+    if (this.validateCard()) {
+      let pkg = {
+        userId: this.props.user.data._id,
+        firstName: this.state.ccfname,
+        lastName: this.state.cclname,
+        number: this.state.ccnumber,
+        exMonth: this.state.ccmonth,
+        exYear: this.state.ccyear,
+        ccv: this.state.ccv,
+        address: this.state.ccaddress,
+        isDeleted: false
+      };
+
+      axios
+        .post("/api/creditCards/add/", pkg)
+        .then(() => {
+          this.setState({
+            successmessage: "Successfully added card!",
+            errormessage: ""
+          });
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            this.setState({
+              errormessage:
+                "404 user not found. Please refresh page and try again.",
+              successmessage: ""
+            });
+          } else if (error.response.status === 500) {
+            this.setState({
+              errormessage: "Error! Invalid current password",
+              successmessage: ""
+            });
+          } else {
+            this.setState({
+              errormessage:
+                "400 internal server error. Please try again later.",
+              successmessage: ""
+            });
+          }
         });
-      })
-      .catch(error => {
-        if (error.response.status === 404) {
-          this.setState({
-            errormessage:
-              "404 user not found. Please refresh page and try again.",
-            successmessage: ""
-          });
-        } else if (error.response.status === 500) {
-          this.setState({
-            errormessage: "Error! Invalid current password",
-            successmessage: ""
-          });
-        } else {
-          this.setState({
-            errormessage: "400 internal server error. Please try again later.",
-            successmessage: ""
-          });
-        }
-      });
+    }
     e.preventDefault();
   }
 
@@ -187,6 +217,19 @@ export default class CreditCard extends Component {
         });
     };
   }
+
+  getYearSelection = numYears => {
+    let start = new Date().getFullYear();
+    let rows = [];
+    for (let year = start; year <= start + numYears; year++) {
+      rows.push(
+        <option value={year} key={year}>
+          {year}
+        </option>
+      );
+    }
+    return rows;
+  };
 
   render() {
     return (
@@ -206,72 +249,100 @@ export default class CreditCard extends Component {
             <Accordion.Collapse eventKey="0">
               <Card.Body>
                 <form onSubmit={this.onAddCard}>
-                  <label htmlFor="fname" className="ProfileFormTest">
-                    First name
-                  </label>
-                  <input
-                    type="text"
-                    name="fname"
-                    value={this.state.ccfName}
-                    onChange={this.onChangeFName}
-                    className="ProfileInputBox"
-                    required
-                  />
-                  <label htmlFor="lname" className="ProfileFormTest">
-                    Last name
-                  </label>
-                  <input
-                    type="text"
-                    name="lname"
-                    value={this.state.cclName}
-                    onChange={this.onChangeLName}
-                    className="ProfileInputBox"
-                    required
-                  />
+                  <div className="CreditCardNameContainer">
+                    <div>
+                      <label htmlFor="fname" className="ProfileFormTest">
+                        First name
+                      </label>
+                      <input
+                        type="text"
+                        name="fname"
+                        value={this.state.ccfName}
+                        onChange={this.onChangeFName}
+                        className="CreditCardFirstName"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="lname" className="ProfileFormTest">
+                        Last name
+                      </label>
+                      <input
+                        type="text"
+                        name="lname"
+                        value={this.state.cclName}
+                        onChange={this.onChangeLName}
+                        className="CreditCardLastName"
+                        required
+                      />
+                    </div>
+                  </div>
                   <label htmlFor="number" className="ProfileFormTest">
                     Credit card number
                   </label>
                   <input
                     type="text"
                     name="number"
+                    maxLength="16"
                     value={this.state.ccnumber}
                     onChange={this.onChangeNumber}
-                    className="ProfileInputBox"
+                    className="CreditCardInputBox"
                     required
                   />
-                  <label htmlFor="ccv" className="ProfileFormTest">
-                    CCV
-                  </label>
-                  <input
-                    type="text"
-                    name="ccv"
-                    value={this.state.ccv}
-                    onChange={this.onChangeCCV}
-                    className="ProfileInputBox"
-                    required
-                  />
-                  <label htmlFor="month" className="ProfileFormTest">
-                    Month
-                  </label>
-                  <input
-                    type="text"
-                    name="month"
-                    value={this.state.ccmonth}
-                    onChange={this.onChangeMonth}
-                    className="ProfileInputBox"
-                    required
-                  />
-                  <label htmlFor="year" className="ProfileFormTest">
-                    Year
-                  </label>
-                  <input
-                    type="text"
-                    name="year"
-                    value={this.state.ccyear}
-                    onChange={this.onChangeYear}
-                    className="ProfileInputBox"
-                    required
-                  />
+                  <div className="CreditCardExpContainer">
+                    <div>
+                      <label htmlFor="month" className="ProfileFormTest">
+                        Exp. Month
+                      </label>
+
+                      <select
+                        id="month"
+                        onChange={this.onChangeMonth}
+                        className="CreditCardMonth"
+                      >
+                        <option value="blankmonth"></option>
+                        <option value="01">01 - January</option>
+                        <option value="02">02 - February</option>
+                        <option value="03">03 - March</option>
+                        <option value="04">04 - April</option>
+                        <option value="05">05 - May</option>
+                        <option value="06">06 - June</option>
+                        <option value="07">07 - July</option>
+                        <option value="08">08 - August</option>
+                        <option value="09">09 - September</option>
+                        <option value="10">10 - October</option>
+                        <option value="11">11 - November</option>
+                        <option value="12">12 - December</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="year" className="ProfileFormTest">
+                        Exp. Year
+                      </label>
+                      <select
+                        id="year"
+                        onChange={this.onChangeYear}
+                        className="CreditCardYear"
+                      >
+                        <option value="blankyear"></option>
+                        {this.getYearSelection(10)}
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="ccv" className="ProfileFormTest">
+                        CCV
+                      </label>
+                      <input
+                        type="text"
+                        maxLength="3"
+                        name="ccv"
+                        value={this.state.ccv}
+                        onChange={this.onChangeCCV}
+                        className="CreditCardCCV"
+                        required
+                      />
+                    </div>
+                  </div>
                   <label htmlFor="address" className="ProfileFormTest">
                     Billing address
                   </label>
@@ -280,7 +351,7 @@ export default class CreditCard extends Component {
                     name="address"
                     value={this.state.ccaddress}
                     onChange={this.onChangeAddress}
-                    className="ProfileInputBox"
+                    className="CreditCardInputBox"
                     required
                   />
                   <label htmlFor="password" className="ProfileFormTest">
@@ -291,7 +362,7 @@ export default class CreditCard extends Component {
                     name="password"
                     value={this.state.ccpassword}
                     onChange={this.onChangePassword}
-                    className="ProfileInputBox"
+                    className="CreditCardInputBox"
                     required
                   />
                   <div className="ProfileErrorMessage">

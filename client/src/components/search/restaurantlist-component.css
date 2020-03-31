@@ -1,3 +1,7 @@
+.RestaurantListComponentItem {
+  display: flex;
+}
+
 .RestaurantListComponentItem:hover {
   cursor: pointer;
   background-color: #eeeeee;
@@ -16,28 +20,26 @@
   font-weight: bold;
   font-size: 0.9em;
   margin-bottom: 10px;
-  min-width: 140px;
+  min-width: 130px;
+}
+
+.RestaurantListGrouping {
+  width: 50%;
+  float: right;
+  display: inline-flex;
+  padding-top: 24px;
 }
 
 .RestaurantListComponentRating {
-  display: inline-block;
-  margin-left: 10vw;
-}
-
-.RestaurantListComponentNumReviews {
-  display: inline-block;
-  margin-left: 10px;
-  font-size: 0.8em;
+  margin-left: 5vw;
 }
 
 .RestaurantListComponentPrice {
-  display: inline-block;
-  margin-left: 10vw;
+  margin-left: 5vw;
 }
 
 .RestaurantListComponentDistance {
-  display: inline-block;
-  margin-left: 10vw;
+  margin-left: 5vw;
   font-size: 0.8em;
   color: grey;
 }

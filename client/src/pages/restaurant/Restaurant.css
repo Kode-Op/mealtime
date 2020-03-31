@@ -1,6 +1,8 @@
 .RestaurantContainer {
   text-align: left;
-  width: 1200px;
+  width: 100%;
+  padding: 0 50px 0 50px;
+  max-width: 1300px;
   margin: 30px auto;
 }
 

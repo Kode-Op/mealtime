@@ -6,7 +6,7 @@
   margin: 0 10px 10px 0;
   border: 2px solid #dddddd;
   border-radius: 15px;
-  width: 48%;
+  width: 100%;
   background-color: white;
 }
 
@@ -39,4 +39,10 @@
   text-align: right;
   width: 30%;
   height: 100%;
+}
+
+@media only screen and (min-width: 1024px) {
+  .MenuItem {
+    width: 48%;
+  }
 }
