@@ -78,6 +78,94 @@
   border-radius: 15px !important;
 }
 
+.splashcontentmobile {
+  position: absolute;
+  top: 388px;
+  width: 100%;
+}
+
+.splashcontent {
+  position: absolute;
+  top: 30.22vw;
+  width: 100%;
+}
+
+.splashcenterdiv {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.splashcentercontainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 50px 0 100px 0;
+  border-bottom: 1px solid lightgrey;
+  align-items: center;
+  justify-content: center;
+}
+
+.splashcentercontainerreverse {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 50px 0 100px 0;
+  border-bottom: 1px solid lightgrey;
+  align-items: center;
+  justify-content: center;
+}
+
+.splashtrio {
+  max-width: 400px;
+  width: 100%;
+  margin: 20px 20px 30px 20px;
+}
+
+.splashtrio img {
+  padding-bottom: 20px;
+}
+
+.splashtrio h5 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.splashtrio p {
+  font-size: 0.9em;
+}
+
+.splashduo {
+  max-width: 500px;
+  width: 100%;
+  margin: -40px 20px 30px 20px;
+}
+
+.splashduo img {
+  margin-bottom: 20px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.splashduo h5 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.splashduo p {
+  font-size: 0.9em;
+  margin-bottom: 40px;
+}
+
+.splashfooter {
+  background-color: #333366;
+  color: white;
+  width: 100%;
+  height: 200px;
+  padding-top: 60px;
+}
+
 @media only screen and (min-width: 435px) {
   .splashbox {
     width: 76%;
@@ -176,6 +264,22 @@
   .splashgo {
     width: 20%;
     margin-right: 0px;
+  }
+
+  .splashcentercontainer {
+    flex-direction: row;
+  }
+
+  .splashcentercontainerreverse {
+    flex-direction: row-reverse;
+  }
+
+  .splashtrio {
+    width: 30%;
+  }
+
+  .splashduo {
+    width: 50%;
   }
 }
 
