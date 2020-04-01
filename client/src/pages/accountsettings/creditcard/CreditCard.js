@@ -37,7 +37,7 @@ export default class CreditCard extends Component {
     this.onDeleteCard = this.onDeleteCard.bind(this);
 
     axios
-      .get("/api/creditCards/" + this.props.user.data._id)
+      .get("/api/creditCards/" + this.props.user._id)
       .then(response => {
         this.setState({ creditCards: response.data, isLoaded: true });
       })

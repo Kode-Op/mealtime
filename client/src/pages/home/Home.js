@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import GetLogin from "../../utils/GetLogin";
 import Navbar from "../../components/nav/NavbarHomepage";
+import Loader from "../../assets/loader/Loader";
 import "./Home.css";
 import splashplaceholder from "../../assets/images/splash/splashplaceholdershadow.png";
 import mobilesplash from "../../assets/images/splash/mobilebackground.png";
@@ -19,6 +21,7 @@ export default class Home extends Component {
     else if (window.innerWidth < 1366)
       this.state = { mobileview: false, smallscreendesktop: true };
     else this.state = { mobileview: false, smallscreendesktop: false };
+    GetLogin(this.setState.bind(this));
   }
 
   getScrollState = () => {
@@ -55,122 +58,138 @@ export default class Home extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <Navbar />
-        <div
-          className={
-            this.state.mobileview ? "splashcontainermobile" : "splashcontainer"
-          }
-        >
-          <img
-            src={this.state.mobileview ? mobilesplash : splashplaceholder}
-            alt=""
-          />
-        </div>
+    if (this.state.isUserLoaded) {
+      if (!this.state.user) {
+        return (
+          <div>
+            <Navbar />
+            <div
+              className={
+                this.state.mobileview
+                  ? "splashcontainermobile"
+                  : "splashcontainer"
+              }
+            >
+              <img
+                src={this.state.mobileview ? mobilesplash : splashplaceholder}
+                alt=""
+              />
+            </div>
 
-        <div
-          className={this.state.scrolled ? "splashzonesticky" : "splashzone"}
-        >
-          <h1>Any time can be MealTime.</h1>
-          <form>
-            <input
-              type="text"
-              name="address"
-              className="splashbox"
-              placeholder="Enter your address..."
-            />
-            <Link to="/search">
-              <Button className="splashgo" variant="danger">
+            <div
+              className={
+                this.state.scrolled ? "splashzonesticky" : "splashzone"
+              }
+            >
+              <h1>Any time can be MealTime.</h1>
+              <form>
+                <input
+                  type="text"
+                  name="address"
+                  className="splashbox"
+                  placeholder="Enter your address..."
+                />
+                <Link to="/search">
+                  <Button className="splashgo" variant="danger">
+                    >
+                  </Button>
+                </Link>
+              </form>
+            </div>
+            <div
+              className={
+                this.state.mobileview ? "splashcontentmobile" : "splashcontent"
+              }
+            >
+              <div className="splashcenterdiv">
+                <div className="splashcentercontainer">
+                  <div className="splashtrio">
+                    <img src={splashcontentplaceholder} alt="" />
+                    <h5>Try the app!</h5>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua.
+                    </p>
+                  </div>
+                  <div className="splashtrio">
+                    <img src={splashcontentplaceholder} alt="" />
+                    <h5>Local favorites</h5>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua.
+                    </p>
+                  </div>
+                  <div className="splashtrio">
+                    <img src={splashcontentplaceholder} alt="" />
+                    <h5>Become a partner</h5>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua.
+                    </p>
+                  </div>
+                </div>
+                <div className="splashcentercontainer">
+                  <div className="splashduo">
+                    <h5>Pickup or delivery</h5>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
+                  </div>
+                  <div className="splashduo">
+                    <img src={splashcontentplaceholder500x375} alt="" />
+                  </div>
+                </div>
+                <div className="splashcentercontainerreverse">
+                  <div className="splashduo">
+                    <h5>About MealTime</h5>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
+                  </div>
+                  <div className="splashduo">
+                    <img src={splashcontentplaceholder500x375} alt="" />
+                  </div>
+                </div>
+              </div>
+              <div className="splashfooter">
+                <p>
+                  MealTime is a fictional product created by David Allison,
+                  Rachel Scherer, Alex Tung, June Lee, and Osiris Sielatshom for
+                  CS4800.
+                </p>
+                <a
+                  href="https://rachelscherer.github.io/kodeop"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-              </Button>
-            </Link>
-          </form>
-        </div>
-        <div
-          className={
-            this.state.mobileview ? "splashcontentmobile" : "splashcontent"
-          }
-        >
-          <div className="splashcenterdiv">
-            <div className="splashcentercontainer">
-              <div className="splashtrio">
-                <img src={splashcontentplaceholder} alt="" />
-                <h5>Try the app!</h5>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="splashtrio">
-                <img src={splashcontentplaceholder} alt="" />
-                <h5>Local favorites</h5>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="splashtrio">
-                <img src={splashcontentplaceholder} alt="" />
-                <h5>Become a partner</h5>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-            </div>
-            <div className="splashcentercontainer">
-              <div className="splashduo">
-                <h5>Pickup or delivery</h5>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-              <div className="splashduo">
-                <img src={splashcontentplaceholder500x375} alt="" />
-              </div>
-            </div>
-            <div className="splashcentercontainerreverse">
-              <div className="splashduo">
-                <h5>About MealTime</h5>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-              <div className="splashduo">
-                <img src={splashcontentplaceholder500x375} alt="" />
+                  Company website
+                </a>
+                <br />
+                <a
+                  href="https://github.com/Kode-Op/mealtime"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Github repository
+                </a>
               </div>
             </div>
           </div>
-          <div className="splashfooter">
-            <p>
-              MealTime is a fictional product created by David Allison, Rachel
-              Scherer, Alex Tung, June Lee, and Osiris Sielatshom for CS4800.
-            </p>
-            <a
-              href="https://rachelscherer.github.io/kodeop"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Company website
-            </a>
-            <br />
-            <a
-              href="https://github.com/Kode-Op/mealtime"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Github repository
-            </a>
-          </div>
-        </div>
-      </div>
-    );
+        );
+      } else {
+        return <Redirect to="/feed" />;
+      }
+    } else {
+      return <Loader />;
+    }
   }
 }

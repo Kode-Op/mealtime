@@ -6,6 +6,7 @@ import axios from "axios";
 //Import components
 import Navbar from "../../components/nav/Navbar";
 import MenuItemComponent from "../../components/restaurant/menuitem-component.js";
+import GetLogin from "../../utils/GetLogin";
 
 //Import assets
 import DisplayPrice from "../../assets/displayprice/DisplayPrice";
@@ -23,12 +24,11 @@ export default class Restaurant extends Component {
     const id = query.get("id");
 
     this.state = {
-      isValidRestaurant: false,
       isPageLoaded: false,
-      areMenuItemsLoaded: false,
       id: id,
       menuItems: []
     };
+    GetLogin(this.setState.bind(this));
   }
 
   componentDidMount() {
@@ -39,30 +39,29 @@ export default class Restaurant extends Component {
         .then(response => {
           this.setState({
             restaurant: response.data,
-            isValidRestaurant: true,
             isPageLoaded: true
           });
         })
-        .catch(error => {
-          this.setState({ isValidRestaurant: false, isPageLoaded: true });
+        .catch(() => {
+          this.setState({ restaurant: null, isPageLoaded: true });
         });
     } else {
-      this.setState({ isPageLoaded: true, isValidRestaurant: false });
+      this.setState({ restaurant: null, isPageLoaded: true });
     }
 
     //Get the menu items
     axios
       .get("/api/menuitems/" + this.state.id)
       .then(response => {
-        this.setState({ menuItems: response.data, areMenuItemsLoaded: true });
+        this.setState({ menuItems: response.data });
       })
-      .catch(error => {
-        this.setState({ areMenuItemsLoaded: true });
+      .catch(() => {
+        this.setState({ menuItems: null });
       });
   }
 
   getMenuItems() {
-    if (this.state.areMenuItemsLoaded) {
+    if (this.state.menuItems) {
       return this.state.menuItems.map(currentMenuItem => {
         return (
           <MenuItemComponent
@@ -77,11 +76,11 @@ export default class Restaurant extends Component {
   }
 
   render() {
-    if (this.state.isPageLoaded) {
-      if (this.state.isValidRestaurant) {
+    if (this.state.isPageLoaded && this.state.isUserLoaded) {
+      if (this.state.restaurant) {
         return (
           <div>
-            <Navbar />
+            <Navbar user={this.state.user} />
             <div className="RestaurantContainer">
               <div className="RestaurantTitleContainer">
                 <img
@@ -117,7 +116,7 @@ export default class Restaurant extends Component {
       } else {
         return (
           <div>
-            <Navbar />
+            <Navbar user={this.state.user} />
             <br />
             <br />
             <h3>Oops</h3>
@@ -133,13 +132,7 @@ export default class Restaurant extends Component {
         );
       }
     } else {
-      return (
-        <div>
-          <Navbar />
-          <div style={{ height: 60 }} />
-          <Loader />
-        </div>
-      );
+      return <Loader />;
     }
   }
 }

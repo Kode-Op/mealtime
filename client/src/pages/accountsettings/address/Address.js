@@ -6,9 +6,9 @@ export default class Address extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: this.props.user.data.address,
+      address: this.props.user.address,
       password: "",
-      phone: this.props.user.data.phone,
+      phone: this.props.user.phone,
       passwordphone: "",
       errorMessage: "",
       successMessage: "",

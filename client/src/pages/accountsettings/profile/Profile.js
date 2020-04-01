@@ -46,10 +46,10 @@ export default class Profile extends Component {
 
     this.state = initialState;
     this.state = {
-      userID: this.props.user.data._id,
-      fName: this.props.user.data.firstName,
-      lName: this.props.user.data.lastName,
-      email: this.props.user.data.email
+      userID: this.props.user._id,
+      fName: this.props.user.firstName,
+      lName: this.props.user.lastName,
+      email: this.props.user.email
     };
   }
 

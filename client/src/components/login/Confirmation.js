@@ -76,7 +76,7 @@ export default class LoginConfirmation extends Component {
         return (
           <Redirect
             to={{
-              pathname: "/"
+              pathname: "/feed"
             }}
           />
         );

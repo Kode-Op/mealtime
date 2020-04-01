@@ -7,6 +7,7 @@ import Home from "./pages/home/Home";
 import Account from "./pages/accountsettings/Account";
 import Restaurant from "./pages/restaurant/Restaurant";
 import RestaurantList from "./pages/search/RestaurantList";
+import Feed from "./pages/feed/Feed";
 import Login from "./components/login/Login";
 import Logout from "./components/logout/Logout";
 import Register from "./components/register/Register";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/register" component={Register} />
           <Route path="/account" component={Account} />
           <Route path="/search" component={RestaurantList} />
+          <Route path="/feed" component={Feed} />
           <Route path="/restaurant" component={Restaurant} />
         </Switch>
       </div>

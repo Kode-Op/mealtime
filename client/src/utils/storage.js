@@ -21,7 +21,6 @@ export function setInStorage(key, obj) {
 
   try {
     localStorage.setItem(key, JSON.stringify(obj));
-    console.log("key:" + key + "obj" + JSON.stringify(obj));
   } catch (err) {
     console.error(err);
   }

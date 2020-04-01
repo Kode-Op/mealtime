@@ -73,7 +73,7 @@ export default class RegisterConfirmation extends Component {
   render() {
     if (this.state.isLoaded) {
       if (this.state.accountCreated || this.state.redirect) {
-        return <Redirect to="/" />;
+        return <Redirect to="/feed" />;
       } else if (
         this.state.message === '"Request failed with status code 403"'
       ) {

@@ -3,10 +3,9 @@ import { Link, Route, useRouteMatch, Redirect } from "react-router-dom";
 import Navbar from "../../components/nav/Navbar";
 import Profile from "./profile/Profile";
 import CreditCard from "./creditcard/CreditCard";
-import { getFromStorage } from "../../utils/storage";
-import axios from "axios";
 import Address from "./address/Address";
 import Loader from "../../assets/loader/Loader";
+import GetLogin from "../../utils/GetLogin";
 import "./Account.css";
 
 function CustomLink({ to, label }) {
@@ -24,64 +23,20 @@ function CustomLink({ to, label }) {
 export default class Account extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoaded: false, loggedin: false, user: [] };
+    this.state = {};
+    GetLogin(this.setState.bind(this));
   }
 
   componentDidMount() {
     window.addEventListener("resize", this.getMobileView, false);
-
-    //Check to see if logged in
-    const obj = getFromStorage("mealtime");
-    let token = "";
-    if (obj !== null) {
-      token = obj.token;
-      // Verify token
-      axios
-        .get("/api/users/verify/" + token)
-        .then(tokenResponse => {
-          if (tokenResponse.data.success) {
-            axios
-              .get("/api/users/getUser/" + token)
-              .then(userResponse => {
-                axios
-                  .get("/api/users/" + userResponse.data.userId)
-                  .then(idResponse => {
-                    this.setState({
-                      loggedin: true,
-                      isLoaded: true,
-                      user: idResponse
-                    });
-                  })
-                  .catch(error => {
-                    this.setState({ isLoaded: true, loggedin: false });
-                    console.log("Error in getting /api/users: " + error);
-                  });
-              })
-              .catch(error => {
-                this.setState({ isLoaded: true, loggedin: false });
-                console.log("Error in getting /api/users/getUser: " + error);
-              });
-          } else {
-            this.setState({ isLoaded: true, loggedin: false });
-            console.log("Error in getting /api/users/verify");
-          }
-        })
-        .catch(error => {
-          this.setState({ isLoaded: true, loggedin: false });
-          console.log(error);
-        });
-    } else {
-      this.setState({ isLoaded: true, loggedin: false });
-      console.log("User isn't logged in");
-    }
   }
 
   render() {
-    if (this.state.isLoaded) {
-      if (this.state.loggedin) {
+    if (this.state.isUserLoaded) {
+      if (this.state.user) {
         return (
           <div className="accountcontainer">
-            <Navbar />
+            <Navbar user={this.state.user} />
             <div className="accountleftpane">
               <h2>Your account</h2>
               <ul>

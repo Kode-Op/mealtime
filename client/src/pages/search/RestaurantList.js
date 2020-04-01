@@ -3,6 +3,7 @@ import { ListGroup } from "react-bootstrap";
 import Navbar from "../../components/nav/Navbar";
 import RestaurantListComponent from "../../components/search/restaurantlist-component";
 import Loader from "../../assets/loader/Loader";
+import GetLogin from "../../utils/GetLogin";
 import axios from "axios";
 import MenuItemTypePlaceholder from "./menuitemtypeplaceholder.png";
 import "./RestaurantList.css";
@@ -12,23 +13,27 @@ export default class RestaurantList extends Component {
     super(props);
 
     this.state = {
-      isLoaded: false,
+      areRestaurantsLoaded: false,
       restaurants: []
     };
+    GetLogin(this.setState.bind(this));
   }
   componentDidMount() {
     axios
       .get("/api/restaurants")
       .then(response => {
-        this.setState({ restaurants: response.data, isLoaded: true });
+        this.setState({
+          restaurants: response.data,
+          areRestaurantsLoaded: true
+        });
       })
-      .catch(error => {
-        this.setState({ isLoaded: true });
+      .catch(() => {
+        this.setState({ areRestaurantsLoaded: true });
       });
   }
 
   restaurantList() {
-    if (this.state.isLoaded) {
+    if (this.state.areRestaurantsLoaded) {
       return this.state.restaurants.map(currentRestaurant => {
         return (
           <RestaurantListComponent
@@ -68,30 +73,34 @@ export default class RestaurantList extends Component {
   };
 
   render() {
-    return (
-      <div className="RestaurantListContainer">
-        <Navbar />
-        <div className="RestaurantListLeftPane">
-          Filters selection will go here
-        </div>
-        <div className="RestaurantListRightPane">
-          <div className="RestaurantListMostPopular">
-            <h5>Most popular near you</h5>
-            <div className="RestaurantMenuItemTypeContainer">
-              {this.getPopularMenuItemTypes()}
-            </div>
+    if (this.state.isUserLoaded) {
+      return (
+        <div className="RestaurantListContainer">
+          <Navbar user={this.state.user} />
+          <div className="RestaurantListLeftPane">
+            Filters selection will go here
           </div>
-          <div className="RestaurantListAppliedFilters">
-            <h5>Applied filters:</h5>
-            <div className="RestaurantListAppliedFilterContainer">
-              {this.getAppliedFilters(4)} (example)
+          <div className="RestaurantListRightPane">
+            <div className="RestaurantListMostPopular">
+              <h5>Most popular near you</h5>
+              <div className="RestaurantMenuItemTypeContainer">
+                {this.getPopularMenuItemTypes()}
+              </div>
             </div>
+            <div className="RestaurantListAppliedFilters">
+              <h5>Applied filters:</h5>
+              <div className="RestaurantListAppliedFilterContainer">
+                {this.getAppliedFilters(4)} (example)
+              </div>
+            </div>
+            <ListGroup className="RestaurantListGroup">
+              {this.restaurantList()}
+            </ListGroup>
           </div>
-          <ListGroup className="RestaurantListGroup">
-            {this.restaurantList()}
-          </ListGroup>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return <Loader />;
+    }
   }
 }
