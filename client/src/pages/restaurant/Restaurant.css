@@ -52,12 +52,3 @@
   flex-wrap: wrap;
   width: 100%;
 }
-
-.RestaurantMenuItem {
-  height: 200px;
-  background-color: lightgray;
-  padding: 40px;
-  margin: 0 10px 10px 0;
-  border: 1px solid blue;
-  width: 48%;
-}

@@ -1,0 +1,16 @@
+.FeedContainer {
+  text-align: left;
+  width: calc(100% - 100px);
+  margin: 30px 50px 0 50px;
+}
+
+.FeedContainer h4 {
+  font-weight: bold;
+  padding-bottom: 20px;
+}
+
+.FeedRestaurantContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}

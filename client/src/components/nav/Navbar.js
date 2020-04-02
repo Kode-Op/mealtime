@@ -84,6 +84,7 @@ export default class NavBar extends Component {
               type="text"
               name="address"
               className="navbox"
+              defaultValue={this.props.user.address}
               placeholder="Enter your address..."
             />
             <Link to="/search">
