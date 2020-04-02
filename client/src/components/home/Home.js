@@ -1,15 +1,24 @@
+//Import libraries
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
-import GetLogin from "../../utils/GetLogin";
-import Navbar from "../../components/nav/NavbarHomepage";
-import Loader from "../../assets/loader/Loader";
+
+//Import components
+import Navbar from "../nav/NavbarHomepage";
 import Footer from "../footer/Footer";
-import "./Home.css";
+
+//Import assets
+import Loader from "../../assets/loader/Loader";
 import splashplaceholder from "../../assets/images/splash/splashplaceholdershadow.png";
 import mobilesplash from "../../assets/images/splash/mobilebackground.png";
 import splashcontentplaceholder from "./splashcontentplaceholder.png";
 import splashcontentplaceholder500x375 from "./splashcontentplaceholder500x375.png";
+
+//Import utilities
+import GetLogin from "../../utils/GetLogin";
+
+//Import stylesheets
+import "./Home.css";
 
 export default class Home extends Component {
   constructor() {
@@ -17,14 +26,28 @@ export default class Home extends Component {
     this.state = {
       scrolled: false
     };
-    if (window.innerWidth < 1024)
+
+    //Set the "mobileview" and "smallscreendesktop" variables based on the
+    //initial width of the window
+    if (window.innerWidth < 1024) {
       this.state = { mobileview: true, smallscreendesktop: false };
-    else if (window.innerWidth < 1366)
+    } else if (window.innerWidth < 1366) {
       this.state = { mobileview: false, smallscreendesktop: true };
-    else this.state = { mobileview: false, smallscreendesktop: false };
+    } else {
+      this.state = { mobileview: false, smallscreendesktop: false };
+    }
+
+    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
     GetLogin(this.setState.bind(this));
   }
 
+  /*  
+      This method sets the "scrolled" variable to true is the top of the
+      window surpasses the "Enter your address" input field. This is used
+      to make it stick to the top of the screen after it's surpassed. This
+      method also recalculates "mobileview" and "smallscreendesktop" when
+      the window is either being scrolled or resized
+  */
   getScrollState = () => {
     let intViewportWidth;
     this.state.smallscreendesktop
@@ -49,6 +72,7 @@ export default class Home extends Component {
     new Image().src = mobilesplash;
     new Image().src = splashplaceholder;
 
+    //Trigger the getScrollState method when the window is either being scrolled or resized
     window.addEventListener("scroll", this.getScrollState, false);
     window.addEventListener("resize", this.getScrollState, false);
   }

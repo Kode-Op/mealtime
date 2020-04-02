@@ -1,13 +1,19 @@
+//Import libraries
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
+
+//Import stylesheets
 import "./FeedAddressOverlay.css";
 
+//This class renders a popup text box that asks the user for the address if
+//no address is associated with the user's account
 export default class FeedAddressOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = { address: "" };
   }
 
+  //Event handler for changing the address
   onChangeAddress = e => {
     this.setState({
       address: e.target.value
@@ -19,6 +25,13 @@ export default class FeedAddressOverlay extends Component {
       <div className="FeedAddressOverlayBackground">
         <div className="FeedAddressOverlayPopup">
           <h4>Please enter your address</h4>
+
+          {/*
+            After pressing "Let's eat", the address variable will be passed as
+            an argument to the updateAddressHandler method found in the parent
+            component, Feed.js
+          */}
+
           <form
             onSubmit={() => this.props.updateAddressHandler(this.state.address)}
           >

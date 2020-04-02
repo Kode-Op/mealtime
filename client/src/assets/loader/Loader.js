@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import "./Loader.css";
 
-export default class Loader extends Component {
-  render() {
-    return <div className="loader" />;
-  }
-}
+//This displays the spinning blue loading symbol. This animation uses CSS keyframes
+const Loader = () => {
+  return <div className="loader" />;
+};
+
+export default Loader;

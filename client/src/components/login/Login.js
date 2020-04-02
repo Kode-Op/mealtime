@@ -1,68 +1,61 @@
+//Import libraries
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
-import "./Login.css";
 
-const initialState = {
-  email: "",
-  password: "",
-  errorMessage: "",
-  isValidated: false
-};
+//Import stylesheets
+import "./Login.css";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.state = {
+      email: "",
+      password: "",
+      errorMessage: "",
+      isValidated: false
+    };
 
-    this.state = initialState;
-
+    //If this page was redirected back from the confirmation page,
+    //set errorMessage to the errorMessage from the confirmation page.
     if (typeof this.props.location.state !== "undefined") {
       this.state = { errorMessage: this.props.location.state.errorMessage };
     }
   }
 
-  onChangeEmail(e) {
+  //Event handlers for each form field
+  onChangeEmail = e => {
     this.setState({
       email: e.target.value
     });
-  }
-
-  onChangePassword(e) {
+  };
+  onChangePassword = e => {
     this.setState({
       password: e.target.value
     });
-  }
+  };
 
+  //Event handler for form submission
+  onSubmit = e => {
+    e.preventDefault();
+
+    if (this.validate()) {
+      this.setState({ isValidated: true });
+    }
+  };
+
+  //Helper function that verifies if the email is in the format email@website.domain
   validate = () => {
     //Regular expression courtesy of https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
     const emailVerification = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    let errorMessage = "";
-
     if (!emailVerification.test(this.state.email)) {
-      errorMessage = "You must enter a valid email address.";
-    }
-
-    if (errorMessage) {
-      this.setState({ errorMessage });
+      this.setState({ errorMessage: "You must enter a valid email address." });
       return false;
     }
     return true;
   };
-
-  onSubmit(e) {
-    e.preventDefault();
-
-    const isValid = this.validate();
-
-    if (isValid) {
-      this.setState({ isValidated: true });
-    }
-  }
 
   render() {
     if (this.state.isValidated) {

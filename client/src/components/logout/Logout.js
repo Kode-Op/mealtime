@@ -1,8 +1,13 @@
+//Import libraries
 import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import { getFromStorage } from "../../utils/storage";
+
+//Import assets
 import Loader from "../../assets/loader/Loader";
+
+//Import utilities
+import { getFromStorage } from "../../utils/storage";
 
 export default class Logout extends Component {
   constructor(props) {
@@ -10,6 +15,8 @@ export default class Logout extends Component {
     this.state = { isLoaded: false };
   }
 
+  //If the user isn't already logged out, call /api/users/logout/_token
+  //and set isLoaded to true when a response is returned
   componentDidMount() {
     const obj = getFromStorage("mealtime");
     let token = "";

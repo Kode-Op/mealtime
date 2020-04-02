@@ -1,9 +1,13 @@
+//Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-import { setInStorage } from "../../utils/storage";
 
+//Import assets
 import Loader from "../../assets/loader/Loader";
+
+//Import utilities
+import { setInStorage } from "../../utils/storage";
 
 export default class RegisterConfirmation extends Component {
   constructor(props) {
@@ -16,6 +20,8 @@ export default class RegisterConfirmation extends Component {
       message: ""
     };
 
+    //this.props.location.state will only be undefined if this page
+    //was accessed outside of the login page.
     if (typeof this.props.location.state !== "undefined") {
       let user = {
         firstName: this.props.location.state.firstName,
@@ -62,6 +68,7 @@ export default class RegisterConfirmation extends Component {
     }
   }
 
+  //Set the page to redirect after three seconds if something goes wrong.
   componentDidMount() {
     this.id = setTimeout(() => this.setState({ redirect: true }), 3000);
   }

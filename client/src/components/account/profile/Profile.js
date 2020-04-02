@@ -1,179 +1,91 @@
+//Import libraries
 import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
 import axios from "axios";
-
-function EditButton() {
-  return <div className="ProfileEditLink">Edit</div>;
-}
-
-let initialState = {
-  userID: "",
-  fName: "",
-  lName: "",
-  passwordname: "",
-  email: "",
-  emailconfirm: "",
-  passwordemail: "",
-  passwordcurrent: "",
-  passwordnew: "",
-  passwordnewconfirm: "",
-  successMessageName: "",
-  successMessageEmail: "",
-  successMessagePassword: "",
-  errorMessageName: "",
-  errorMessageEmail: "",
-  errorMessagePassword: ""
-};
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.onChangeFName = this.onChangeFName.bind(this);
-    this.onChangeLName = this.onChangeLName.bind(this);
-    this.onChangePasswordName = this.onChangePasswordName.bind(this);
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangeEmailConfirm = this.onChangeEmailConfirm.bind(this);
-    this.onChangePasswordEmail = this.onChangePasswordEmail.bind(this);
-    this.onChangePasswordCurrent = this.onChangePasswordCurrent.bind(this);
-    this.onChangePasswordNew = this.onChangePasswordNew.bind(this);
-    this.onChangePasswordNewConfirm = this.onChangePasswordNewConfirm.bind(
-      this
-    );
-    this.onSubmitName = this.onSubmitName.bind(this);
-    this.onSubmitEmail = this.onSubmitEmail.bind(this);
-    this.onSubmitPassword = this.onSubmitPassword.bind(this);
-
-    this.state = initialState;
+    //Each variable will store the input field values
     this.state = {
       userID: this.props.user._id,
       fName: this.props.user.firstName,
       lName: this.props.user.lastName,
-      email: this.props.user.email
+      email: this.props.user.email,
+      passwordname: "",
+      emailconfirm: "",
+      passwordemail: "",
+      passwordcurrent: "",
+      passwordnew: "",
+      passwordnewconfirm: "",
+      successMessageName: "",
+      successMessageEmail: "",
+      successMessagePassword: "",
+      errorMessageName: "",
+      errorMessageEmail: "",
+      errorMessagePassword: ""
     };
   }
 
-  onChangeFName(e) {
+  //Event handlers for each form field
+  onChangeFName = e => {
     this.setState({
       fName: e.target.value
     });
-  }
-  onChangeLName(e) {
+  };
+  onChangeLName = e => {
     this.setState({
       lName: e.target.value
     });
-  }
-  onChangePasswordName(e) {
+  };
+  onChangePasswordName = e => {
     this.setState({
       passwordname: e.target.value
     });
-  }
-  onChangeEmail(e) {
+  };
+  onChangeEmail = e => {
     this.setState({
       email: e.target.value
     });
-  }
-  onChangeEmailConfirm(e) {
+  };
+  onChangeEmailConfirm = e => {
     this.setState({
       emailconfirm: e.target.value
     });
-  }
-  onChangePasswordEmail(e) {
+  };
+  onChangePasswordEmail = e => {
     this.setState({
       passwordemail: e.target.value
     });
-  }
-  onChangePasswordCurrent(e) {
+  };
+  onChangePasswordCurrent = e => {
     this.setState({
       passwordcurrent: e.target.value
     });
-  }
-  onChangePasswordNew(e) {
+  };
+  onChangePasswordNew = e => {
     this.setState({
       passwordnew: e.target.value
     });
-  }
-  onChangePasswordNewConfirm(e) {
+  };
+  onChangePasswordNewConfirm = e => {
     this.setState({
       passwordnewconfirm: e.target.value
     });
-  }
-
-  validateEmail = () => {
-    //Regular expression courtesy of https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-    const emailVerification = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    let errorMessage = "";
-
-    if (
-      !emailVerification.test(this.state.email) ||
-      !emailVerification.test(this.state.emailconfirm)
-    ) {
-      errorMessage = "You must enter a valid email address. \n";
-    }
-
-    if (this.state.email !== this.state.emailconfirm) {
-      errorMessage = errorMessage.concat("Your emails must match. \n");
-    }
-
-    if (errorMessage) {
-      this.setState({ errorMessageEmail: errorMessage });
-      return false;
-    }
-    this.setState({ errorMessageEmail: "" });
-    return true;
   };
 
-  validatePassword = () => {
-    let errorMessage = "";
-    const lowerCaseLetters = /[a-z]/g;
-    const upperCaseLetters = /[A-Z]/g;
-    const numbers = /[0-9]/g;
-
-    if (this.state.passwordnew !== this.state.passwordnewconfirm) {
-      errorMessage = errorMessage.concat("Your new passwords must match. \n");
-    }
-
-    if (this.state.passwordnew.length < 8) {
-      errorMessage = errorMessage.concat(
-        "Your new password must contain at least 8 characters. \n"
-      );
-    }
-
-    if (!lowerCaseLetters.test(this.state.passwordnew)) {
-      errorMessage = errorMessage.concat(
-        "Your new password must contain lowercase letters. \n"
-      );
-    }
-
-    if (!upperCaseLetters.test(this.state.passwordnew)) {
-      errorMessage = errorMessage.concat(
-        "Your new password must contain uppercase letters. \n"
-      );
-    }
-
-    if (!numbers.test(this.state.passwordnew)) {
-      errorMessage = errorMessage.concat(
-        "Your new password must contain numbers. \n"
-      );
-    }
-
-    if (errorMessage) {
-      this.setState({ errorMessagePassword: errorMessage });
-      return false;
-    }
-    return true;
-  };
-
-  onSubmitName(e) {
+  //Event handlers for when the user submits the forms on the page
+  onSubmitName = e => {
     let pkg = {
       firstName: this.state.fName,
       lastName: this.state.lName,
       password: this.state.passwordname
     };
+
     axios
       .post("/api/users/updateName/" + this.state.userID, pkg)
-      .then(response => {
+      .then(() => {
         this.setState({
           errorMessageName: "",
           successMessageName: "Successfully updated name!"
@@ -200,7 +112,7 @@ export default class Profile extends Component {
         }
       });
     e.preventDefault();
-  }
+  };
 
   onSubmitEmail(e) {
     if (this.validateEmail()) {
@@ -248,7 +160,7 @@ export default class Profile extends Component {
       };
       axios
         .post("/api/users/updatePassword/" + this.state.userID, pkg)
-        .then(response => {
+        .then(() => {
           this.setState({
             errorMessagePassword: "",
             successMessagePassword: "Successfully updated password!"
@@ -278,6 +190,68 @@ export default class Profile extends Component {
     e.preventDefault();
   }
 
+  //This helper function verifies that the email address is in the format email@website.domain
+  validateEmail = () => {
+    //Regular expression courtesy of https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+    const emailVerification = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let errorMessage = "";
+
+    if (
+      !emailVerification.test(this.state.email) ||
+      !emailVerification.test(this.state.emailconfirm)
+    ) {
+      errorMessage = "You must enter a valid email address. \n";
+    }
+
+    if (this.state.email !== this.state.emailconfirm) {
+      errorMessage = errorMessage.concat("Your emails must match. \n");
+    }
+
+    if (errorMessage) {
+      this.setState({ errorMessageEmail: errorMessage });
+      return false;
+    }
+    this.setState({ errorMessageEmail: "" });
+    return true;
+  };
+
+  //This helper function verifies that the new password is in the correct format.
+  validatePassword = () => {
+    let errorMessage = "";
+    const lowerCaseLetters = /[a-z]/g;
+    const upperCaseLetters = /[A-Z]/g;
+    const numbers = /[0-9]/g;
+
+    if (this.state.passwordnew !== this.state.passwordnewconfirm) {
+      errorMessage = errorMessage.concat("Your new passwords must match. \n");
+    }
+    if (this.state.passwordnew.length < 8) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain at least 8 characters. \n"
+      );
+    }
+    if (!lowerCaseLetters.test(this.state.passwordnew)) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain lowercase letters. \n"
+      );
+    }
+    if (!upperCaseLetters.test(this.state.passwordnew)) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain uppercase letters. \n"
+      );
+    }
+    if (!numbers.test(this.state.passwordnew)) {
+      errorMessage = errorMessage.concat(
+        "Your new password must contain numbers. \n"
+      );
+    }
+    if (errorMessage) {
+      this.setState({ errorMessagePassword: errorMessage });
+      return false;
+    }
+    return true;
+  };
+
   render() {
     return (
       <div>
@@ -293,7 +267,7 @@ export default class Profile extends Component {
               <div className="ProfileUserInfo">
                 {this.state.fName} {this.state.lName}
               </div>
-              <EditButton />
+              <div className="ProfileEditLink">Edit</div>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
               <Card.Body>
@@ -354,7 +328,7 @@ export default class Profile extends Component {
             >
               <div className="ProfileHeaderLeft">Email:</div>
               <div className="ProfileUserInfo">{this.state.email}</div>
-              <EditButton />
+              <div className="ProfileEditLink">Edit</div>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="1">
               <Card.Body>
@@ -415,7 +389,7 @@ export default class Profile extends Component {
             >
               <div className="ProfileHeaderLeft">Password:</div>
               <div className="ProfileUserInfo">•••••••••••••••</div>
-              <EditButton />
+              <div className="ProfileEditLink">Edit</div>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="2">
               <Card.Body>

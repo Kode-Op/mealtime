@@ -1,13 +1,19 @@
+//Import libraries
 import React, { Component } from "react";
 import axios from "axios";
 import { Accordion, Card, Button } from "react-bootstrap";
+
+//Import assets
 import Loader from "../../../assets/loader/Loader";
+
+//Import stylesheets
 import "./CreditCard.css";
 
 export default class CreditCard extends Component {
   constructor(props) {
     super(props);
 
+    //Each variable will store the input field values
     this.state = {
       isLoaded: false,
       creditCards: [],
@@ -25,17 +31,7 @@ export default class CreditCard extends Component {
   }
 
   componentDidMount() {
-    this.onChangeFName = this.onChangeFName.bind(this);
-    this.onChangeLName = this.onChangeLName.bind(this);
-    this.onChangeNumber = this.onChangeNumber.bind(this);
-    this.onChangeCCV = this.onChangeCCV.bind(this);
-    this.onChangeMonth = this.onChangeMonth.bind(this);
-    this.onChangeYear = this.onChangeYear.bind(this);
-    this.onChangeAddress = this.onChangeAddress.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onAddCard = this.onAddCard.bind(this);
-    this.onDeleteCard = this.onDeleteCard.bind(this);
-
+    //Load the credit card data associated with the user that's logged in.
     axios
       .get("/api/creditCards/" + this.props.user._id)
       .then(response => {
@@ -46,123 +42,57 @@ export default class CreditCard extends Component {
       });
   }
 
-  onChangeFName(e) {
+  //Event handlers for each form field
+  onChangeFName = e => {
     this.setState({
       ccfname: e.target.value
     });
-  }
-  onChangeLName(e) {
+  };
+  onChangeLName = e => {
     this.setState({
       cclname: e.target.value
     });
-  }
-
-  onChangeNumber(e) {
+  };
+  onChangeNumber = e => {
     this.setState({
       ccnumber: e.target.value
     });
-  }
-
-  onChangeCCV(e) {
+  };
+  onChangeCCV = e => {
     this.setState({
       ccv: e.target.value
     });
-  }
-
-  onChangeMonth(e) {
+  };
+  onChangeMonth = e => {
     this.setState({
       ccmonth: e.target.value
     });
-    console.log(this.state.ccmonth);
-  }
-
-  onChangeYear(e) {
+  };
+  onChangeYear = e => {
     this.setState({
       ccyear: e.target.value
     });
-  }
-
-  onChangeAddress(e) {
+  };
+  onChangeAddress = e => {
     this.setState({
       ccaddress: e.target.value
     });
-  }
-
-  onChangePassword(e) {
+  };
+  onChangePassword = e => {
     this.setState({
       ccpassword: e.target.value
     });
-  }
-
-  creditCardList() {
-    if (this.state.isLoaded) {
-      return this.state.creditCards.map(currentCard => {
-        return (
-          <Card key={currentCard._id}>
-            <Accordion.Toggle
-              as={Card.Header}
-              eventKey={currentCard._id}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="ProfileHeaderLeft">Card: </div>
-              <div className="ProfileUserInfo">
-                {currentCard.firstName} {currentCard.lastName} -{" "}
-                {currentCard.number}
-              </div>
-              <div className="ProfileEditLink">Delete</div>
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey={currentCard._id}>
-              <Card.Body>
-                <h5>Are you sure?</h5>
-                <div className="ProfileErrorMessage">
-                  {this.state.errorMessageName}
-                </div>
-                <Button
-                  variant="danger"
-                  onClick={this.onDeleteCard(currentCard._id)}
-                >
-                  Delete Card
-                </Button>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-        );
-      });
-    } else {
-      return <Loader />;
-    }
-  }
-
-  validateCard = () => {
-    let errorMessage = "";
-
-    if (this.state.ccnumber.length !== 16) {
-      errorMessage = errorMessage.concat(
-        "Your credit card must have 16 characters. \n"
-      );
-    }
-    if (this.state.ccv.length !== 3) {
-      errorMessage = errorMessage.concat("Your CCV must have 3 characters. \n");
-    }
-    if (this.state.ccmonth === "blankmonth" || this.state.ccmonth === "") {
-      errorMessage = errorMessage.concat("You must enter a month. \n");
-    }
-    if (this.state.ccyear === "blankyear" || this.state.ccyear === "") {
-      errorMessage = errorMessage.concat("You must enter a year. \n");
-    }
-
-    if (errorMessage) {
-      this.setState({ errormessage: errorMessage });
-      return false;
-    }
-    return true;
   };
 
-  onAddCard(e) {
+  //Event handlers for when the user submits the forms on the page
+  onAddCard = e => {
     e.preventDefault();
+
+    //Currently, password is not required when adding a credit card
+    //TODO: Discuss with teammates whether or not this should be the case
     if (this.validateCard()) {
       let pkg = {
-        userId: this.props.user.data._id,
+        userId: this.props.user._id,
         firstName: this.state.ccfname,
         lastName: this.state.cclname,
         number: this.state.ccnumber,
@@ -203,9 +133,9 @@ export default class CreditCard extends Component {
         });
     }
     e.preventDefault();
-  }
+  };
 
-  onDeleteCard(cardID) {
+  onDeleteCard = cardID => {
     return function() {
       axios
         .delete("/api/creditCards/" + cardID)
@@ -216,8 +146,81 @@ export default class CreditCard extends Component {
           console.log(error);
         });
     };
-  }
+  };
 
+  //This helper function verifies that the credit card is in the right format
+  validateCard = () => {
+    let errorMessage = "";
+    this.setState({ errormessage: "" });
+
+    if (this.state.ccnumber.length !== 16) {
+      errorMessage = errorMessage.concat(
+        "Your credit card must have 16 characters.\n"
+      );
+    }
+    if (isNaN(this.state.ccnumber)) {
+      errorMessage = errorMessage.concat(
+        "Your credit card must only contain numbers.\n"
+      );
+    }
+    if (this.state.ccv.length !== 3) {
+      errorMessage = errorMessage.concat("Your CCV must have 3 characters.\n");
+    }
+    if (this.state.ccmonth === "blankmonth" || this.state.ccmonth === "") {
+      errorMessage = errorMessage.concat("You must enter a month.\n");
+    }
+    if (this.state.ccyear === "blankyear" || this.state.ccyear === "") {
+      errorMessage = errorMessage.concat("You must enter a year.\n");
+    }
+    if (errorMessage) {
+      this.setState({ errormessage: errorMessage });
+      return false;
+    }
+    return true;
+  };
+
+  //This method renders each credit card that belongs to the user
+  creditCardList = () => {
+    if (this.state.isLoaded) {
+      return this.state.creditCards.map(currentCard => {
+        return (
+          <Card key={currentCard._id}>
+            <Accordion.Toggle
+              as={Card.Header}
+              eventKey={currentCard._id}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="ProfileHeaderLeft">Card: </div>
+              <div className="ProfileUserInfo">
+                {currentCard.firstName} {currentCard.lastName} -{" "}
+                {currentCard.number}
+              </div>
+              <div className="ProfileEditLink">Delete</div>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={currentCard._id}>
+              <Card.Body>
+                <h5>Are you sure?</h5>
+                <div className="ProfileErrorMessage">
+                  {this.state.errorMessageName}
+                </div>
+                <Button
+                  variant="danger"
+                  onClick={this.onDeleteCard(currentCard._id)}
+                >
+                  Delete Card
+                </Button>
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        );
+      });
+    } else {
+      return <Loader />;
+    }
+  };
+
+  //This method creates a dropdown box option for each year, starting with
+  //the current year, and ending with the current year + numYears
   getYearSelection = numYears => {
     let start = new Date().getFullYear();
     let rows = [];

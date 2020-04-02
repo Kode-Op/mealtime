@@ -1,8 +1,13 @@
+//Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+
+//Import assets
 import RestaurantFeedPlaceholder from "./restaurantfeed-placeholder.png";
 import DisplayPrice from "../../assets/displayprice/DisplayPrice";
 import DisplayRating from "../../assets/displayrating/DisplayRating";
+
+//Import stylesheets
 import "./RestaurantFeedComponent.css";
 
 export default class RestaurantFeedComponent extends Component {
@@ -11,6 +16,7 @@ export default class RestaurantFeedComponent extends Component {
     this.state = { redirect: false };
   }
 
+  //This method sets the variable redirect to true after clicking on this particular restaurant
   viewRestaurant = () => {
     this.setState({ redirect: true });
   };

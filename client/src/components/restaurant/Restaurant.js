@@ -21,19 +21,24 @@ import "./Restaurant.css";
 export default class Restaurant extends Component {
   constructor(props) {
     super(props);
+
+    //Search the URL for an ID, then store it as a state variable
     const query = new URLSearchParams(this.props.location.search);
     const id = query.get("id");
 
     this.state = {
       isPageLoaded: false,
       id: id,
-      menuItems: []
+      menuItems: [],
+      restaurant: []
     };
+
+    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
     GetLogin(this.setState.bind(this));
   }
 
+  //Get the restaurant data and the menu item associated with the restaurant
   componentDidMount() {
-    //Get the restaurant data
     if (this.state.id !== "") {
       axios
         .get("/api/restaurants/" + this.state.id)
@@ -50,7 +55,6 @@ export default class Restaurant extends Component {
       this.setState({ restaurant: null, isPageLoaded: true });
     }
 
-    //Get the menu items
     axios
       .get("/api/menuitems/" + this.state.id)
       .then(response => {
@@ -61,7 +65,8 @@ export default class Restaurant extends Component {
       });
   }
 
-  getMenuItems() {
+  //This method returns a menu item for each menu item associated with the restaurant.
+  getMenuItems = () => {
     if (this.state.menuItems) {
       return this.state.menuItems.map(currentMenuItem => {
         return (
@@ -74,7 +79,7 @@ export default class Restaurant extends Component {
     } else {
       return <Loader />;
     }
-  }
+  };
 
   render() {
     if (this.state.isPageLoaded && this.state.isUserLoaded) {

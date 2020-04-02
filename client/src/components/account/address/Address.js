@@ -1,3 +1,4 @@
+//Import Libraries
 import React, { Component } from "react";
 import { Button, Accordion, Card } from "react-bootstrap";
 import axios from "axios";
@@ -5,6 +6,8 @@ import axios from "axios";
 export default class Address extends Component {
   constructor(props) {
     super(props);
+
+    //Each variable will store the input field values
     this.state = {
       address: this.props.user.address,
       password: "",
@@ -15,46 +18,39 @@ export default class Address extends Component {
       errorMessagePhone: "",
       successMessagePhone: ""
     };
-
-    this.onChangeAddress = this.onChangeAddress.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onChangePhone = this.onChangePhone.bind(this);
-    this.onChangePasswordPhone = this.onChangePasswordPhone.bind(this);
-    this.onSubmitAddress = this.onSubmitAddress.bind(this);
-    this.onSubmitPhone = this.onSubmitPhone.bind(this);
   }
 
-  onChangeAddress(e) {
+  //Event handlers for each form field
+  onChangeAddress = e => {
     this.setState({
       address: e.target.value
     });
-  }
-
-  onChangePassword(e) {
+  };
+  onChangePassword = e => {
     this.setState({
       password: e.target.value
     });
-  }
-
-  onChangePhone(e) {
+  };
+  onChangePhone = e => {
     this.setState({
       phone: e.target.value
     });
-  }
-
-  onChangePasswordPhone(e) {
+  };
+  onChangePasswordPhone = e => {
     this.setState({
       passwordphone: e.target.value
     });
-  }
+  };
 
-  onSubmitAddress(e) {
+  //Event handlers for when the user submits the forms on the page
+  onSubmitAddress = e => {
     let pkg = {
       address: this.state.address,
       password: this.state.password
     };
+
     axios
-      .post("/api/users/updateAddress/" + this.props.user.data._id, pkg)
+      .post("/api/users/updateAddress/" + this.props.user._id, pkg)
       .then(() => {
         this.setState({
           errorMessage: "",
@@ -82,26 +78,17 @@ export default class Address extends Component {
       });
     this.setState({ password: "" });
     e.preventDefault();
-  }
-
-  phoneValidation = () => {
-    if (this.state.phone.length !== 10) {
-      this.setState({
-        errorMessagePhone: "Your phone must be 10 characters in length. \n"
-      });
-      return false;
-    }
-    return true;
   };
 
-  onSubmitPhone(e) {
+  onSubmitPhone = e => {
     if (this.phoneValidation()) {
       let pkg = {
         phone: this.state.phone,
         password: this.state.passwordphone
       };
+
       axios
-        .post("/api/users/updatePhone/" + this.props.user.data._id, pkg)
+        .post("/api/users/updatePhone/" + this.props.user._id, pkg)
         .then(() => {
           this.setState({
             errorMessagePhone: "",
@@ -131,7 +118,28 @@ export default class Address extends Component {
       this.setState({ passwordphone: "" });
     }
     e.preventDefault();
-  }
+  };
+
+  //This helper function verifies that the phone number has the format 5551234567
+  phoneValidation = () => {
+    let errorMessage = "";
+
+    if (this.state.phone.length !== 10) {
+      errorMessage = errorMessage.concat(
+        "Your phone must be 10 characters in length.\n"
+      );
+    }
+    if (isNaN(this.state.phone)) {
+      errorMessage = errorMessage.concat(
+        "Your phone number must only contain numbers.\n"
+      );
+    }
+    if (errorMessage) {
+      this.setState({ errorMessagePhone: errorMessage });
+      return false;
+    }
+    return true;
+  };
 
   render() {
     return (

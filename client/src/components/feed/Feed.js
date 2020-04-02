@@ -1,22 +1,34 @@
+//Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import GetLogin from "../../utils/GetLogin";
+import axios from "axios";
+
+//Import components
 import Navbar from "../nav/Navbar";
-import Loader from "../../assets/loader/Loader";
 import FeedAddressOverlay from "./FeedAddressOverlay";
 import RestaurantFeedComponent from "./RestaurantFeedComponent";
 import Footer from "../footer/Footer";
-import axios from "axios";
+
+//Import assets
+import Loader from "../../assets/loader/Loader";
+
+//Import utilities
+import GetLogin from "../../utils/GetLogin";
+
+//Import stylesheets
 import "./Feed.css";
 
 export default class Feed extends Component {
   constructor(props) {
     super(props);
     this.state = { restaurants: [], areRestaurantsLoaded: false };
+
+    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
     GetLogin(this.setState.bind(this));
   }
 
   componentDidMount() {
+    //Fetch all restaurant data, and load into the restaurants variable
     axios
       .get("/api/restaurants")
       .then(response => {
@@ -54,8 +66,8 @@ export default class Feed extends Component {
     }));
   };
 
+  //This method renders a restaurant for each object found in the "restaurants"
   getRestaurantFeed = () => {
-    //For now, we'll render every restaurant
     if (this.state.areRestaurantsLoaded) {
       return this.state.restaurants.map(currentRestaurant => {
         return (

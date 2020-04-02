@@ -17,6 +17,7 @@ export default class RestaurantListComponent extends Component {
     this.state = { redirect: false };
   }
 
+  //This method sets the variable redirect to true after clicking on this particular restaurant
   viewRestaurant = () => {
     this.setState({ redirect: true });
   };

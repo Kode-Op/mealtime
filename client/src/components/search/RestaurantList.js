@@ -1,12 +1,21 @@
+//Import libraries
 import React, { Component } from "react";
 import { ListGroup } from "react-bootstrap";
-import Navbar from "../../components/nav/Navbar";
-import RestaurantListComponent from "../../components/search/restaurantlist-component";
-import Loader from "../../assets/loader/Loader";
-import GetLogin from "../../utils/GetLogin";
-import Footer from "../footer/Footer";
 import axios from "axios";
+
+//Import components
+import Navbar from "../nav/Navbar";
+import RestaurantListComponent from "../search/restaurantlist-component";
+
+//Import assets
+import Loader from "../../assets/loader/Loader";
+import Footer from "../footer/Footer";
 import MenuItemTypePlaceholder from "./menuitemtypeplaceholder.png";
+
+//Import utilities
+import GetLogin from "../../utils/GetLogin";
+
+//Import stylesheets
 import "./RestaurantList.css";
 
 export default class RestaurantList extends Component {
@@ -17,9 +26,13 @@ export default class RestaurantList extends Component {
       areRestaurantsLoaded: false,
       restaurants: []
     };
+
+    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
     GetLogin(this.setState.bind(this));
   }
+
   componentDidMount() {
+    //Fetch all restaurant data, and load into the restaurants variable
     axios
       .get("/api/restaurants")
       .then(response => {
@@ -33,7 +46,8 @@ export default class RestaurantList extends Component {
       });
   }
 
-  restaurantList() {
+  //This method renders a restaurant for each object found in the "restaurants"
+  restaurantList = () => {
     if (this.state.areRestaurantsLoaded) {
       return this.state.restaurants.map(currentRestaurant => {
         return (
@@ -46,8 +60,10 @@ export default class RestaurantList extends Component {
     } else {
       return <Loader />;
     }
-  }
+  };
 
+  //This method returns 7 "types" of restaurant in a for loop to choose from in a filter list.
+  //Eventually, we will get this data from an api call
   getPopularMenuItemTypes = () => {
     let rows = [];
     for (let i = 0; i < 7; i++) {
@@ -61,6 +77,8 @@ export default class RestaurantList extends Component {
     return rows;
   };
 
+  //Returns types of filters applied to the search. For now, this is just a static number.
+  //Todo: Apply filter just by clicking on tags or menu item types
   getAppliedFilters = numFilters => {
     let rows = [];
     for (let i = 0; i < numFilters; i++) {

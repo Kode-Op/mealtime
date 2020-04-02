@@ -1,5 +1,8 @@
-import { getFromStorage } from "./storage";
+//Import libraries
 import axios from "axios";
+
+//Import utilties
+import { getFromStorage } from "./storage";
 
 const GetLogin = setState => {
   const obj = getFromStorage("mealtime");

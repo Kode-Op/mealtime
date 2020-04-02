@@ -1,11 +1,15 @@
+//Import libraries
 import React, { Component } from "react";
 import { Navbar, Nav, ButtonToolbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
+
+//Import stylesheets
 import "./Navbar.css";
 
 export default class NavbarHomepage extends Component {
   constructor(props) {
     super(props);
+
     if (window.innerWidth < 1024)
       this.state = {
         mobileview: true,
@@ -18,6 +22,12 @@ export default class NavbarHomepage extends Component {
       };
   }
 
+  /*
+    This method sets the opacity of the navbar to be proportional to the
+    window scroll height between the bottom of the splash screen and 75
+    pixels up from it. This allows the navbar to fade in as you scroll
+    down the page.
+  */
   getOpacity = () => {
     const range = 75;
     let intViewport = window.scrollY;

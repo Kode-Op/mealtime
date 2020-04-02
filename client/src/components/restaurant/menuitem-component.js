@@ -1,5 +1,10 @@
+//Import libraries
 import React from "react";
+
+//Import assets
 import MenuItemPlaceholder from "./menuitem-placeholder.png";
+
+//Import stylesheets
 import "./menuitem-component.css";
 
 const MenuItemComponent = props => (

@@ -1,6 +1,6 @@
+//Import libraries
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./App.css";
 
 //Import components
 import Home from "./components/home/Home";
@@ -14,6 +14,11 @@ import Register from "./components/register/Register";
 import RegisterConfirmation from "./components/register/Confirmation";
 import LoginConfirmation from "./components/login/Confirmation";
 
+//Import stylesheets
+import "./App.css";
+
+//This method is responsible for routing the main components of the website,
+//and is also the starting point of the app.
 function App() {
   return (
     <Router>

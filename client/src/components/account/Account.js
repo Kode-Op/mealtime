@@ -1,14 +1,26 @@
+//Import libraries
 import React, { Component } from "react";
 import { Link, Route, useRouteMatch, Redirect } from "react-router-dom";
+
+//Import components
 import Navbar from "../nav/Navbar";
 import Profile from "./profile/Profile";
 import CreditCard from "./creditcard/CreditCard";
 import Address from "./address/Address";
-import Loader from "../../assets/loader/Loader";
-import GetLogin from "../../utils/GetLogin";
 import Footer from "../footer/Footer";
+
+//Import assets
+import Loader from "../../assets/loader/Loader";
+
+//Import utilities
+import GetLogin from "../../utils/GetLogin";
+
+//Import stylesheets
 import "./Account.css";
 
+//This method renders non-clickable plain text in the sidebar if the
+//current URL matches the route for that particular link. Otherwise,
+//it will render a link to that URL.
 function CustomLink({ to, label }) {
   let routematch = useRouteMatch({
     path: to
@@ -25,11 +37,9 @@ export default class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    GetLogin(this.setState.bind(this));
-  }
 
-  componentDidMount() {
-    window.addEventListener("resize", this.getMobileView, false);
+    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
+    GetLogin(this.setState.bind(this));
   }
 
   render() {
