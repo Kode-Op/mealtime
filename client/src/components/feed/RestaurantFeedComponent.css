@@ -4,10 +4,19 @@
   overflow: hidden;
   height: 300px;
   margin: 0 50px 50px 0;
-  border: 2px solid grey;
+  border: 2px solid #cccccc;
   border-radius: 15px;
   width: 100%;
   background-color: white;
+}
+
+.RestaurantFeedComponentContainer:hover {
+  cursor: pointer;
+  border: 2px solid #aaaaaa;
+}
+
+.RestaurantFeedComponentContainer:active {
+  border: 2px solid #888888;
 }
 
 .RestaurantFeedComponentImage {

@@ -2,12 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
-//Import pages and components
-import Home from "./pages/home/Home";
-import Account from "./pages/accountsettings/Account";
-import Restaurant from "./pages/restaurant/Restaurant";
-import RestaurantList from "./pages/search/RestaurantList";
-import Feed from "./pages/feed/Feed";
+//Import components
+import Home from "./components/home/Home";
+import Account from "./components/account/Account";
+import Restaurant from "./components/restaurant/Restaurant";
+import RestaurantList from "./components/search/RestaurantList";
+import Feed from "./components/feed/Feed";
 import Login from "./components/login/Login";
 import Logout from "./components/logout/Logout";
 import Register from "./components/register/Register";

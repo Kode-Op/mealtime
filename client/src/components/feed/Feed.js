@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import GetLogin from "../../utils/GetLogin";
-import Navbar from "../../components/nav/Navbar";
+import Navbar from "../nav/Navbar";
 import Loader from "../../assets/loader/Loader";
-import FeedAddressOverlay from "../../components/feed/FeedAddressOverlay";
-import RestaurantFeedComponent from "../../components/feed/RestaurantFeedComponent";
+import FeedAddressOverlay from "./FeedAddressOverlay";
+import RestaurantFeedComponent from "./RestaurantFeedComponent";
 import axios from "axios";
 import "./Feed.css";
 
@@ -35,7 +35,7 @@ export default class Feed extends Component {
     // Uncomment after that is completed
     let pkg = {
       address: newAddress,
-      password: this.state.user.password
+      password: 
     };
     axios
       .post("/api/users/updateAddress/" + this.state.user._id, pkg)

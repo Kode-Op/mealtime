@@ -15,7 +15,6 @@ export default class RestaurantListComponent extends Component {
   constructor(props) {
     super(props);
     this.state = { redirect: false };
-    this.viewRestaurant = this.viewRestaurant.bind(this);
   }
 
   viewRestaurant = () => {

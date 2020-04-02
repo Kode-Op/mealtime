@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, Route, useRouteMatch, Redirect } from "react-router-dom";
-import Navbar from "../../components/nav/Navbar";
+import Navbar from "../nav/Navbar";
 import Profile from "./profile/Profile";
 import CreditCard from "./creditcard/CreditCard";
 import Address from "./address/Address";
