@@ -4,6 +4,7 @@ import { Link, Redirect } from "react-router-dom";
 import GetLogin from "../../utils/GetLogin";
 import Navbar from "../../components/nav/NavbarHomepage";
 import Loader from "../../assets/loader/Loader";
+import Footer from "../footer/Footer";
 import "./Home.css";
 import splashplaceholder from "../../assets/images/splash/splashplaceholdershadow.png";
 import mobilesplash from "../../assets/images/splash/mobilebackground.png";
@@ -160,28 +161,7 @@ export default class Home extends Component {
                   </div>
                 </div>
               </div>
-              <div className="splashfooter">
-                <p>
-                  MealTime is a fictional product created by David Allison,
-                  Rachel Scherer, Alex Tung, June Lee, and Osiris Sielatshom for
-                  CS4800.
-                </p>
-                <a
-                  href="https://rachelscherer.github.io/kodeop"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Company website
-                </a>
-                <br />
-                <a
-                  href="https://github.com/Kode-Op/mealtime"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Github repository
-                </a>
-              </div>
+              <Footer />
             </div>
           </div>
         );

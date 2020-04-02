@@ -4,6 +4,7 @@ import Navbar from "../../components/nav/Navbar";
 import RestaurantListComponent from "../../components/search/restaurantlist-component";
 import Loader from "../../assets/loader/Loader";
 import GetLogin from "../../utils/GetLogin";
+import Footer from "../footer/Footer";
 import axios from "axios";
 import MenuItemTypePlaceholder from "./menuitemtypeplaceholder.png";
 import "./RestaurantList.css";
@@ -97,6 +98,7 @@ export default class RestaurantList extends Component {
               {this.restaurantList()}
             </ListGroup>
           </div>
+          <Footer />
         </div>
       );
     } else {

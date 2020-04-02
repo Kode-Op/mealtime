@@ -13,4 +13,5 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  min-height: 62.2vh;
 }

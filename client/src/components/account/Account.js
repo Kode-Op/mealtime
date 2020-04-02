@@ -6,6 +6,7 @@ import CreditCard from "./creditcard/CreditCard";
 import Address from "./address/Address";
 import Loader from "../../assets/loader/Loader";
 import GetLogin from "../../utils/GetLogin";
+import Footer from "../footer/Footer";
 import "./Account.css";
 
 function CustomLink({ to, label }) {
@@ -35,46 +36,58 @@ export default class Account extends Component {
     if (this.state.isUserLoaded) {
       if (this.state.user) {
         return (
-          <div className="accountcontainer">
-            <Navbar user={this.state.user} />
-            <div className="accountleftpane">
-              <h2>Your account</h2>
-              <ul>
-                <li>
-                  <CustomLink to="/account/profile" label="Profile" />
-                </li>
-                <li>
-                  <CustomLink
-                    to="/account/card"
-                    label="Credit card information"
-                  />
-                </li>
-                <li>
-                  <CustomLink to="/account/address" label="Address and phone" />
-                </li>
-              </ul>
+          <div>
+            <div className="accountcontainer">
+              <Navbar user={this.state.user} />
+              <div className="accountleftpane">
+                <h2>Your account</h2>
+                <ul>
+                  <li>
+                    <CustomLink to="/account/profile" label="Profile" />
+                  </li>
+                  <li>
+                    <CustomLink
+                      to="/account/card"
+                      label="Credit card information"
+                    />
+                  </li>
+                  <li>
+                    <CustomLink
+                      to="/account/address"
+                      label="Address and phone"
+                    />
+                  </li>
+                </ul>
+              </div>
+              <div className="accountrightpane">
+                <Route
+                  exact
+                  path="/account/"
+                  render={props => (
+                    <Profile {...props} user={this.state.user} />
+                  )}
+                />
+                <Route
+                  path="/account/profile"
+                  render={props => (
+                    <Profile {...props} user={this.state.user} />
+                  )}
+                />
+                <Route
+                  path="/account/card"
+                  render={props => (
+                    <CreditCard {...props} user={this.state.user} />
+                  )}
+                />
+                <Route
+                  path="/account/address"
+                  render={props => (
+                    <Address {...props} user={this.state.user} />
+                  )}
+                />
+              </div>
             </div>
-            <div className="accountrightpane">
-              <Route
-                exact
-                path="/account/"
-                render={props => <Profile {...props} user={this.state.user} />}
-              />
-              <Route
-                path="/account/profile"
-                render={props => <Profile {...props} user={this.state.user} />}
-              />
-              <Route
-                path="/account/card"
-                render={props => (
-                  <CreditCard {...props} user={this.state.user} />
-                )}
-              />
-              <Route
-                path="/account/address"
-                render={props => <Address {...props} user={this.state.user} />}
-              />
-            </div>
+            <Footer />
           </div>
         );
       } else {

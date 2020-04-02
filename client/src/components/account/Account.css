@@ -1,5 +1,5 @@
 .accountcontainer {
-  height: 92vh;
+  height: 80vh;
 }
 
 .accountleftpane {
@@ -7,7 +7,7 @@
   padding-top: 30px;
   padding-left: 20px;
   float: left;
-  width: 30%;
+  width: 25%;
   height: 100%;
   border-right: 1px solid #b5b5b5;
 }
@@ -25,7 +25,7 @@
 
 .accountrightpane {
   float: right;
-  width: 70%;
+  width: 75%;
   height: 100%;
   text-align: left;
   padding-top: 30px;

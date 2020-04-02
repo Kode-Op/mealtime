@@ -1,6 +1,7 @@
 .splashcontainer {
   display: flex;
   overflow: hidden;
+  min-height: 100%;
 }
 
 .splashcontainer img {

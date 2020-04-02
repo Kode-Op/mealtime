@@ -5,6 +5,7 @@ import Navbar from "../nav/Navbar";
 import Loader from "../../assets/loader/Loader";
 import FeedAddressOverlay from "./FeedAddressOverlay";
 import RestaurantFeedComponent from "./RestaurantFeedComponent";
+import Footer from "../footer/Footer";
 import axios from "axios";
 import "./Feed.css";
 
@@ -91,6 +92,7 @@ export default class Feed extends Component {
                   {this.getRestaurantFeed()}
                 </div>
               </div>
+              <Footer />
             </div>
           );
         }

@@ -7,6 +7,7 @@ import axios from "axios";
 import Navbar from "../../components/nav/Navbar";
 import MenuItemComponent from "../../components/restaurant/menuitem-component.js";
 import GetLogin from "../../utils/GetLogin";
+import Footer from "../footer/Footer";
 
 //Import assets
 import DisplayPrice from "../../assets/displayprice/DisplayPrice";
@@ -111,6 +112,7 @@ export default class Restaurant extends Component {
                 </div>
               </div>
             </div>
+            <Footer />
           </div>
         );
       } else {
