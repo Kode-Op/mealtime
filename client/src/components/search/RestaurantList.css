@@ -42,13 +42,21 @@
   margin-right: 1.8vw;
 }
 
+.RestaurantMenuItemType:hover {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
 .RestaurantMenuItemType img {
   border-radius: 50%;
 }
 
 .RestaurantListAppliedFilters {
   width: 100%;
-  padding: 10px 20px 5px 20px;
+  padding: 15px 20px 10px 20px;
   border-top: 1px solid lightgray;
   display: flex;
   overflow: hidden;
@@ -56,6 +64,11 @@
 
 .RestaurantListAppliedFilters h5 {
   font-size: 1em;
+  padding-top: 2px;
+}
+
+.RestaurantListAppliedFilterContainer {
+  min-height: 34px;
 }
 
 .RestaurantListAppliedFilter {
@@ -65,6 +78,14 @@
   margin-left: 1.8vw;
   background-color: lightgray;
   border-radius: 6px;
+}
+
+.RestaurantListAppliedFilter:hover {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 @media only screen and (min-width: 1024px) {

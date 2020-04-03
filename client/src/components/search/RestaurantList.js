@@ -24,7 +24,8 @@ export default class RestaurantList extends Component {
 
     this.state = {
       areRestaurantsLoaded: false,
-      restaurants: []
+      restaurants: [],
+      appliedFilters: []
     };
 
     //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
@@ -68,7 +69,11 @@ export default class RestaurantList extends Component {
     let rows = [];
     for (let i = 0; i < 7; i++) {
       rows.push(
-        <div className="RestaurantMenuItemType">
+        <div
+          key={i}
+          className="RestaurantMenuItemType"
+          onClick={() => this.addFilter(i)}
+        >
           <img src={MenuItemTypePlaceholder} alt="" />
           <div className="RestaurantMenuItemTypeDescription">Type {i + 1}</div>
         </div>
@@ -78,17 +83,38 @@ export default class RestaurantList extends Component {
   };
 
   //Returns types of filters applied to the search. For now, this is just a static number.
-  //Todo: Apply filter just by clicking on tags or menu item types
-  getAppliedFilters = numFilters => {
+  getAppliedFilters = () => {
     let rows = [];
-    for (let i = 0; i < numFilters; i++) {
+
+    this.state.appliedFilters.map((item, i) =>
       rows.push(
-        <div className="RestaurantListAppliedFilter">
-          <div style={{ margin: "0 auto" }}>Filter {i + 1}</div>
+        <div
+          className="RestaurantListAppliedFilter"
+          key={i}
+          onClick={() => this.removeFilter(i)}
+        >
+          <div style={{ margin: "0 auto" }}>{this.state.appliedFilters[i]}</div>
         </div>
-      );
-    }
+      )
+    );
+
     return rows;
+  };
+
+  //This method appends a filter to this.state.appliedFilters if the filter isn't already included in the array
+  addFilter = i => {
+    let filters = this.state.appliedFilters;
+    if (filters.indexOf("Type " + (i + 1)) === -1) {
+      filters.push("Type " + (i + 1));
+      this.setState({ appliedFilters: filters });
+    }
+  };
+
+  //This method removes a filter from this.state.appliedFilters
+  removeFilter = i => {
+    let filters = this.state.appliedFilters;
+    filters.splice(i, 1);
+    this.setState({ appliedFilters: filters });
   };
 
   render() {
@@ -110,7 +136,7 @@ export default class RestaurantList extends Component {
               <div className="RestaurantListAppliedFilters">
                 <h5>Applied filters:</h5>
                 <div className="RestaurantListAppliedFilterContainer">
-                  {this.getAppliedFilters(4)} (example)
+                  {this.getAppliedFilters()}
                 </div>
               </div>
               <ListGroup className="RestaurantListGroup">
