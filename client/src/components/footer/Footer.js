@@ -7,11 +7,12 @@ const Footer = () => {
       style={{
         backgroundColor: "#333366",
         color: "white",
-        width: "100%",
         height: 200,
         paddingTop: 60,
         position: "relative",
-        clear: "both"
+        left: 0,
+        right: 0,
+        bottom: 0
       }}
     >
       <p>

@@ -94,27 +94,29 @@ export default class RestaurantList extends Component {
   render() {
     if (this.state.isUserLoaded) {
       return (
-        <div className="RestaurantListContainer">
-          <Navbar user={this.state.user} />
-          <div className="RestaurantListLeftPane">
-            Filters selection will go here
-          </div>
-          <div className="RestaurantListRightPane">
-            <div className="RestaurantListMostPopular">
-              <h5>Most popular near you</h5>
-              <div className="RestaurantMenuItemTypeContainer">
-                {this.getPopularMenuItemTypes()}
-              </div>
+        <div>
+          <div className="RestaurantListContainer">
+            <Navbar user={this.state.user} />
+            <div className="RestaurantListLeftPane">
+              Filters selection will go here
             </div>
-            <div className="RestaurantListAppliedFilters">
-              <h5>Applied filters:</h5>
-              <div className="RestaurantListAppliedFilterContainer">
-                {this.getAppliedFilters(4)} (example)
+            <div className="RestaurantListRightPane">
+              <div className="RestaurantListMostPopular">
+                <h5>Most popular near you</h5>
+                <div className="RestaurantMenuItemTypeContainer">
+                  {this.getPopularMenuItemTypes()}
+                </div>
               </div>
+              <div className="RestaurantListAppliedFilters">
+                <h5>Applied filters:</h5>
+                <div className="RestaurantListAppliedFilterContainer">
+                  {this.getAppliedFilters(4)} (example)
+                </div>
+              </div>
+              <ListGroup className="RestaurantListGroup">
+                {this.restaurantList()}
+              </ListGroup>
             </div>
-            <ListGroup className="RestaurantListGroup">
-              {this.restaurantList()}
-            </ListGroup>
           </div>
           <Footer />
         </div>
