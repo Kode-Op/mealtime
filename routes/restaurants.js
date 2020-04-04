@@ -6,8 +6,8 @@ let Restaurant = require("../models/restaurant_model");
 // Returns: All info on all restaurants
 router.route("/").get((req, res) => {
   Restaurant.find()
-    .then(restaurants => res.json(restaurants))
-    .catch(err => res.status(400).json("Error: " + err));
+    .then((restaurants) => res.json(restaurants))
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Format: GET /api/restaurants/Restaurant._id
@@ -15,8 +15,8 @@ router.route("/").get((req, res) => {
 // Returns: All info on a specific restaurant
 router.route("/:id").get((req, res) => {
   Restaurant.findById(req.params.id)
-    .then(restaurants => res.json(restaurants))
-    .catch(err => res.status(400).json("Error: " + err));
+    .then((restaurants) => res.json(restaurants))
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Format: POST /api/restaurants/add
@@ -38,13 +38,13 @@ router.route("/add").post((req, res) => {
     description,
     minorder,
     address,
-    hoursofoperation
+    hoursofoperation,
   });
 
   newItem
     .save()
     .then(() => res.json("Restaurant added! Id: " + newItem.id))
-    .catch(err => res.status(400).json("Error: " + err));
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 module.exports = router;

@@ -18,7 +18,7 @@ export default class LoginConfirmation extends Component {
       token: "",
       isLoaded: false,
       redirect: false,
-      undefinedVars: false
+      undefinedVars: false,
     };
 
     //this.props.location.state will only be undefined if this page
@@ -26,18 +26,18 @@ export default class LoginConfirmation extends Component {
     if (typeof this.props.location.state !== "undefined") {
       let user = {
         email: this.props.location.state.email,
-        password: this.props.location.state.password
+        password: this.props.location.state.password,
       };
 
       axios
         .post("/api/users/login", user)
-        .then(response => {
+        .then((response) => {
           // login successful, token created and saved
           setInStorage("mealtime", { token: response.data.token });
           this.setState({
             isLoaded: true,
             accountConfirmed: true,
-            undefinedVars: false
+            undefinedVars: false,
           });
         })
         .catch(() => {
@@ -45,21 +45,21 @@ export default class LoginConfirmation extends Component {
             // login failed
             isLoaded: true,
             accountConfirmed: false,
-            undefinedVars: false
+            undefinedVars: false,
           });
         });
     } else {
       this.setState({
         isLoaded: true,
         undefinedVars: true,
-        accountConfirmed: false
+        accountConfirmed: false,
       });
     }
   }
 
-  //Set the page to redirect after three seconds if something goes wrong.
+  //Set the page to redirect after ten seconds if something goes wrong.
   componentDidMount() {
-    this.id = setTimeout(() => this.setState({ redirect: true }), 3000);
+    this.id = setTimeout(() => this.setState({ redirect: true }), 10000);
   }
 
   componentWillUnmount() {
@@ -74,8 +74,8 @@ export default class LoginConfirmation extends Component {
             to={{
               pathname: "/login",
               state: {
-                errorMessage: "An unexpected error has occurred. \n"
-              }
+                errorMessage: "An unexpected error has occurred. \n",
+              },
             }}
           />
         );
@@ -83,7 +83,7 @@ export default class LoginConfirmation extends Component {
         return (
           <Redirect
             to={{
-              pathname: "/feed"
+              pathname: "/feed",
             }}
           />
         );
@@ -93,8 +93,8 @@ export default class LoginConfirmation extends Component {
             to={{
               pathname: "/login",
               state: {
-                errorMessage: "Invalid email or password. \n"
-              }
+                errorMessage: "Invalid email or password. \n",
+              },
             }}
           />
         );
@@ -106,8 +106,8 @@ export default class LoginConfirmation extends Component {
             to={{
               pathname: "/login",
               state: {
-                errorMessage: "An unexpected error has occurred. \n"
-              }
+                errorMessage: "An unexpected error has occurred. \n",
+              },
             }}
           />
         );

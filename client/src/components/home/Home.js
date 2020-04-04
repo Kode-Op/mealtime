@@ -24,7 +24,7 @@ export default class Home extends Component {
   constructor() {
     super();
     this.state = {
-      scrolled: false
+      scrolled: false,
     };
 
     //Set the "mobileview" and "smallscreendesktop" variables based on the
@@ -36,9 +36,6 @@ export default class Home extends Component {
     } else {
       this.state = { mobileview: false, smallscreendesktop: false };
     }
-
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
   }
 
   /*  
@@ -75,6 +72,20 @@ export default class Home extends Component {
     //Trigger the getScrollState method when the window is either being scrolled or resized
     window.addEventListener("scroll", this.getScrollState, false);
     window.addEventListener("resize", this.getScrollState, false);
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin.then((response) => {
+      console.log(response);
+      this.setState({
+        isUserLoaded: true,
+        user: response,
+      });
+    }).catch((error) => {
+      console.log("Error: " + error);
+      this.setState({
+        isUserLoaded: true,
+      });
+    });
   }
 
   componentWillUnmount() {

@@ -24,8 +24,17 @@ export default class Account extends Component {
     super(props);
     this.state = {};
 
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin.then((response) => {
+      this.setState({
+        isUserLoaded: true,
+        user: response,
+      });
+    }).catch(() => {
+      this.setState({
+        isUserLoaded: true,
+      });
+    });
   }
 
   render() {
@@ -59,25 +68,25 @@ export default class Account extends Component {
                 <Route
                   exact
                   path="/account/"
-                  render={props => (
+                  render={(props) => (
                     <Profile {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/account/profile"
-                  render={props => (
+                  render={(props) => (
                     <Profile {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/account/card"
-                  render={props => (
+                  render={(props) => (
                     <CreditCard {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/account/address"
-                  render={props => (
+                  render={(props) => (
                     <Address {...props} user={this.state.user} />
                   )}
                 />

@@ -22,27 +22,36 @@ export default class Feed extends Component {
   constructor(props) {
     super(props);
     this.state = { restaurants: [], areRestaurantsLoaded: false };
-
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
   }
 
   componentDidMount() {
     //Fetch all restaurant data, and load into the restaurants variable
     axios
       .get("/api/restaurants")
-      .then(response => {
+      .then((response) => {
         this.setState({
           restaurants: response.data,
-          areRestaurantsLoaded: true
+          areRestaurantsLoaded: true,
         });
       })
       .catch(() => {
         this.setState({ areRestaurantsLoaded: true });
       });
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin.then((response) => {
+      this.setState({
+        isUserLoaded: true,
+        user: response,
+      });
+    }).catch(() => {
+      this.setState({
+        isUserLoaded: true,
+      });
+    });
   }
 
-  updateAddressHandler = newAddress => {
+  updateAddressHandler = (newAddress) => {
     /* Update user's address
     // API route needs to be updated so that a password isn't required in this circumstance
     // Uncomment after that is completed
@@ -58,18 +67,18 @@ export default class Feed extends Component {
       });
     */
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       user: {
         ...prevState.user,
-        address: newAddress
-      }
+        address: newAddress,
+      },
     }));
   };
 
   //This method renders a restaurant for each object found in the "restaurants"
   getRestaurantFeed = () => {
     if (this.state.areRestaurantsLoaded) {
-      return this.state.restaurants.map(currentRestaurant => {
+      return this.state.restaurants.map((currentRestaurant) => {
         return (
           <RestaurantFeedComponent
             restaurant={currentRestaurant}

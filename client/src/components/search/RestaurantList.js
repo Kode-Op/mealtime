@@ -25,32 +25,41 @@ export default class RestaurantList extends Component {
     this.state = {
       areRestaurantsLoaded: false,
       restaurants: [],
-      appliedFilters: []
+      appliedFilters: [],
     };
-
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
   }
 
   componentDidMount() {
     //Fetch all restaurant data, and load into the restaurants variable
     axios
       .get("/api/restaurants")
-      .then(response => {
+      .then((response) => {
         this.setState({
           restaurants: response.data,
-          areRestaurantsLoaded: true
+          areRestaurantsLoaded: true,
         });
       })
       .catch(() => {
         this.setState({ areRestaurantsLoaded: true });
       });
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin.then((response) => {
+      this.setState({
+        isUserLoaded: true,
+        user: response,
+      });
+    }).catch(() => {
+      this.setState({
+        isUserLoaded: true,
+      });
+    });
   }
 
   //This method renders a restaurant for each object found in the "restaurants"
   restaurantList = () => {
     if (this.state.areRestaurantsLoaded) {
-      return this.state.restaurants.map(currentRestaurant => {
+      return this.state.restaurants.map((currentRestaurant) => {
         return (
           <RestaurantListComponent
             restaurant={currentRestaurant}
@@ -102,7 +111,7 @@ export default class RestaurantList extends Component {
   };
 
   //This method appends a filter to this.state.appliedFilters if the filter isn't already included in the array
-  addFilter = i => {
+  addFilter = (i) => {
     let filters = this.state.appliedFilters;
     if (filters.indexOf("Type " + (i + 1)) === -1) {
       filters.push("Type " + (i + 1));
@@ -111,7 +120,7 @@ export default class RestaurantList extends Component {
   };
 
   //This method removes a filter from this.state.appliedFilters
-  removeFilter = i => {
+  removeFilter = (i) => {
     let filters = this.state.appliedFilters;
     filters.splice(i, 1);
     this.setState({ appliedFilters: filters });
