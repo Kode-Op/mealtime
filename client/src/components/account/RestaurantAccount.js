@@ -4,10 +4,9 @@ import { Route, Redirect } from "react-router-dom";
 
 //Import components
 import Navbar from "../nav/Navbar";
-import Profile from "./profile/Profile";
-import CreditCard from "./creditcard/CreditCard";
-import Address from "./address/Address";
 import Footer from "../footer/Footer";
+import ManageRestaurants from "./restaurants/ManageRestaurants";
+import ManageMenuItems from "./menuitems/ManageMenuItems";
 import RouteLink from "../routelink/RouteLink";
 
 //Import assets
@@ -16,12 +15,10 @@ import Loader from "../../assets/loader/Loader";
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
 
-//Import stylesheets
-import "./Account.css";
-
-export default class Account extends Component {
+export default class RestaurantAccount extends Component {
   constructor(props) {
     super(props);
+
     this.state = {};
 
     //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
@@ -39,18 +36,15 @@ export default class Account extends Component {
                 <h2>Your account</h2>
                 <ul>
                   <li>
-                    <RouteLink to="/account/profile" label="Profile" />
-                  </li>
-                  <li>
                     <RouteLink
-                      to="/account/card"
-                      label="Credit card information"
+                      to="/manage/restaurants"
+                      label="Manage Restaurants"
                     />
                   </li>
                   <li>
                     <RouteLink
-                      to="/account/address"
-                      label="Address and phone"
+                      to="/manage/menuitems"
+                      label="Manage Menu Items"
                     />
                   </li>
                 </ul>
@@ -58,27 +52,21 @@ export default class Account extends Component {
               <div className="accountrightpane">
                 <Route
                   exact
-                  path="/account/"
+                  path="/manage/"
                   render={props => (
-                    <Profile {...props} user={this.state.user} />
+                    <ManageRestaurants {...props} user={this.state.user} />
                   )}
                 />
                 <Route
-                  path="/account/profile"
+                  path="/manage/restaurants"
                   render={props => (
-                    <Profile {...props} user={this.state.user} />
+                    <ManageRestaurants {...props} user={this.state.user} />
                   )}
                 />
                 <Route
-                  path="/account/card"
+                  path="/manage/menuitems"
                   render={props => (
-                    <CreditCard {...props} user={this.state.user} />
-                  )}
-                />
-                <Route
-                  path="/account/address"
-                  render={props => (
-                    <Address {...props} user={this.state.user} />
+                    <ManageMenuItems {...props} user={this.state.user} />
                   )}
                 />
               </div>

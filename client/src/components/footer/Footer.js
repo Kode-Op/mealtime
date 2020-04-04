@@ -8,7 +8,7 @@ const Footer = () => {
         backgroundColor: "#333366",
         color: "white",
         height: 200,
-        paddingTop: 60,
+        padding: "60px 20px 0 20px",
         position: "relative",
         left: 0,
         right: 0,
