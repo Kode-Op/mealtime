@@ -146,7 +146,8 @@ router.get("/verify/:id", function(req, res) {
       } else if (!session.isDeleted) {
         return res.status(200).send({
           success: true,
-          message: "Valid token"
+          message: "Valid token",
+          userId: session.userId
         });
       } else {
         return res.status(500).send({
