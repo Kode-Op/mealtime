@@ -20,21 +20,37 @@ import GetLogin from "../../utils/GetLogin";
 import "./Account.css";
 
 export default class Account extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
 
     //Get "user" and "isUserLoaded" from the GetLogin utility
-    GetLogin.then((response) => {
-      this.setState({
-        isUserLoaded: true,
-        user: response,
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
       });
-    }).catch(() => {
-      this.setState({
-        isUserLoaded: true,
-      });
-    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

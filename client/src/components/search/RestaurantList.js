@@ -19,6 +19,8 @@ import GetLogin from "../../utils/GetLogin";
 import "./RestaurantList.css";
 
 export default class RestaurantList extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -30,6 +32,8 @@ export default class RestaurantList extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     //Fetch all restaurant data, and load into the restaurants variable
     axios
       .get("/api/restaurants")
@@ -44,16 +48,26 @@ export default class RestaurantList extends Component {
       });
 
     //Get "user" and "isUserLoaded" from the GetLogin utility
-    GetLogin.then((response) => {
-      this.setState({
-        isUserLoaded: true,
-        user: response,
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
       });
-    }).catch(() => {
-      this.setState({
-        isUserLoaded: true,
-      });
-    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   //This method renders a restaurant for each object found in the "restaurants"

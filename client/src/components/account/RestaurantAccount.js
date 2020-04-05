@@ -16,6 +16,8 @@ import Loader from "../../assets/loader/Loader";
 import GetLogin from "../../utils/GetLogin";
 
 export default class RestaurantAccount extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -23,26 +25,38 @@ export default class RestaurantAccount extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     //Get "user" and "isUserLoaded" from the GetLogin utility
-    GetLogin.then((response) => {
-      this.setState({
-        isUserLoaded: true,
-        user: response,
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
       });
-    }).catch(() => {
-      this.setState({
-        isUserLoaded: true,
-      });
-    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
-    if (this.state.userObj.isUserLoaded) {
-      if (this.state.userObj.user) {
+    if (this.state.isUserLoaded) {
+      if (this.state.user) {
         return (
           <div>
             <div className="accountcontainer">
-              <Navbar user={this.state.userObj.user} />
+              <Navbar user={this.state.user} />
               <div className="accountleftpane">
                 <h2>Your account</h2>
                 <ul>
@@ -65,28 +79,19 @@ export default class RestaurantAccount extends Component {
                   exact
                   path="/manage/"
                   render={(props) => (
-                    <ManageRestaurants
-                      {...props}
-                      user={this.state.userObj.user}
-                    />
+                    <ManageRestaurants {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/manage/restaurants"
                   render={(props) => (
-                    <ManageRestaurants
-                      {...props}
-                      user={this.state.userObj.user}
-                    />
+                    <ManageRestaurants {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/manage/menuitems"
                   render={(props) => (
-                    <ManageMenuItems
-                      {...props}
-                      user={this.state.userObj.user}
-                    />
+                    <ManageMenuItems {...props} user={this.state.user} />
                   )}
                 />
               </div>

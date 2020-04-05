@@ -19,6 +19,8 @@ import Loader from "../../assets/loader/Loader";
 import "./Restaurant.css";
 
 export default class Restaurant extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -36,6 +38,8 @@ export default class Restaurant extends Component {
 
   //Get the restaurant data and the menu item associated with the restaurant
   componentDidMount() {
+    this._isMounted = true;
+
     if (this.state.id !== "") {
       axios
         .get("/api/restaurants/" + this.state.id)
@@ -62,16 +66,26 @@ export default class Restaurant extends Component {
       });
 
     //Get "user" and "isUserLoaded" from the GetLogin utility
-    GetLogin.then((response) => {
-      this.setState({
-        isUserLoaded: true,
-        user: response,
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
       });
-    }).catch(() => {
-      this.setState({
-        isUserLoaded: true,
-      });
-    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   //This method returns a menu item for each menu item associated with the restaurant.

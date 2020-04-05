@@ -19,36 +19,58 @@ import GetLogin from "../../utils/GetLogin";
 import "./Feed.css";
 
 export default class Feed extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
-    this.state = { restaurants: [], areRestaurantsLoaded: false };
+    this.state = {
+      restaurants: [],
+      areRestaurantsLoaded: false,
+      isUserLoaded: false,
+    };
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     //Fetch all restaurant data, and load into the restaurants variable
     axios
       .get("/api/restaurants")
       .then((response) => {
-        this.setState({
-          restaurants: response.data,
-          areRestaurantsLoaded: true,
-        });
+        if (this._isMounted) {
+          this.setState({
+            restaurants: response.data,
+            areRestaurantsLoaded: true,
+          });
+        }
       })
       .catch(() => {
-        this.setState({ areRestaurantsLoaded: true });
+        if (this._isMounted) {
+          this.setState({ areRestaurantsLoaded: true });
+        }
       });
 
     //Get "user" and "isUserLoaded" from the GetLogin utility
-    GetLogin.then((response) => {
-      this.setState({
-        isUserLoaded: true,
-        user: response,
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
       });
-    }).catch(() => {
-      this.setState({
-        isUserLoaded: true,
-      });
-    });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   updateAddressHandler = (newAddress) => {
