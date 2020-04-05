@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-let CreditCard = require("../models/creditCard_model");
 
 const Schema = mongoose.Schema;
 
@@ -37,6 +36,10 @@ const userSchema = new Schema(
     phone: {
       type: String,
       default: ""
+    },
+    isOwner: {
+      type: Boolean,
+      default: false
     }
   },
   {

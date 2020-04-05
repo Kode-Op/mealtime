@@ -13,7 +13,7 @@ router.route("/").get((req, res) => {
 });
 
 // Format: GET /api/users/getUser/:token
-// Required Fields: :token in call
+// Required Fields: :token in call (this is the SESSION TOKEN)
 // Returns: User._id
 router.route("/getUser/:id").get((req, res) => {
   const token = req.params.id;
@@ -50,13 +50,15 @@ router.route("/add").post((req, res) => {
   const lastName = req.body.lastName;
   const password = req.body.password;
   const address = req.body.address;
+  const isOwner = req.body.isOwner;
 
   const newItem = new User({
     email,
     firstName,
     lastName,
     password,
-    address
+    address,
+    isOwner
   });
 
   newItem.password = newItem.generateHash(password);
@@ -185,7 +187,7 @@ router.route("/:id").delete((req, res) => {
 
 // DEPRECATED - DO NOT USE
 // Format: POST /api/users/update/User._id
-// Required Fields: email, firstName, lastName, password, address
+// Required Fields: email, firstName, lastName, password, address, isOwner
 // Returns: Status based on successful/unsuccessful name update
 router.route("/update/:id").post((req, res) => {
   User.findById(req.params.id).then(users => {
@@ -194,6 +196,7 @@ router.route("/update/:id").post((req, res) => {
     users.lastName = req.body.lastName;
     users.password = req.body.password;
     users.address = req.body.address;
+    users.isOwner = req.body.isOwner;
     users
       .save()
       .then(() => res.json("User updated."))
@@ -333,6 +336,29 @@ router.route("/updateAddress/:id").post((req, res) => {
         .status(500)
         .json("Invalid Password")
         .send();
+    }
+  });
+});
+
+// Format: GET /api/users/makeOwner/User._id
+// Required Fields: none
+// Returns: Status based on successful/unsuccessful update of user to be an owner
+router.route("/makeOwner/:id").get((req, res) => {
+  var userId = req.params.id;
+  User.findById(userId).then(users => {
+    if (!users) {
+      // not found
+      return res
+        .status(404)
+        .json("Not Found.")
+        .send();
+    } else {
+      // found
+      users.isOwner = true;
+      users
+        .save()
+        .then(() => res.json("User is now an Owner."))
+        .catch(err => res.status(400).json("Error: " + err));
     }
   });
 });
