@@ -146,11 +146,24 @@ router.get("/verify/:id", function(req, res) {
           message: "No valid token"
         });
       } else if (!session.isDeleted) {
-        return res.status(200).send({
-          success: true,
-          message: "Valid token",
-          userId: session.userId
-        });
+        User.findById(session.userId)
+          .then(user => {
+            if (!user) {
+              // user not found
+              return res.status(404).send({
+                success: false,
+                message: "User not found."
+              });
+            } else {
+              let response = {
+                success: true,
+                message: "Valid token",
+                data: user
+              };
+              return res.status(200).json(response);
+            }
+          })
+          .catch(err => res.status(500).json("Error: " + err));
       } else {
         return res.status(500).send({
           success: false,
