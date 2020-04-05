@@ -12,6 +12,7 @@ router.route("/").get((req, res) => {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
+// DEPRECATED - DO NOT USE (use api/users/verify/:token)
 // Format: GET /api/users/getUser/:token
 // Required Fields: :token in call (this is the SESSION TOKEN)
 // Returns: User._id
@@ -327,7 +328,7 @@ router.route("/updatePhone/:id").post((req, res) => {
 });
 
 // Format: POST /api/users/updateAddress/User._id
-// Required Fields: address (String), password
+// Required Fields: address (String)
 // Returns: Status based on successful/unsuccessful address update
 router.route("/updateAddress/:id").post((req, res) => {
   var password = req.body.password;
@@ -338,17 +339,12 @@ router.route("/updateAddress/:id").post((req, res) => {
         .status(404)
         .json("Not Found.")
         .send();
-    } else if (users.validPassword(password)) {
+    } else {
       users.address = req.body.address;
       users
         .save()
         .then(() => res.json("Address updated."))
         .catch(err => res.status(400).json("Error: " + err));
-    } else {
-      return res
-        .status(500)
-        .json("Invalid Password")
-        .send();
     }
   });
 });
