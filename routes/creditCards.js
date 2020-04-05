@@ -60,7 +60,7 @@ router.route("/:id").delete((req, res) => {
 });
 
 // Format: POST /api/creditCards/updateCard/CreditCard._id
-// Required Fields: firstName, lastName, number, exMonth, exYear, ccv, address, password
+// Required Fields: firstName, lastName, number, exMonth, exYear, ccv, address
 // Returns: Status based on successful/unsuccessful card update
 router.route("/updateCard/:id").post((req, res) => {
   var password = req.body.password;
@@ -81,7 +81,7 @@ router.route("/updateCard/:id").post((req, res) => {
           .status(404)
           .json("User Not Found.")
           .send();
-      } else if (users.validPassword(password)) {
+      } else {
         card.firstName = req.body.firstName;
         card.lastName = req.body.lastName;
         card.number = req.body.number;
@@ -94,11 +94,6 @@ router.route("/updateCard/:id").post((req, res) => {
           .save()
           .then(() => res.json("Card updated."))
           .catch(err => res.status(400).json("Error: " + err));
-      } else {
-        return res
-          .status(500)
-          .json("Invalid Password")
-          .send();
       }
     });
   });
