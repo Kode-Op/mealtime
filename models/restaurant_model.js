@@ -229,7 +229,8 @@ const restaurantSchema = new Schema(
         }
       ],
       additionalItems: false
-    }
+    },
+    ownerId: { type: String, required: true }
   },
   {
     timestamps: true
