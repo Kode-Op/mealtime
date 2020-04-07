@@ -11,7 +11,7 @@ const restaurantSchema = new Schema(
     minorder: { type: Number, default: 1 },
     address: {
       type: String,
-      default: ""
+      default: "",
     },
     hoursofoperation: {
       type: Array,
@@ -24,28 +24,28 @@ const restaurantSchema = new Schema(
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 1
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //Start time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
-            }
+              maximum: 2359,
+            },
           ],
-          additionalItems: false
+          additionalItems: false,
         },
         //Monday
         {
@@ -54,28 +54,28 @@ const restaurantSchema = new Schema(
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 1
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //Start time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
-            }
+              maximum: 2359,
+            },
           ],
-          additionalItems: false
+          additionalItems: false,
         },
         //Tuesday
         {
@@ -84,28 +84,28 @@ const restaurantSchema = new Schema(
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 1
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //Start time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
-            }
+              maximum: 2359,
+            },
           ],
-          additionalItems: false
+          additionalItems: false,
         },
         //Wednesday
         {
@@ -114,28 +114,28 @@ const restaurantSchema = new Schema(
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 1
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //Start time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
-            }
+              maximum: 2359,
+            },
           ],
-          additionalItems: false
+          additionalItems: false,
         },
         //Thursday
         {
@@ -144,28 +144,28 @@ const restaurantSchema = new Schema(
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 1
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //Start time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
-            }
+              maximum: 2359,
+            },
           ],
-          additionalItems: false
+          additionalItems: false,
         },
         //Friday
         {
@@ -174,28 +174,28 @@ const restaurantSchema = new Schema(
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 1
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //Start time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
-            }
+              maximum: 2359,
+            },
           ],
-          additionalItems: false
+          additionalItems: false,
         },
         //Saturday
         {
@@ -204,36 +204,46 @@ const restaurantSchema = new Schema(
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 1
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //Start time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
+              maximum: 2359,
             },
             //End time 2
             {
               type: Number,
               minimum: 0,
-              maximum: 2359
-            }
+              maximum: 2359,
+            },
           ],
-          additionalItems: false
-        }
+          additionalItems: false,
+        },
       ],
-      additionalItems: false
+      additionalItems: false,
     },
-    ownerId: { type: String, required: true }
+    ownerId: { type: String, required: true },
+    tags: {
+      type: Array,
+      required: true,
+      default: [],
+    },
+    isDeleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

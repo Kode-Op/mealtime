@@ -10,48 +10,53 @@ const userSchema = new Schema(
       required: true,
       trim: true,
       minlength: 6,
-      unique: true
+      unique: true,
     },
     password: {
       type: String,
       required: true,
-      minlength: 5
+      minlength: 5,
     },
     firstName: {
       type: String,
       required: true,
       trim: true,
-      minlength: 1
+      minlength: 1,
     },
     lastName: {
       type: String,
       required: true,
       trim: true,
-      minlength: 1
+      minlength: 1,
     },
     address: {
       type: String,
-      default: ""
+      default: "",
     },
     phone: {
       type: String,
-      default: ""
+      default: "",
     },
     isOwner: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    tags: {
+      type: Array,
+      required: true,
+      default: [],
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
-userSchema.methods.generateHash = function(password) {
+userSchema.methods.generateHash = function (password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
