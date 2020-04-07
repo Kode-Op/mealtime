@@ -66,7 +66,7 @@ router.route("/addTags/:id").post((req, res) => {
 
 // Format: POST /api/restaurants/setTags/._id
 // Required Fields: tags[]
-// Returns: 200 on success, 413 if tag.length > 6, 404 if restaurant not found, 400 if other error
+// Returns: 200 on success, 413 if tag.length > 6, 404 if user not found, 400 if other error
 router.route("/setTags/:id").post((req, res) => {
   let restaurantId = req.params.id;
   let tags = req.body.tags;
@@ -76,6 +76,10 @@ router.route("/setTags/:id").post((req, res) => {
   } else {
     Restaurant.findById(restaurantId)
       .then((restaurant) => {
+        if (!restaurant) {
+          // Restaurant not found
+          return res.status(404).json("Restaurant not found.");
+        }
         restaurant.tags = tags;
         restaurant
           .save()
