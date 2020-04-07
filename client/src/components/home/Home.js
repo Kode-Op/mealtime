@@ -26,6 +26,8 @@ import GetLogin from "../../utils/GetLogin";
 import "./Home.css";
 
 export default class Home extends Component {
+  _isMounted = false;
+
   constructor() {
     super();
     this.state = {
@@ -41,9 +43,6 @@ export default class Home extends Component {
     } else {
       this.state = { mobileview: false, smallscreendesktop: false };
     }
-
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
   }
 
   /*  
@@ -73,6 +72,8 @@ export default class Home extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
+
     //Force each splash image to preload
     new Image().src = mobilesplash;
     new Image().src = splashplaceholder;
@@ -80,9 +81,29 @@ export default class Home extends Component {
     //Trigger the getScrollState method when the window is either being scrolled or resized
     window.addEventListener("scroll", this.getScrollState, false);
     window.addEventListener("resize", this.getScrollState, false);
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
+      });
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
+
     window.removeEventListener("scroll", this.getScrollState);
     window.removeEventListener("resize", this.getScrollState);
   }

@@ -19,30 +19,61 @@ import GetLogin from "../../utils/GetLogin";
 import "./Feed.css";
 
 export default class Feed extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
-    this.state = { restaurants: [], areRestaurantsLoaded: false };
-
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
+    this.state = {
+      restaurants: [],
+      areRestaurantsLoaded: false,
+      isUserLoaded: false,
+    };
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     //Fetch all restaurant data, and load into the restaurants variable
     axios
       .get("/api/restaurants")
-      .then(response => {
-        this.setState({
-          restaurants: response.data,
-          areRestaurantsLoaded: true
-        });
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            restaurants: response.data,
+            areRestaurantsLoaded: true,
+          });
+        }
       })
       .catch(() => {
-        this.setState({ areRestaurantsLoaded: true });
+        if (this._isMounted) {
+          this.setState({ areRestaurantsLoaded: true });
+        }
+      });
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
       });
   }
 
-  updateAddressHandler = newAddress => {
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  updateAddressHandler = (newAddress) => {
     /* Update user's address
     // API route needs to be updated so that a password isn't required in this circumstance
     // Uncomment after that is completed
@@ -58,18 +89,18 @@ export default class Feed extends Component {
       });
     */
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       user: {
         ...prevState.user,
-        address: newAddress
-      }
+        address: newAddress,
+      },
     }));
   };
 
   //This method renders a restaurant for each object found in the "restaurants"
   getRestaurantFeed = () => {
     if (this.state.areRestaurantsLoaded) {
-      return this.state.restaurants.map(currentRestaurant => {
+      return this.state.restaurants.map((currentRestaurant) => {
         return (
           <RestaurantFeedComponent
             restaurant={currentRestaurant}

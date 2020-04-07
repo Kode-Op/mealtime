@@ -16,13 +16,38 @@ import Loader from "../../assets/loader/Loader";
 import GetLogin from "../../utils/GetLogin";
 
 export default class RestaurantAccount extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
     this.state = {};
+  }
 
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
+  componentDidMount() {
+    this._isMounted = true;
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
@@ -53,19 +78,19 @@ export default class RestaurantAccount extends Component {
                 <Route
                   exact
                   path="/manage/"
-                  render={props => (
+                  render={(props) => (
                     <ManageRestaurants {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/manage/restaurants"
-                  render={props => (
+                  render={(props) => (
                     <ManageRestaurants {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/manage/menuitems"
-                  render={props => (
+                  render={(props) => (
                     <ManageMenuItems {...props} user={this.state.user} />
                   )}
                 />

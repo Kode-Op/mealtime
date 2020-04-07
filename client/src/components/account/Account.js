@@ -20,12 +20,37 @@ import GetLogin from "../../utils/GetLogin";
 import "./Account.css";
 
 export default class Account extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {};
+  }
 
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
+  componentDidMount() {
+    this._isMounted = true;
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
@@ -59,25 +84,25 @@ export default class Account extends Component {
                 <Route
                   exact
                   path="/account/"
-                  render={props => (
+                  render={(props) => (
                     <Profile {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/account/profile"
-                  render={props => (
+                  render={(props) => (
                     <Profile {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/account/card"
-                  render={props => (
+                  render={(props) => (
                     <CreditCard {...props} user={this.state.user} />
                   )}
                 />
                 <Route
                   path="/account/address"
-                  render={props => (
+                  render={(props) => (
                     <Address {...props} user={this.state.user} />
                   )}
                 />

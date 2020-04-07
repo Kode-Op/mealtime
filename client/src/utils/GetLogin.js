@@ -4,46 +4,30 @@ import axios from "axios";
 //Import utilties
 import { getFromStorage } from "./storage";
 
-const GetLogin = setState => {
-  const obj = getFromStorage("mealtime");
-  let token = "";
-  if (obj !== null) {
-    token = obj.token;
-    // Verify token
-    axios
-      .get("/api/users/verify/" + token)
-      .then(tokenResponse => {
-        if (tokenResponse.data.success) {
+export default function GetLogin() {
+  return new Promise((resolve, reject) => {
+    const obj = getFromStorage("mealtime");
+    let token = "";
+    if (obj !== null) {
+      token = obj.token;
+      // Verify token
+      axios
+        .get("/api/users/getUser/" + token)
+        .then((response) => {
           axios
-            .get("/api/users/getUser/" + token)
-            .then(userResponse => {
-              axios
-                .get("/api/users/" + userResponse.data.userId)
-                .then(idResponse => {
-                  setState({ user: idResponse.data, isUserLoaded: true });
-                })
-                .catch(error => {
-                  console.log("Error in getting /api/users: " + error);
-                  setState({ isUserLoaded: true });
-                });
+            .get("/api/users/" + response.data.userId)
+            .then((userResponse) => {
+              resolve(userResponse.data);
             })
-            .catch(error => {
-              console.log("Error in getting /api/users/getUser: " + error);
-              setState({ isUserLoaded: true });
+            .catch((error) => {
+              reject(error);
             });
-        } else {
-          console.log("Error in getting /api/users/verify");
-          setState({ isUserLoaded: true });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        setState({ isUserLoaded: true });
-      });
-  } else {
-    console.log("User isn't logged in");
-    setState({ isUserLoaded: true });
-  }
-};
-
-export default GetLogin;
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    } else {
+      reject("Not logged in");
+    }
+  });
+}

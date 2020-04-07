@@ -19,6 +19,8 @@ import Loader from "../../assets/loader/Loader";
 import "./Restaurant.css";
 
 export default class Restaurant extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -30,22 +32,21 @@ export default class Restaurant extends Component {
       isPageLoaded: false,
       id: id,
       menuItems: [],
-      restaurant: []
+      restaurant: [],
     };
-
-    //Get the "user" and "isUserLoaded" state variables from the GetLogin utility
-    GetLogin(this.setState.bind(this));
   }
 
   //Get the restaurant data and the menu item associated with the restaurant
   componentDidMount() {
+    this._isMounted = true;
+
     if (this.state.id !== "") {
       axios
         .get("/api/restaurants/" + this.state.id)
-        .then(response => {
+        .then((response) => {
           this.setState({
             restaurant: response.data,
-            isPageLoaded: true
+            isPageLoaded: true,
           });
         })
         .catch(() => {
@@ -57,18 +58,40 @@ export default class Restaurant extends Component {
 
     axios
       .get("/api/menuitems/" + this.state.id)
-      .then(response => {
+      .then((response) => {
         this.setState({ menuItems: response.data });
       })
       .catch(() => {
         this.setState({ menuItems: null });
       });
+
+    //Get "user" and "isUserLoaded" from the GetLogin utility
+    GetLogin()
+      .then((response) => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+            user: response,
+          });
+        }
+      })
+      .catch(() => {
+        if (this._isMounted) {
+          this.setState({
+            isUserLoaded: true,
+          });
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   //This method returns a menu item for each menu item associated with the restaurant.
   getMenuItems = () => {
     if (this.state.menuItems) {
-      return this.state.menuItems.map(currentMenuItem => {
+      return this.state.menuItems.map((currentMenuItem) => {
         return (
           <MenuItemComponent
             menuItem={currentMenuItem}
