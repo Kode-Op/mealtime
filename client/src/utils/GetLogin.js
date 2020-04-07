@@ -12,16 +12,9 @@ export default function GetLogin() {
       token = obj.token;
       // Verify token
       axios
-        .get("/api/users/getUser/" + token)
+        .get("/api/users/verify/" + token)
         .then((response) => {
-          axios
-            .get("/api/users/" + response.data.userId)
-            .then((userResponse) => {
-              resolve(userResponse.data);
-            })
-            .catch((error) => {
-              reject(error);
-            });
+          resolve(response.data.data);
         })
         .catch((error) => {
           reject(error);

@@ -58,7 +58,7 @@ export default class RestaurantAccount extends Component {
             <div className="accountcontainer">
               <Navbar user={this.state.user} />
               <div className="accountleftpane">
-                <h2>Your account</h2>
+                <h2>Your restaurants</h2>
                 <ul>
                   <li>
                     <RouteLink

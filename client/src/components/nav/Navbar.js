@@ -12,11 +12,11 @@ export default class NavBar extends Component {
 
     if (window.innerWidth < 1024) {
       this.state = {
-        mobileview: true
+        mobileview: true,
       };
     } else {
       this.state = {
-        mobileview: false
+        mobileview: false,
       };
     }
   }
@@ -41,7 +41,7 @@ export default class NavBar extends Component {
   }
 
   //This method renders a navbar with different contents depending on whether
-  //or not a user is logged in
+  //or not a user is logged in, and if the user is a restaurant owner.
   getLogin = () => {
     if (!this.props.user) {
       return (
@@ -80,7 +80,7 @@ export default class NavBar extends Component {
           </Navbar.Collapse>
         </React.Fragment>
       );
-    } else {
+    } else if (this.props.user && !this.props.user.isOwner) {
       return (
         <React.Fragment>
           <Nav.Link>
@@ -109,6 +109,43 @@ export default class NavBar extends Component {
               </div>
               <Link to="/account/profile">
                 <div className="NavSettings">Settings</div>
+              </Link>
+              <Link to="/logout">
+                <div className="NavLogout">Logout</div>
+              </Link>
+            </ButtonToolbar>
+          </Navbar.Collapse>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <Nav.Link>
+            <Link to="/feed" className="linkstyle" style={{ paddingTop: 0 }}>
+              MealTime
+            </Link>
+          </Nav.Link>
+          <div className="navzone">
+            <input
+              type="text"
+              name="address"
+              className="navbox"
+              defaultValue={this.props.user.address}
+              placeholder="Enter your address..."
+            />
+            <Link to="/search">
+              <Button className="navgo" variant="danger">
+                >
+              </Button>
+            </Link>
+          </div>
+          <Navbar.Collapse className="justify-content-end">
+            <ButtonToolbar>
+              <div className="NavWelcome">
+                Welcome, {this.props.user.firstName}!
+              </div>
+              <Link to="/manage/restaurants">
+                <div className="NavSettings">Manage Restaurants</div>
               </Link>
               <Link to="/logout">
                 <div className="NavLogout">Logout</div>
