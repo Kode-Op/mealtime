@@ -21,7 +21,7 @@ router.route("/byTag/:tag").get((req, res) => {
 });
 
 // DEPRECATED - DO NOT USE (only for Insomnia use for migration, no max length check, limited error checks)
-// Format: POST /api/restaurants/addTags/:id
+// Format: POST /api/restaurants/addTags/._id
 // Required Fields: tags[]
 // Returns: List of successful/Unsuccsessful additions, prevents duplicates
 router.route("/addTags/:id").post((req, res) => {
@@ -64,9 +64,9 @@ router.route("/addTags/:id").post((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-// Format: POST /api/restaurants/setTags/:id
+// Format: POST /api/restaurants/setTags/._id
 // Required Fields: tags[]
-// Returns: 200 on success, 413 if tag.length > 6, 404 if user not found, 400 if other error
+// Returns: 200 on success, 413 if tag.length > 6, 404 if restaurant not found, 400 if other error
 router.route("/setTags/:id").post((req, res) => {
   let restaurantId = req.params.id;
   let tags = req.body.tags;
