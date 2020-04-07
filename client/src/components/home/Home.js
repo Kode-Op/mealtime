@@ -9,6 +9,11 @@ import Footer from "../footer/Footer";
 
 //Import assets
 import Loader from "../../assets/loader/Loader";
+import appimage from "../../assets/images/splash/app_image.PNG";
+import localimage from "../../assets/images/splash/local_image.PNG";
+import partnerimage from "../../assets/images/splash/partner_image.PNG";
+import aboutimage from "../../assets/images/splash/about_image.jpg";
+import pickupimage from "../../assets/images/splash/pickup_image.jpg";
 import splashplaceholder from "../../assets/images/splash/splashplaceholdershadow.png";
 import mobilesplash from "../../assets/images/splash/mobilebackground.png";
 import splashcontentplaceholder from "./splashcontentplaceholder.png";
@@ -24,7 +29,7 @@ export default class Home extends Component {
   constructor() {
     super();
     this.state = {
-      scrolled: false
+      scrolled: false,
     };
 
     //Set the "mobileview" and "smallscreendesktop" variables based on the
@@ -129,30 +134,27 @@ export default class Home extends Component {
               <div className="splashcenterdiv">
                 <div className="splashcentercontainer">
                   <div className="splashtrio">
-                    <img src={splashcontentplaceholder} alt="" />
+                    <img src={appimage} alt={splashcontentplaceholder} />
                     <h5>Try the app!</h5>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
+                      Get the best experience possible with our mobile Android
+                      app!
                     </p>
                   </div>
                   <div className="splashtrio">
-                    <img src={splashcontentplaceholder} alt="" />
+                    <img src={localimage} alt={splashcontentplaceholder} />
                     <h5>Local favorites</h5>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
+                      Bring every local flavor that you crave, right to your
+                      doorstep with Mealtime.
                     </p>
                   </div>
                   <div className="splashtrio">
-                    <img src={splashcontentplaceholder} alt="" />
+                    <img src={partnerimage} alt={splashcontentplaceholder} />
                     <h5>Become a partner</h5>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
+                      Grow your business and reach customers like never before
+                      by partnering with Mealtime.
                     </p>
                   </div>
                 </div>
@@ -160,28 +162,32 @@ export default class Home extends Component {
                   <div className="splashduo">
                     <h5>Pickup or delivery</h5>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      Get it delivered right to your door. Or, try pickup on
+                      your way home. It’s Mealtime on your time!
                     </p>
                   </div>
                   <div className="splashduo">
-                    <img src={splashcontentplaceholder500x375} alt="" />
+                    <img
+                      src={pickupimage}
+                      alt={splashcontentplaceholder500x375}
+                    />
                   </div>
                 </div>
                 <div className="splashcentercontainerreverse">
                   <div className="splashduo">
                     <h5>About MealTime</h5>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      Mealtime is a new way to get meals on your own time. With
+                      powerful filters that cater to your personal tastes and
+                      preferences, finding great and affordable eats have never
+                      been easier. Any time can be Mealtime!
                     </p>
                   </div>
                   <div className="splashduo">
-                    <img src={splashcontentplaceholder500x375} alt="" />
+                    <img
+                      src={aboutimage}
+                      alt={splashcontentplaceholder500x375}
+                    />
                   </div>
                 </div>
               </div>
