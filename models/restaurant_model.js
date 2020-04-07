@@ -236,6 +236,11 @@ const restaurantSchema = new Schema(
       required: true,
       default: [],
     },
+    isDeleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,

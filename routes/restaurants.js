@@ -5,7 +5,7 @@ let Restaurant = require("../models/restaurant_model");
 // Required Fields: none
 // Returns: All info on all restaurants
 router.route("/").get((req, res) => {
-  Restaurant.find()
+  Restaurant.find({ isDeleted: false })
     .then((restaurants) => res.json(restaurants))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -15,7 +15,7 @@ router.route("/").get((req, res) => {
 // Returns: All info on restaurants containing corresponding tag
 router.route("/byTag/:tag").get((req, res) => {
   let tag = Number(req.params.tag);
-  Restaurant.find({ tags: tag })
+  Restaurant.find({ tags: tag, isDeleted: false })
     .then((restaurants) => res.json(restaurants))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -124,7 +124,7 @@ router.route("/:id").get((req, res) => {
 // Required Fields: none
 // Returns: All info on restaurants owned by a particular owner
 router.route("/byOwner/:id").get((req, res) => {
-  Restaurant.find({ ownerId: req.params.id })
+  Restaurant.find({ ownerId: req.params.id, isDeleted: false })
     .then((restaurants) => res.json(restaurants))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -141,6 +141,7 @@ router.route("/add").post((req, res) => {
   const address = req.body.address;
   const hoursofoperation = req.body.hoursofoperation;
   const ownerId = req.body.ownerId;
+  const isDeleted = false;
 
   const newItem = new Restaurant({
     name,
@@ -151,6 +152,7 @@ router.route("/add").post((req, res) => {
     address,
     hoursofoperation,
     ownerId,
+    isDeleted,
   });
 
   newItem
@@ -172,6 +174,53 @@ router.route("/addOwner/:id").post((req, res) => {
       restaurants
         .save()
         .then(() => res.json("OwnerId updated."))
+        .catch((err) => res.status(400).json("Error: " + err));
+    })
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
+// Format: POST /api/restaurants/update/Restaurant._id
+// Required Fields: ownerId minorder, address, hoursofoperation, tags, name, price, rating, description
+// Returns: Status based on successful/unsuccessful restaurant update
+router.route("/update/:id").post((req, res) => {
+  minorder = req.body.minorder;
+  address = req.body.address;
+  hoursofoperation = req.body.hoursofoperation;
+  tags = req.body.tags;
+  name = req.body.name;
+  price = req.body.price;
+  rating = req.body.rating;
+  description = req.body.description;
+
+  Restaurant.findById(req.params.id)
+    .then((restaurant) => {
+      restaurant.minorder = minorder;
+      restaurant.address = address;
+      restaurant.hoursofoperation = hoursofoperation;
+      restaurant.tags = tags;
+      restaurant.name = name;
+      restaurant.price = price;
+      restaurant.rating = rating;
+      restaurant.description = description;
+
+      restaurant
+        .save()
+        .then(() => res.json("Restaurant Updated."))
+        .catch((err) => res.status(400).json("Error: " + err));
+    })
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
+// Format: DELETE /api/restaurants/Restaurant._id
+// Required Fields: none
+// Returns: Status based on successful/unsuccessful restaurant deletion
+router.route("/:id").delete((req, res) => {
+  Restaurant.findById(req.params.id)
+    .then((restaurant) => {
+      restaurant.isDeleted = true;
+      restaurant
+        .save()
+        .then(() => res.json("Restaurant Deleted."))
         .catch((err) => res.status(400).json("Error: " + err));
     })
     .catch((err) => res.status(400).json("Error: " + err));
