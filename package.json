@@ -16,7 +16,11 @@
   "license": "ISC",
   "dependencies": {
     "antd": "^4.1.1",
+    "aws-sdk": "^2.656.0",
     "bcrypt": "^4.0.1",
+    "busboy": "^0.3.1",
+    "busboy-body-parser": "^0.3.2",
+    "connect-busboy": "0.0.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "epxress": "0.0.1-security",

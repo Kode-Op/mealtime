@@ -2,10 +2,13 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
+const busboy = require("connect-busboy");
+const busboyBodyParser = require("busboy-body-parser");
 
 require("dotenv").config();
 
 const app = express();
+app.use(busboy());
 
 let port = process.env.PORT;
 if (port == null || port == "") {
@@ -14,19 +17,21 @@ if (port == null || port == "") {
 
 app.use(cors());
 app.use(express.json());
+app.use(busboyBodyParser());
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
 
+const filesRouter = require("./routes/files");
 const menuItemsRouter = require("./routes/menuItems");
 const restaurantsRouter = require("./routes/restaurants");
 const ordersRouter = require("./routes/orders");
@@ -35,6 +40,7 @@ const reviewRouter = require("./routes/reviews");
 const userRouter = require("./routes/users");
 const creditCardRouter = require("./routes/creditCards");
 
+app.use("/api/files", filesRouter);
 app.use("/api/menuItems", menuItemsRouter);
 app.use("/api/restaurants", restaurantsRouter);
 app.use("/api/orders", ordersRouter);
@@ -52,24 +58,5 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
-
-/////////////////////////////////////////////////////////////////////////
-// Use multer for uploading images.
-// Read: https://medium.com/@alvenw/how-to-store-images-to-mongodb-with-node-js-fb3905c37e6d
-//
-//app.post(‘/api/photo’,function(req,res){
-// var newItem = new Item();
-// newItem.img.data = fs.readFileSync(req.files.userPhoto.path)
-// newItem.img.contentType = ‘image/png’;
-// newItem.save();
-//});
-//
-//app.use(multer({ dest: ‘./uploads/’,
-// rename: function (fieldname, filename) {
-//   return filename;
-// },
-//}));
-//
-/////////////////////////////////////////////////////////////////////////
 
 app.listen(port);
