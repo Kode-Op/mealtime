@@ -8,6 +8,9 @@ import axios from "axios";
 //Import assets
 import Loader from "../../../assets/loader/Loader";
 
+//Import utilities
+import TagBank from "../../../utils/Tags";
+
 //Import stylesheets
 import "./ManageRestaurants.css";
 import "antd/dist/antd.css";
@@ -18,16 +21,26 @@ export default class ManageRestaurants extends Component {
   constructor(props) {
     super(props);
 
+    //Instantiate a 7x4 matrix of "0000"
+    const hourmatrix = new Array(7)
+      .fill("0000")
+      .map(() => new Array(4).fill("0000"));
+
     this.state = {
       restaurants: [],
       areRestaurantsLoaded: false,
+      successMessage: "",
       errorMessage: "",
+      tagWarning: "",
       name: "",
       address: "",
       rating: 0,
       price: 0,
       minorder: 0,
       description: "",
+      tags: [],
+      tagbank: TagBank,
+      hoursofoperation: hourmatrix,
     };
   }
 
@@ -90,20 +103,38 @@ export default class ManageRestaurants extends Component {
     let adjustedStartTime;
     let adjustedEndTime;
     if (time !== null) {
-      let startTimeHour = time[0]._d.getHours();
-      let endTimeHour = time[1]._d.getHours();
+      let startTimeHours = time[0]._d.getHours();
+      let endTimeHours = time[1]._d.getHours();
+      let startTimeMinutes = time[0]._d.getMinutes();
+      let endTimeMinutes = time[1]._d.getMinutes();
 
       //Converts the time object from the format "HH:mm" into the format "HHmm"
-      adjustedStartTime = startTimeHour * 100 + time[0]._d.getMinutes();
-      adjustedEndTime = endTimeHour * 100 + time[1]._d.getMinutes();
+      adjustedStartTime = startTimeHours * 100 + startTimeMinutes;
+      adjustedEndTime = endTimeHours * 100 + endTimeMinutes;
 
-      //Converts to string and adds a leading 0 if before 10:00am
-      startTimeHour > 9
-        ? (adjustedStartTime = adjustedStartTime.toString(10))
-        : (adjustedStartTime = "0" + adjustedStartTime.toString(10));
-      endTimeHour > 9
-        ? (adjustedEndTime = adjustedEndTime.toString(10))
-        : (adjustedEndTime = "0" + adjustedEndTime.toString(10));
+      //Converts to string and adds a leading 0 if before 10:00am,
+      //and two leading zeros if before 1:00am, and adds three leading
+      //zeros if before 12:10am
+
+      if (startTimeHours === 0 && startTimeMinutes < 10) {
+        adjustedStartTime = "000" + adjustedStartTime.toString(10);
+      } else if (startTimeHours === 0 && startTimeMinutes >= 10) {
+        adjustedStartTime = "00" + adjustedStartTime.toString(10);
+      } else if (startTimeHours <= 9) {
+        adjustedStartTime = "0" + adjustedStartTime.toString(10);
+      } else {
+        adjustedStartTime = adjustedStartTime.toString(10);
+      }
+
+      if (endTimeHours === 0 && endTimeMinutes < 10) {
+        adjustedEndTime = "000" + adjustedEndTime.toString(10);
+      } else if (endTimeHours === 0 && endTimeMinutes >= 10) {
+        adjustedEndTime = "00" + adjustedEndTime.toString(10);
+      } else if (endTimeHours <= 9) {
+        adjustedEndTime = "0" + adjustedEndTime.toString(10);
+      } else {
+        adjustedEndTime = adjustedEndTime.toString(10);
+      }
     } else {
       adjustedStartTime = "0000";
       adjustedEndTime = "0000";
@@ -130,28 +161,39 @@ export default class ManageRestaurants extends Component {
     minorder = "$" + minorder;
 
     this.setState({
+      errorMessage: "",
+      successMessage: "",
+      tagWarning: "",
       name: restaurant.name,
       address: restaurant.address,
       rating: restaurant.rating,
       price: restaurant.price,
       minorder: minorder,
+      tags: restaurant.tags,
       description: restaurant.description,
-      ownerId: this.props.user._id,
       hoursofoperation: restaurant.hoursofoperation,
     });
   };
 
   //This resets the state values for adding restaurants
   resetStateVals = () => {
+    //Instantiate a 7x4 matrix of "0000"
+    const hourmatrix = new Array(7)
+      .fill("0000")
+      .map(() => new Array(4).fill("0000"));
+
     this.setState({
+      errorMessage: "",
+      successMessage: "",
+      tagWarning: "",
       name: "",
       address: "",
       rating: 0,
       price: 0,
       minorder: "$0.00",
+      tags: [],
       description: "",
-      ownerId: this.props.user._id,
-      hoursofoperation: [],
+      hoursofoperation: hourmatrix,
     });
   };
 
@@ -168,8 +210,8 @@ export default class ManageRestaurants extends Component {
             minuteStep={5}
             onChange={(time) => this.onChangeTime(time, dayOfWeek, true)}
             value={
-              this.state.hoursofoperation &&
-              this.state.hoursofoperation.length > 0
+              this.state.hoursofoperation[dayOfWeek][0] !== "0000" ||
+              this.state.hoursofoperation[dayOfWeek][1] !== "0000"
                 ? [
                     moment(this.state.hoursofoperation[dayOfWeek][0], "HH:mm"),
                     moment(this.state.hoursofoperation[dayOfWeek][1], "HH:mm"),
@@ -186,8 +228,8 @@ export default class ManageRestaurants extends Component {
             minuteStep={5}
             onChange={(time) => this.onChangeTime(time, dayOfWeek, false)}
             value={
-              this.state.hoursofoperation &&
-              this.state.hoursofoperation.length > 0
+              this.state.hoursofoperation[dayOfWeek][2] !== "0000" ||
+              this.state.hoursofoperation[dayOfWeek][3] !== "0000"
                 ? [
                     moment(this.state.hoursofoperation[dayOfWeek][2], "HH:mm"),
                     moment(this.state.hoursofoperation[dayOfWeek][3], "HH:mm"),
@@ -198,6 +240,80 @@ export default class ManageRestaurants extends Component {
         </div>
       </React.Fragment>
     );
+  };
+
+  //This method adds a tag to the tag array in the state.
+  addTag = (index) => {
+    if (this.state.tags.length < 6) {
+      this.setState({
+        tags: [...this.state.tags, index],
+        tagWarning: "",
+      });
+    } else {
+      this.setState({ tagWarning: "You many only select up to 6 tags" });
+    }
+  };
+
+  //This method removes a tag from the tag array in the state.
+  removeTag = (i) => {
+    if (this.state.tags.length > 0) {
+      let tags = this.state.tags;
+      let index = tags.indexOf(i);
+      if (index !== -1) {
+        tags.splice(index, 1);
+        this.setState({
+          tags: tags,
+          tagWarning: "",
+        });
+      }
+    }
+  };
+
+  //This method obtains and styles the tag bank, applying a different style to
+  //those already included in the tags
+  getTagBank = () => {
+    let rows = [];
+    this.state.tagbank.forEach((item, i) => {
+      if (!this.state.tags.includes(i)) {
+        rows.push(
+          <div
+            key={i}
+            className="ManageRestaurantTagItem"
+            onClick={() => this.addTag(i)}
+          >
+            {item}
+          </div>
+        );
+      } else {
+        rows.push(
+          <div
+            key={i}
+            className="ManageRestaurantTagItemSelected"
+            onClick={() => this.removeTag(i)}
+          >
+            {item}
+          </div>
+        );
+      }
+    });
+    return rows;
+  };
+
+  //This method obtains and styles the applied tags.
+  getTagList = () => {
+    let rows = [];
+    this.state.tags.forEach((item, i) => {
+      rows.push(
+        <div
+          key={i}
+          className="ManageRestaurantTagItemSelected"
+          onClick={() => this.removeTag(item)}
+        >
+          {this.state.tagbank[item]}
+        </div>
+      );
+    });
+    return rows;
   };
 
   //This method prints out the form
@@ -312,11 +428,30 @@ export default class ManageRestaurants extends Component {
           <div style={{ width: 100 }}>Saturday:</div>
           {this.getTime(6)}
         </div>
+
         <label
           htmlFor="description"
           className="ProfileFormTest"
           style={{ paddingTop: 20 }}
         >
+          Please select at most 6 tags for your restaurant:
+        </label>
+        <div className="ManageRestaurantTagComponent">
+          <div className="ManageRestaurantAppliedTags">
+            {this.getTagList()}
+            <div
+              style={{
+                color: "red",
+                display: "inline",
+                marginLeft: 10,
+              }}
+            >
+              {this.state.tagWarning}
+            </div>
+          </div>
+          <div className="ManageRestaurantTagArea">{this.getTagBank()}</div>
+        </div>
+        <label htmlFor="description" className="ProfileFormTest">
           How would you describe your restaurant?
         </label>
         <textarea
@@ -327,36 +462,107 @@ export default class ManageRestaurants extends Component {
           required
         />
         <div className="ProfileErrorMessage">{this.state.errorMessage}</div>
+        <div className="ProfileSuccessMessage">{this.state.successMessage}</div>
       </React.Fragment>
     );
   };
 
-  //TODO: This method handles form submission for editing restaurants
-  onEditRestaurant = (e) => {
+  //This method handles form submission for editing restaurants
+  onUpdateRestaurant = (e, restaurantID) => {
     e.preventDefault();
     if (this.validateForm()) {
-      //let minorderint = this.parseMinOrder(this.state.minorder);
-      //Todo - Make API call
-      return false;
+      let pkg = {
+        minorder: this.parseMinOrder(this.state.minorder),
+        address: this.state.address,
+        hoursofoperation: this.state.hoursofoperation,
+        tags: this.state.tags,
+        name: this.state.name,
+        price: this.state.price,
+        rating: this.state.rating,
+        description: this.state.description,
+      };
+
+      axios
+        .post("/api/restaurants/update/" + restaurantID, pkg)
+        .then(() => {
+          this.setState({
+            successMessage: "Successfully edited restaurant!",
+            errorMessage: "",
+          });
+        })
+        .catch((error) => {
+          this.setState({
+            errorMessage:
+              "An unxpected error has occurred. Please try again later.",
+            successMessage: "",
+          });
+          console.log(error);
+        });
     }
-    return false;
   };
 
-  //TODO: This method handles form submission for adding restaurants
+  //This method handles form submission for adding restaurants
   onAddRestaurant = (e) => {
     e.preventDefault();
     if (this.validateForm()) {
-      //let minorderint = this.parseMinOrder(this.state.minorder);
-      //Todo - Make API call
-      return false;
+      let pkg = {
+        name: this.state.name,
+        price: parseInt(this.state.price, 10),
+        rating: parseInt(this.state.rating, 10),
+        description: this.state.description,
+        minorder: this.parseMinOrder(this.state.minorder),
+        address: this.state.address,
+        hoursofoperation: this.state.hoursofoperation,
+        ownerId: this.props.user._id,
+        isDeleted: false,
+        //tags: this.state.tags,   (uncomment when the routes is able to accept tags)
+      };
+
+      axios
+        .post("/api/restaurants/add/", pkg)
+        .then(() => {
+          this.setState({
+            successMessage: "Successfully added restaurant!",
+            errorMessage: "",
+          });
+        })
+        .catch((error) => {
+          this.setState({
+            errorMessage:
+              "An unxpected error has occurred. Please try again later.",
+            successMessage: "",
+          });
+          console.log(error);
+        });
     }
-    return false;
   };
 
-  //TODO: This method handles form submission for deleting restaurants
-  onDeleteRestaurant = () => {
-    alert("To do");
-    return false;
+  //This method handles form submission for deleting restaurants
+  onDeleteRestaurant = (e, restaurantID) => {
+    e.preventDefault();
+    if (
+      window.confirm(
+        "WARNING: This will delete your restaurant.\nAre you sure you want to do this?"
+      )
+    ) {
+      axios
+        .delete("/api/restaurants/" + restaurantID)
+        .then(() => {
+          this.setState({
+            successMessage: "Successfully deleted restaurant.",
+            errorMessage: "",
+          });
+          window.location.reload(true);
+        })
+        .catch((error) => {
+          this.setState({
+            errorMessage:
+              "An unxpected error has occurred. Please try again later.",
+            successMessage: "",
+          });
+          console.log(error);
+        });
+    }
   };
 
   //This method validates the form.
@@ -365,7 +571,7 @@ export default class ManageRestaurants extends Component {
     //Regular expression courtesy of https://stackoverflow.com/questions/8829765/regular-expression-for-dollar-amount-in-javascript
     const minorderVerification = /^\$?[0-9]+(\.[0-9][0-9])?$/;
     let errorMessage = "";
-    if (this.state.price == 0) {
+    if (this.state.price === "0") {
       errorMessage = errorMessage.concat(
         "You must enter a price scale value. \n"
       );
@@ -415,14 +621,20 @@ export default class ManageRestaurants extends Component {
             </Accordion.Toggle>
             <Accordion.Collapse eventKey={currentRestaurant._id}>
               <Card.Body>
-                <form onSubmit={this.onEditRestaurant}>
+                <form
+                  onSubmit={(e) =>
+                    this.onUpdateRestaurant(e, currentRestaurant._id)
+                  }
+                >
                   {this.getForm(currentRestaurant._id)}
                   <Button variant="success" type="submit">
-                    Edit restaurant
+                    Update restaurant
                   </Button>
                   <Button
                     variant="danger"
-                    onClick={() => this.onDeleteRestaurant()}
+                    onClick={(e) =>
+                      this.onDeleteRestaurant(e, currentRestaurant._id)
+                    }
                     style={{ marginLeft: 30 }}
                   >
                     Delete restaurant

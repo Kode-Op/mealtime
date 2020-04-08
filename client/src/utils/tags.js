@@ -1,4 +1,4 @@
-let tags = [
+const tags = [
   "American",
   "Asian",
   "Bakery",
@@ -13,7 +13,7 @@ let tags = [
   "Dinner",
   "Fast food",
   "Greek",
-  "Healthy options",
+  "Healthy",
   "Indian",
   "Italian",
   "Japanese",
@@ -42,3 +42,5 @@ let tags = [
   "Vegetarian",
   "Vietnamese",
 ];
+
+export default tags;
