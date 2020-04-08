@@ -130,7 +130,7 @@ router.route("/byOwner/:id").get((req, res) => {
 });
 
 // Format: POST /api/restaurants/add
-// Required Fields: name, price, rating, descrption, address, hours of operation, ownerId
+// Required Fields: name, price, rating, descrption, address, hours of operation, ownerId, tags
 // Returns: Status based on successful/unsuccessful restaurant creation
 router.route("/add").post((req, res) => {
   const name = req.body.name;
@@ -142,6 +142,7 @@ router.route("/add").post((req, res) => {
   const hoursofoperation = req.body.hoursofoperation;
   const ownerId = req.body.ownerId;
   const isDeleted = false;
+  const tags = req.body.tags;
 
   const newItem = new Restaurant({
     name,
@@ -153,6 +154,7 @@ router.route("/add").post((req, res) => {
     hoursofoperation,
     ownerId,
     isDeleted,
+    tags,
   });
 
   newItem
