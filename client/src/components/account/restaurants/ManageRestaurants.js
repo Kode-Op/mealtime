@@ -21,10 +21,11 @@ export default class ManageRestaurants extends Component {
   constructor(props) {
     super(props);
 
-    //Instantiate a 7x4 matrix of "0000"
-    const hourmatrix = new Array(7)
-      .fill("0000")
-      .map(() => new Array(4).fill("0000"));
+    //Instantiate a 7x4 matrix;
+    let hourmatrix = new Array(7);
+    for (let i = 0; i < hourmatrix.length; i++) {
+      hourmatrix[i] = ["0000", "0100", "0900", "1159"];
+    }
 
     this.state = {
       restaurants: [],
@@ -177,10 +178,11 @@ export default class ManageRestaurants extends Component {
 
   //This resets the state values for adding restaurants
   resetStateVals = () => {
-    //Instantiate a 7x4 matrix of "0000"
-    const hourmatrix = new Array(7)
-      .fill("0000")
-      .map(() => new Array(4).fill("0000"));
+    //Instantiate a 7x4 matrix
+    let hourmatrix = new Array(7);
+    for (let i = 0; i < hourmatrix.length; i++) {
+      hourmatrix[i] = ["0000", "0100", "0900", "1159"];
+    }
 
     this.setState({
       errorMessage: "",
