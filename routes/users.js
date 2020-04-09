@@ -359,7 +359,7 @@ router.route("/updateTags/:id").post((req, res) => {
         user
           .save()
           .then(() => res.json("Tags Set."))
-          .catch((err) => res.status(400).json("Error: " + err));
+          .catch((err) => res.status(401).json("Error: " + err));
       }
     })
     .catch((err) => res.status(400).json("Error: " + err));
