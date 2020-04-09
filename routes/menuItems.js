@@ -17,7 +17,7 @@ router.get("/:id", function (req, res) {
 
   MenuItem.find({
     restaurantId: restaurant,
-    isHidden: false,
+    isDeleted: false,
   })
     .then((MenuItem) => res.json(MenuItem))
     .catch((err) => res.status(400).json("Error: " + err));
