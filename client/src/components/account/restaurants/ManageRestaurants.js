@@ -517,7 +517,7 @@ export default class ManageRestaurants extends Component {
         hoursofoperation: this.state.hoursofoperation,
         ownerId: this.props.user._id,
         isDeleted: false,
-        //tags: this.state.tags,   (uncomment when the routes is able to accept tags)
+        tags: this.state.tags,
       };
 
       axios
