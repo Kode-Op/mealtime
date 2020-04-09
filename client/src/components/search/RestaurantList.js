@@ -10,7 +10,9 @@ import RestaurantListComponent from "../search/restaurantlist-component";
 //Import assets
 import Loader from "../../assets/loader/Loader";
 import Footer from "../footer/Footer";
-import MenuItemTypePlaceholder from "./menuitemtypeplaceholder.png";
+//import MenuItemTypePlaceholder from "./menuitemtypeplaceholder.png";
+import DisplayTag from "../../assets/displaytag/DisplayTag";
+import TagBank from "../../utils/Tags";
 
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
@@ -25,9 +27,11 @@ export default class RestaurantList extends Component {
     super(props);
 
     this.state = {
+      tags: TagBank,
       areRestaurantsLoaded: false,
       restaurants: [],
       appliedFilters: [],
+      featuredTags: [5, 14, 16, 18, 22, 24, 25],
     };
   }
 
@@ -90,18 +94,26 @@ export default class RestaurantList extends Component {
   //Eventually, we will get this data from an api call
   getPopularMenuItemTypes = () => {
     let rows = [];
-    for (let i = 0; i < 7; i++) {
+
+    this.state.featuredTags.forEach((currentTag) => {
       rows.push(
-        <div
-          key={i}
-          className="RestaurantMenuItemType"
-          onClick={() => this.addFilter(i)}
-        >
-          <img src={MenuItemTypePlaceholder} alt="" />
-          <div className="RestaurantMenuItemTypeDescription">Type {i + 1}</div>
+        <div>
+          <div className="RestaurantMenuItemType">
+            {" "}
+            <DisplayTag
+              tag={currentTag}
+              size="small"
+              style={{ width: 100 }}
+            />{" "}
+          </div>
+          <div className="RestaurantMenuItemTypeDescription">
+            {" "}
+            {this.state.tags[currentTag]}
+            {" "}
+          </div>
         </div>
       );
-    }
+    });
     return rows;
   };
 

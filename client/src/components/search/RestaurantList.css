@@ -35,6 +35,8 @@
   font-weight: bold;
   font-size: 0.9em;
   padding-top: 5px;
+  text-align: center;
+  padding-right: 30px;
 }
 
 .RestaurantMenuItemType {
@@ -51,6 +53,7 @@
 }
 
 .RestaurantMenuItemType img {
+  width: 100px;
   border-radius: 50%;
 }
 
