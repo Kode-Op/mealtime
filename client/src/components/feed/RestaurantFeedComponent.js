@@ -29,7 +29,10 @@ export default class RestaurantFeedComponent extends Component {
           onClick={this.viewRestaurant}
         >
           <div className="RestaurantFeedComponentImage">
-            <img src={RestaurantFeedPlaceholder} alt="" />
+            <img
+              src={"https://mealtimebucket.s3-us-west-1.amazonaws.com/" + this.props.restaurant._id + "/large.png"}
+              alt={RestaurantFeedPlaceholder}
+            />
           </div>
           <div className="RestaurantFeedComponentContent">
             <div className="RestaurantFeedComponentContentLeft">
