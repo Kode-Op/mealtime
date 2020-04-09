@@ -9,12 +9,11 @@ const menuItemSchema = new Schema(
     price: { type: Number, required: true },
     preptime: { type: Number, required: true },
     description: { type: String, required: true },
-    tag: { type: String },
     category: { type: String },
-    isHidden: { type: Boolean, default: false }
+    isDeleted: { type: Boolean, required: true, default: false },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

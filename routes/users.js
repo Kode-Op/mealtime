@@ -342,10 +342,10 @@ router.route("/makeOwner/:id").get((req, res) => {
   });
 });
 
-// Format: POST /api/users/setTags/User._id
+// Format: POST /api/users/updateTags/User._id
 // Required Fields: tags[]
 // Returns: 200 on success, 404 if user not found, 400 if other error
-router.route("/setTags/:id").post((req, res) => {
+router.route("/updateTags/:id").post((req, res) => {
   let userId = req.params.id;
   let tags = req.body.tags;
 
