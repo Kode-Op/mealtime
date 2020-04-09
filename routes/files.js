@@ -10,8 +10,8 @@ let s3bucket = new AWS.S3({
 });
 
 // Format: POST /api/files/upload
-// Required Fields: file,
-// Returns: 200 if successful upload to S3 bucket, upload info in console.log
+// Required Fields: file, path (path format: subfolder/filename.txt) *only for images
+// Returns: location if successful, error if not
 router.route("/upload").post((req, res) => {
   const file = req.files.file;
 
@@ -20,35 +20,23 @@ router.route("/upload").post((req, res) => {
       Bucket: process.env.BUCKET_NAME,
       Key: req.body.path,
       Body: file.data,
+      ContentType: "image",
+      //ACL: "public-read",
     };
 
-    s3bucket.upload(params, function (err, data) {
+    s3bucket.putObject(params, function (err, data) {
       if (err) {
         return res
           .status(400)
           .json("Error: " + err)
           .send();
       }
-      return res.status(200).json(data).send();
+      let response = {
+        success: true,
+        location: process.env.BUCKET_URL + params.Key,
+      };
+      return res.status(200).json(response).send();
     });
-  });
-});
-
-// DEPRECATED - DO NOT USE (Probably not needed, returns an unencoded file)
-router.route("/getObject/:key").get((req, res) => {
-  var params = {
-    Bucket: process.env.BUCKET_NAME,
-    Key: req.params.key,
-  };
-  s3bucket.getObject(params, function (err, data) {
-    if (err) {
-      return res
-        .status(400)
-        .json("Error: " + err)
-        .send();
-    } else {
-      return res.status(200).json(data).send();
-    }
   });
 });
 
