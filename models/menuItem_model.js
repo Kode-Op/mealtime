@@ -10,7 +10,7 @@ const menuItemSchema = new Schema(
     preptime: { type: Number, required: true },
     description: { type: String, required: true },
     category: { type: String },
-    isDeleted: { type: Boolean, required: true, default: false },
+    isHidden: { type: Boolean, required: true, default: false },
   },
   {
     timestamps: true,

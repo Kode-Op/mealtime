@@ -13,13 +13,11 @@ router.route("/").get((req, res) => {
 // Format: GET /api/menuItems/
 // Returns: Returns JSON packages of all menu items associated with a restaurant
 router.get("/:id", function (req, res) {
-  const restaurant = req.params.id;
-
   MenuItem.find({
-    restaurantId: restaurant,
-    isDeleted: false,
+    restaurantId: req.params.id,
+    isHidden: false,
   })
-    .then((MenuItem) => res.json(MenuItem))
+    .then((menuItems) => res.json(menuItems))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
@@ -79,7 +77,7 @@ router.route("/update/:id").post((req, res) => {
 // Returns: Status based on successful/unsuccessful deletion
 router.route("/:id").delete((req, res) => {
   MenuItem.findById(req.params.id).then((restaurant) => {
-    restaurant.isDeleted = true;
+    restaurant.isHidden = true;
     restaurant
       .save()
       .then(() => res.json("MenuItem Deleted."))
