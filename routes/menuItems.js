@@ -13,7 +13,6 @@ router.route("/").get((req, res) => {
 // Format: GET /api/menuItems/
 // Returns: Returns JSON packages of all menu items associated with a restaurant
 router.get("/:id", function (req, res) {
-  cccccccccccc;
   const restaurant = req.params.id;
 
   MenuItem.find({
