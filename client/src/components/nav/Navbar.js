@@ -1,6 +1,12 @@
 //Import libraries
 import React, { Component } from "react";
-import { Navbar, Nav, Button, ButtonToolbar } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Button,
+  ButtonToolbar,
+  NavDropdown,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 //Import stylesheets
@@ -144,12 +150,26 @@ export default class NavBar extends Component {
               <div className="NavWelcome">
                 Welcome, {this.props.user.firstName}!
               </div>
+              <NavDropdown title="Your account">
+                <NavDropdown.Item href="/manage/restaurants">
+                  <div className="NavSettingsDropdown">Manage Restaurants</div>
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/account/profile">
+                  <div className="NavSettingsDropdown">Settings</div>
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="/logout">
+                  <div className="NavLogoutDropdown">Logout</div>
+                </NavDropdown.Item>
+              </NavDropdown>
+              {/*
               <Link to="/manage/restaurants">
                 <div className="NavSettings">Manage Restaurants</div>
               </Link>
               <Link to="/logout">
                 <div className="NavLogout">Logout</div>
               </Link>
+              */}
             </ButtonToolbar>
           </Navbar.Collapse>
         </React.Fragment>

@@ -3,6 +3,9 @@ import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
 import axios from "axios";
 
+//Import utilities
+import TagBank from "../../../utils/Tags";
+
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -13,6 +16,7 @@ export default class Profile extends Component {
       fName: this.props.user.firstName,
       lName: this.props.user.lastName,
       email: this.props.user.email,
+      tags: this.props.user.tags,
       passwordname: "",
       emailconfirm: "",
       passwordemail: "",
@@ -24,63 +28,66 @@ export default class Profile extends Component {
       successMessagePassword: "",
       errorMessageName: "",
       errorMessageEmail: "",
-      errorMessagePassword: ""
+      errorMessagePassword: "",
+      errorMessageTags: "",
+      successMessageTags: "",
+      tagbank: TagBank,
     };
   }
 
   //Event handlers for each form field
-  onChangeFName = e => {
+  onChangeFName = (e) => {
     this.setState({
-      fName: e.target.value
+      fName: e.target.value,
     });
   };
-  onChangeLName = e => {
+  onChangeLName = (e) => {
     this.setState({
-      lName: e.target.value
+      lName: e.target.value,
     });
   };
-  onChangePasswordName = e => {
+  onChangePasswordName = (e) => {
     this.setState({
-      passwordname: e.target.value
+      passwordname: e.target.value,
     });
   };
-  onChangeEmail = e => {
+  onChangeEmail = (e) => {
     this.setState({
-      email: e.target.value
+      email: e.target.value,
     });
   };
-  onChangeEmailConfirm = e => {
+  onChangeEmailConfirm = (e) => {
     this.setState({
-      emailconfirm: e.target.value
+      emailconfirm: e.target.value,
     });
   };
-  onChangePasswordEmail = e => {
+  onChangePasswordEmail = (e) => {
     this.setState({
-      passwordemail: e.target.value
+      passwordemail: e.target.value,
     });
   };
-  onChangePasswordCurrent = e => {
+  onChangePasswordCurrent = (e) => {
     this.setState({
-      passwordcurrent: e.target.value
+      passwordcurrent: e.target.value,
     });
   };
-  onChangePasswordNew = e => {
+  onChangePasswordNew = (e) => {
     this.setState({
-      passwordnew: e.target.value
+      passwordnew: e.target.value,
     });
   };
-  onChangePasswordNewConfirm = e => {
+  onChangePasswordNewConfirm = (e) => {
     this.setState({
-      passwordnewconfirm: e.target.value
+      passwordnewconfirm: e.target.value,
     });
   };
 
   //Event handlers for when the user submits the forms on the page
-  onSubmitName = e => {
+  onSubmitName = (e) => {
     let pkg = {
       firstName: this.state.fName,
       lastName: this.state.lName,
-      password: this.state.passwordname
+      password: this.state.passwordname,
     };
 
     axios
@@ -88,26 +95,26 @@ export default class Profile extends Component {
       .then(() => {
         this.setState({
           errorMessageName: "",
-          successMessageName: "Successfully updated name!"
+          successMessageName: "Successfully updated name!",
         });
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
           this.setState({
             errorMessageName:
               "404 user not found. Please refresh page and try again.",
-            successMessageName: ""
+            successMessageName: "",
           });
         } else if (error.response.status === 500) {
           this.setState({
             errorMessageName: "Error! Invalid password",
-            successMessageName: ""
+            successMessageName: "",
           });
         } else {
           this.setState({
             errorMessageName:
               "400 internal server error. Please try again later.",
-            successMessageName: ""
+            successMessageName: "",
           });
         }
       });
@@ -118,33 +125,33 @@ export default class Profile extends Component {
     if (this.validateEmail()) {
       let pkg = {
         email: this.state.email,
-        password: this.state.passwordemail
+        password: this.state.passwordemail,
       };
       axios
         .post("/api/users/updateEmail/" + this.state.userID, pkg)
-        .then(response => {
+        .then((response) => {
           this.setState({
             errorMessageEmail: "",
-            successMessageEmail: "Successfully updated email!"
+            successMessageEmail: "Successfully updated email!",
           });
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 404) {
             this.setState({
               errorMessageEmail:
                 "404 user not found. Please refresh page and try again.",
-              successMessageEmail: ""
+              successMessageEmail: "",
             });
           } else if (error.response.status === 500) {
             this.setState({
               errorMessageEmail: "Error! Invalid password",
-              successMessageEmail: ""
+              successMessageEmail: "",
             });
           } else {
             this.setState({
               errorMessageEmail:
                 "400 internal server error. Please try again later.",
-              successMessageEmail: ""
+              successMessageEmail: "",
             });
           }
         });
@@ -152,37 +159,69 @@ export default class Profile extends Component {
     e.preventDefault();
   }
 
+  onSubmitPreferences = (e) => {
+    e.preventDefault();
+    let pkg = {
+      tags: this.state.tags,
+    };
+
+    axios
+      .post("/api/users/updateTags/" + this.state.userID, pkg)
+      .then(() => {
+        this.setState({
+          errorMessageTags: "",
+          successMessageTags: "Successfully updated tags!",
+        });
+        window.location.reload(true);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          this.setState({
+            errorMessageTags:
+              "404 user not found. Please refresh page and try again.",
+            successMessageTags: "",
+          });
+        } else {
+          this.setState({
+            errorMessageTags:
+              "An unexpected error has occurred. Please refresh page and try again.",
+            successMessageTags: "",
+          });
+        }
+      });
+  };
+
   onSubmitPassword(e) {
     if (this.validatePassword()) {
       let pkg = {
         oldPassword: this.state.passwordcurrent,
-        newPassword: this.state.passwordnew
+        newPassword: this.state.passwordnew,
       };
       axios
         .post("/api/users/updatePassword/" + this.state.userID, pkg)
         .then(() => {
           this.setState({
             errorMessagePassword: "",
-            successMessagePassword: "Successfully updated password!"
+            successMessagePassword: "Successfully updated password!",
           });
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 404) {
             this.setState({
               errorMessagePassword:
                 "404 user not found. Please refresh page and try again.",
-              successMessagePassword: ""
+              successMessagePassword: "",
             });
           } else if (error.response.status === 500) {
             this.setState({
               errorMessagePassword: "Error! Invalid current password",
-              successMessagePassword: ""
+              successMessagePassword: "",
             });
           } else {
             this.setState({
               errorMessagePassword:
                 "400 internal server error. Please try again later.",
-              successMessagePassword: ""
+              successMessagePassword: "",
             });
           }
         });
@@ -250,6 +289,92 @@ export default class Profile extends Component {
       return false;
     }
     return true;
+  };
+
+  //This method adds a tag to the tag array in the state.
+  addTag = (index) => {
+    this.setState({
+      tags: [...this.state.tags, index],
+    });
+  };
+
+  //This method removes a tag from the tag array in the state.
+  removeTag = (i) => {
+    if (this.state.tags.length > 0) {
+      let tags = this.state.tags;
+      let index = tags.indexOf(i);
+      if (index !== -1) {
+        tags.splice(index, 1);
+        this.setState({
+          tags: tags,
+        });
+      }
+    }
+  };
+
+  //This method obtains and styles the tag bank, applying a different style to
+  //those already included in the tags
+  getTagBank = () => {
+    let rows = [];
+    this.state.tagbank.forEach((item, i) => {
+      if (!this.state.tags.includes(i)) {
+        rows.push(
+          <div
+            key={i}
+            className="ManageRestaurantTagItem"
+            onClick={() => this.addTag(i)}
+          >
+            {item}
+          </div>
+        );
+      } else {
+        rows.push(
+          <div
+            key={i}
+            className="ManageRestaurantTagItemSelected"
+            onClick={() => this.removeTag(i)}
+          >
+            {item}
+          </div>
+        );
+      }
+    });
+    return rows;
+  };
+
+  //This method obtains and styles the applied tags.
+  getTagList = () => {
+    let rows = [];
+    this.state.tags.forEach((item, i) => {
+      rows.push(
+        <div
+          key={i}
+          className="ManageRestaurantTagItemSelected"
+          onClick={() => this.removeTag(item)}
+        >
+          {this.state.tagbank[item]}
+        </div>
+      );
+    });
+    return rows;
+  };
+
+  getTagListSimple = () => {
+    let rows = [];
+    this.state.tags.forEach((item, i) => {
+      rows.push(
+        <div key={i} style={{ display: "inline" }}>
+          {this.state.tagbank[item] + ", "}
+        </div>
+      );
+    });
+
+    //Remove the ", " off the last element in rows
+    if (rows.length !== 0) {
+      let newStr = rows[rows.length - 1].props.children.slice(0, -2);
+      rows[rows.length - 1] = newStr;
+    }
+    return rows;
   };
 
   render() {
@@ -387,11 +512,54 @@ export default class Profile extends Component {
               eventKey="2"
               style={{ cursor: "pointer" }}
             >
+              <div className="ProfileHeaderLeft">Preferences:</div>
+              <div className="ProfileUserInfo">{this.getTagListSimple()}</div>
+              <div className="ProfileEditLink">Edit</div>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey="2">
+              <Card.Body>
+                <h5>Edit preferences</h5>
+                <form onSubmit={this.onSubmitPreferences}>
+                  <div className="ManageRestaurantTagComponent">
+                    <div className="ManageRestaurantAppliedTags">
+                      {this.getTagList()}
+                      <div
+                        style={{
+                          color: "red",
+                          display: "inline",
+                          marginLeft: 10,
+                        }}
+                      ></div>
+                    </div>
+                    <div className="ManageRestaurantTagArea">
+                      {this.getTagBank()}
+                    </div>
+                  </div>
+
+                  <div className="ProfileErrorMessage">
+                    {this.state.errorMessageTags}
+                  </div>
+                  <div className="ProfileSuccessMessage">
+                    {this.state.successMessageTags}
+                  </div>
+                  <Button variant="success" type="submit">
+                    Update preferences
+                  </Button>
+                </form>
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+          <Card>
+            <Accordion.Toggle
+              as={Card.Header}
+              eventKey="3"
+              style={{ cursor: "pointer" }}
+            >
               <div className="ProfileHeaderLeft">Password:</div>
               <div className="ProfileUserInfo">•••••••••••••••</div>
               <div className="ProfileEditLink">Edit</div>
             </Accordion.Toggle>
-            <Accordion.Collapse eventKey="2">
+            <Accordion.Collapse eventKey="3">
               <Card.Body>
                 <h5>Edit password</h5>
                 <br />

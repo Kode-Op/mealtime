@@ -113,6 +113,26 @@
   border-radius: 5px;
 }
 
+.ManageRestaurantTagComponent {
+  width: 80%;
+  border: 1px solid grey;
+  padding: 5px 10px 0 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.ManageRestaurantAppliedTags {
+  min-height: 48px;
+  width: 100%;
+  border-bottom: 2px solid lightgray;
+}
+
+.ManageRestaurantTagArea {
+  height: 180px;
+  width: 100%;
+  overflow-x: auto;
+}
+
 @media only screen and (min-width: 480px) {
   .accountleftpane li {
     margin: 0 10px 0 10px;

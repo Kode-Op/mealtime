@@ -27,7 +27,7 @@ export default class ManageMenuItems extends Component {
 
       //Default menu item values
       name: "",
-      price: 0,
+      price: "$0.00",
       preptime: 0,
       description: "",
       category: "",
@@ -220,9 +220,13 @@ export default class ManageMenuItems extends Component {
   };
 
   updateStateVals = (menuitem) => {
+    let price = menuitem.price / 100;
+    price.toLocaleString("en-US", { style: "currency", currency: "USD" });
+    price = "$" + price;
+
     this.setState({
       name: menuitem.name,
-      price: menuitem.price,
+      price: price,
       preptime: menuitem.preptime,
       category: menuitem.category,
       description: menuitem.description,
@@ -234,7 +238,7 @@ export default class ManageMenuItems extends Component {
   resetStateVals = (category) => {
     this.setState({
       name: "",
-      price: 0,
+      price: "$0.00",
       preptime: 0,
       category: category,
       description: "",
@@ -315,9 +319,64 @@ export default class ManageMenuItems extends Component {
     }
   };
 
-  onUpdateMenuItem = () => {};
+  onUpdateMenuItem = (e, id) => {
+    e.preventDefault();
+    if (this.validateForm()) {
+      let pkg = {
+        name: this.state.name,
+        price: this.parsePrice(this.state.price),
+        preptime: parseInt(this.state.preptime, 10),
+        category: this.state.category,
+        description: this.state.description,
+      };
 
-  onDeleteMenuItem = () => {};
+      console.log(pkg);
+      axios
+        .post("/api/menuItems/update/" + id, pkg)
+        .then(() => {
+          this.setState({
+            successMessage: "Successfully edited menu item!",
+            errorMessage: "",
+          });
+          window.location.reload(true);
+        })
+        .catch((error) => {
+          this.setState({
+            errorMessage:
+              "An unxpected error has occurred. Please try again later.",
+            successMessage: "",
+          });
+          console.log(error);
+        });
+    }
+  };
+
+  onDeleteMenuItem = (e, id) => {
+    e.preventDefault();
+    if (
+      window.confirm(
+        "WARNING: This will delete your menu item.\nAre you sure you want to do this?"
+      )
+    ) {
+      axios
+        .delete("/api/menuItems/" + id)
+        .then(() => {
+          this.setState({
+            successMessage: "Successfully deleted menu item",
+            errorMessage: "",
+          });
+          window.location.reload(true);
+        })
+        .catch((error) => {
+          this.setState({
+            errorMessage:
+              "An unxpected error has occurred. Please try again later.",
+            successMessage: "",
+          });
+          console.log(error);
+        });
+    }
+  };
 
   onAddCategory = () => {
     let categoryName = prompt(
@@ -366,17 +425,16 @@ export default class ManageMenuItems extends Component {
           </Accordion.Toggle>
           <Accordion.Collapse eventKey={currentMenuItem._id}>
             <Card.Body>
-              <form>
+              <form
+                onSubmit={(e) => this.onUpdateMenuItem(e, currentMenuItem._id)}
+              >
                 {this.getForm(category, currentMenuItem._id)}
                 <Button variant="success" type="submit">
                   Update menu item
                 </Button>
                 <Button
                   variant="danger"
-                  /*
-                    onClick={(e) =>
-                      this.onDeleteMenuItem(e, currentRestaurant._id)
-                    }*/
+                  onClick={(e) => this.onDeleteMenuItem(e, currentMenuItem._id)}
                   style={{ marginLeft: 30 }}
                 >
                   Delete menu item
