@@ -13,6 +13,7 @@ router.route("/").get((req, res) => {
 // Format: GET /api/menuItems/
 // Returns: Returns JSON packages of all menu items associated with a restaurant
 router.get("/:id", function (req, res) {
+  cccccccccccc;
   const restaurant = req.params.id;
 
   MenuItem.find({
@@ -52,7 +53,7 @@ router.route("/add").post((req, res) => {
 // Format: POST /api/menuItems/update/MenuItem._id
 // Required Fields: name, price, preptime, description, category
 // Returns: Status based on successful/unsuccessful menuItem creation
-router.route("/update/.id").post((req, res) => {
+router.route("/update/:id").post((req, res) => {
   const id = req.params.id;
   const name = req.body.name;
   const price = Number(req.body.price);
