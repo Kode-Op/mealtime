@@ -180,7 +180,10 @@ export default class ManageMenuItems extends Component {
   getRestaurantMenuItems = (e) => {
     if (e.target.value !== "0") {
       let restaurantID = e.target.value;
-      this.setState({ restaurantSelectionMade: true });
+      this.setState({
+        restaurantSelectionMade: true,
+        additionalCategories: [],
+      });
       axios
         .get("/api/menuitems/" + e.target.value)
         .then((response) => {
@@ -577,8 +580,6 @@ export default class ManageMenuItems extends Component {
                 </Button>
               )}
             </div>
-            {console.log(this.state.menuItems)}
-            {console.log(Object.keys(this.state.menuItems).length === 0)}
             {this.state.areMenuItemsLoaded &&
               this.state.additionalCategories.length === 0 &&
               Object.keys(this.state.menuItems).length === 0 && (
