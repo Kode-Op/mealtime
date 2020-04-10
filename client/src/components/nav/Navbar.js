@@ -52,10 +52,10 @@ export default class NavBar extends Component {
     if (!this.props.user) {
       return (
         <React.Fragment>
-          <Nav.Link>
-            <Link to="/" className="linkstyle" style={{ paddingTop: 0 }}>
+          <Nav.Link as={Link} to="/">
+            <div className="linkstyle" style={{ paddingTop: 0 }}>
               MealTime
-            </Link>
+            </div>
           </Nav.Link>
           <div className="navzone">
             <input
@@ -63,6 +63,7 @@ export default class NavBar extends Component {
               name="address"
               className="navbox"
               placeholder="Enter your address..."
+              style={{ color: "black" }}
             />
             <Link to="/search">
               <Button className="navgo" variant="danger">
@@ -72,15 +73,11 @@ export default class NavBar extends Component {
           </div>
           <Navbar.Collapse className="justify-content-end">
             <ButtonToolbar>
-              <Nav.Link>
-                <Link to="/login" className="linkstyle">
-                  Log In
-                </Link>
+              <Nav.Link as={Link} to="/login">
+                <div className="linkstyle">Log In</div>
               </Nav.Link>
-              <Nav.Link>
-                <Link to="/register">
-                  <div className="registerbutton">Register</div>
-                </Link>
+              <Nav.Link as={Link} to="/register">
+                <div className="registerbutton">Register</div>
               </Nav.Link>
             </ButtonToolbar>
           </Navbar.Collapse>
@@ -89,10 +86,10 @@ export default class NavBar extends Component {
     } else if (this.props.user && !this.props.user.isOwner) {
       return (
         <React.Fragment>
-          <Nav.Link>
-            <Link to="/feed" className="linkstyle" style={{ paddingTop: 0 }}>
+          <Nav.Link as={Link} to="/feed">
+            <div className="linkstyle" style={{ paddingTop: 0 }}>
               MealTime
-            </Link>
+            </div>
           </Nav.Link>
           <div className="navzone">
             <input
@@ -126,10 +123,10 @@ export default class NavBar extends Component {
     } else {
       return (
         <React.Fragment>
-          <Nav.Link>
-            <Link to="/feed" className="linkstyle" style={{ paddingTop: 0 }}>
+          <Nav.Link as={Link} to="/feed">
+            <div className="linkstyle" style={{ paddingTop: 0 }}>
               MealTime
-            </Link>
+            </div>
           </Nav.Link>
           <div className="navzone">
             <input
@@ -147,10 +144,19 @@ export default class NavBar extends Component {
           </div>
           <Navbar.Collapse className="justify-content-end">
             <ButtonToolbar>
-              <div className="NavWelcome">
+              <div className="NavWelcome" style={{ marginTop: 8 }}>
                 Welcome, {this.props.user.firstName}!
               </div>
-              <NavDropdown title="Your account">
+              <NavDropdown
+                title={
+                  <span style={{ color: "#add8e6", fontWeight: "bold" }}>
+                    Your account
+                  </span>
+                }
+                id="nav-dropdown"
+                alignRight
+                className="NavSettingsTitle"
+              >
                 <NavDropdown.Item href="/manage/restaurants">
                   <div className="NavSettingsDropdown">Manage Restaurants</div>
                 </NavDropdown.Item>

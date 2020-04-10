@@ -139,6 +139,7 @@ export default class Home extends Component {
                   name="address"
                   className="splashbox"
                   placeholder="Enter your address..."
+                  style={{ color: "black" }}
                 />
                 <Link to="/search">
                   <Button className="splashgo" variant="danger">

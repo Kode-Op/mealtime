@@ -13,12 +13,12 @@ export default class NavbarHomepage extends Component {
     if (window.innerWidth < 1024)
       this.state = {
         mobileview: true,
-        opacity: 0
+        opacity: 0,
       };
     else
       this.state = {
         mobileview: false,
-        opacity: 0
+        opacity: 0,
       };
   }
 
@@ -69,23 +69,25 @@ export default class NavbarHomepage extends Component {
               : { paddingTop: 16 }
           }
         >
-          <Nav.Link>
-            <Link to="/" className="linkstyle" style={{ paddingTop: 0 }}>
-              MealTime
-            </Link>
-          </Nav.Link>
+          <div style={{ marginTop: -8 }}>
+            <Nav.Link as={Link} to="/">
+              <div className="linkstyle" style={{ paddingTop: 0 }}>
+                MealTime
+              </div>
+            </Nav.Link>
+          </div>
           <Navbar.Collapse className="justify-content-end">
             <ButtonToolbar>
-              <Nav.Link>
-                <Link to="/login" className="linkstyle">
-                  Log In
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link to="/register">
+              <div style={{ marginTop: -3 }}>
+                <Nav.Link as={Link} to="/login">
+                  <div className="linkstyle">Log In</div>
+                </Nav.Link>
+              </div>
+              <div style={{ marginTop: -3 }}>
+                <Nav.Link as={Link} to="/register">
                   <div className="registerbutton">Register</div>
-                </Link>
-              </Nav.Link>
+                </Nav.Link>
+              </div>
             </ButtonToolbar>
           </Navbar.Collapse>
         </Navbar>
