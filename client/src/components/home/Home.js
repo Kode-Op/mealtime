@@ -156,7 +156,15 @@ export default class Home extends Component {
               <div className="splashcenterdiv">
                 <div className="splashcentercontainer">
                   <div className="splashtrio">
-                    <img src={appimage} alt={splashcontentplaceholder} />
+                    <img
+                      src={appimage}
+                      onError={(e) => {
+                        e.target.setAttribute("src", splashcontentplaceholder);
+                        e.target.onerror = null;
+                      }}
+                      style={{ borderRadius: "50%" }}
+                      alt=""
+                    />
                     <h5>Try the app!</h5>
                     <p>
                       Get the best experience possible with our mobile Android
@@ -164,7 +172,14 @@ export default class Home extends Component {
                     </p>
                   </div>
                   <div className="splashtrio">
-                    <img src={localimage} alt={splashcontentplaceholder} />
+                    <img
+                      src={localimage}
+                      onError={(e) => {
+                        e.target.setAttribute("src", splashcontentplaceholder);
+                        e.target.onerror = null;
+                      }}
+                      alt=""
+                    />
                     <h5>Local favorites</h5>
                     <p>
                       Bring every local flavor that you crave, right to your
@@ -172,7 +187,15 @@ export default class Home extends Component {
                     </p>
                   </div>
                   <div className="splashtrio">
-                    <img src={partnerimage} alt={splashcontentplaceholder} />
+                    <img
+                      src={partnerimage}
+                      onError={(e) => {
+                        e.target.setAttribute("src", splashcontentplaceholder);
+                        e.target.onerror = null;
+                      }}
+                      alt=""
+                      style={{ borderRadius: "50%" }}
+                    />
                     <h5>Become a partner</h5>
                     <p>
                       Grow your business and reach customers like never before
@@ -191,7 +214,14 @@ export default class Home extends Component {
                   <div className="splashduo">
                     <img
                       src={pickupimage}
-                      alt={splashcontentplaceholder500x375}
+                      onError={(e) => {
+                        e.target.setAttribute(
+                          "src",
+                          splashcontentplaceholder500x375
+                        );
+                        e.target.onerror = null;
+                      }}
+                      alt=""
                     />
                   </div>
                 </div>
@@ -208,7 +238,14 @@ export default class Home extends Component {
                   <div className="splashduo">
                     <img
                       src={aboutimage}
-                      alt={splashcontentplaceholder500x375}
+                      onError={(e) => {
+                        e.target.setAttribute(
+                          "src",
+                          splashcontentplaceholder500x375
+                        );
+                        e.target.onerror = null;
+                      }}
+                      alt=""
                     />
                   </div>
                 </div>

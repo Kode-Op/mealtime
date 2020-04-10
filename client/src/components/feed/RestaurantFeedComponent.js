@@ -30,8 +30,16 @@ export default class RestaurantFeedComponent extends Component {
         >
           <div className="RestaurantFeedComponentImage">
             <img
-              src={"https://mealtimebucket.s3-us-west-1.amazonaws.com/" + this.props.restaurant._id + "/large.png"}
-              alt={RestaurantFeedPlaceholder}
+              src={
+                "https://mealtimebucket.s3-us-west-1.amazonaws.com/" +
+                this.props.restaurant._id +
+                "/large.png"
+              }
+              onError={(e) => {
+                e.target.setAttribute("src", RestaurantFeedPlaceholder);
+                e.target.onerror = null;
+              }}
+              alt="No restaurant found"
             />
           </div>
           <div className="RestaurantFeedComponentContent">

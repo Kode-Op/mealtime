@@ -30,10 +30,18 @@ export default class RestaurantListComponent extends Component {
           onClick={this.viewRestaurant}
         >
           <img
-            src={"https://mealtimebucket.s3-us-west-1.amazonaws.com/" + this.props.restaurant._id + "/small.png"}
+            src={
+              "https://mealtimebucket.s3-us-west-1.amazonaws.com/" +
+              this.props.restaurant._id +
+              "/small.png"
+            }
+            onError={(e) => {
+              e.target.setAttribute("src", RestaurantImagePlaceholder);
+              e.target.onerror = null;
+            }}
             className="RestaurantListComponentImage"
-            alt={RestaurantImagePlaceholder}
-            style={{width:100}}
+            alt="No restaurant found"
+            style={{ width: 100 }}
           />
           <div className="RestaurantListComponentName">
             {this.props.restaurant.name}

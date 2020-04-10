@@ -111,7 +111,7 @@
     display: inline-block;
     width: 78%;
     height: 100%;
-    margin-left: 10px;
+    margin: 0 10px 0 10px;
     border-radius: 15px;
     padding: 5px 20px 0 20px;
     font-size: 1.05em;
@@ -121,6 +121,7 @@
     display: inline-block;
     width: 16%;
     height: 100%;
+    margin-bottom: 8px;
     border-radius: 15px !important;
   }
 

@@ -247,7 +247,6 @@ export default class ManageMenuItems extends Component {
     });
   };
 
-  //Todo: Form validation
   validateForm = () => {
     //Regular expression courtesy of https://stackoverflow.com/questions/8829765/regular-expression-for-dollar-amount-in-javascript
     const priceVerification = /^\$?[0-9]+(\.[0-9][0-9])?$/;
@@ -384,7 +383,7 @@ export default class ManageMenuItems extends Component {
     );
     if (categoryName !== "" && categoryName !== null) {
       let additionalCategories = this.state.additionalCategories;
-      additionalCategories.push(categoryName);
+      additionalCategories.unshift(categoryName);
       this.setState({ additionalCategories });
     }
   };
@@ -554,35 +553,53 @@ export default class ManageMenuItems extends Component {
 
   render() {
     if (this.state.areRestaurantsLoaded) {
-      return (
-        <div>
-          <h2>Please select a restaurant</h2>
-          <div style={{ display: "flex" }}>
-            <select
-              id="0"
-              onChange={this.getRestaurantMenuItems}
-              className="ManageRestaurantInputBox"
-              style={{ marginBottom: -20 }}
-            >
-              <option value="0"></option>
-              {this.getRestaurantSelection()}
-            </select>
-
-            {this.state.areMenuItemsLoaded && (
-              <Button
-                style={{ width: 150, marginLeft: 20 }}
-                onClick={() => this.onAddCategory()}
+      if (this.state.restaurants.length > 0) {
+        return (
+          <div>
+            <h2>Please select a restaurant</h2>
+            <div style={{ display: "flex" }}>
+              <select
+                id="0"
+                onChange={this.getRestaurantMenuItems}
+                className="ManageRestaurantInputBox"
+                style={{ marginBottom: -20 }}
               >
-                Add Category
-              </Button>
-            )}
+                <option value="0"></option>
+                {this.getRestaurantSelection()}
+              </select>
+
+              {this.state.areMenuItemsLoaded && (
+                <Button
+                  style={{ width: 150, marginLeft: 20 }}
+                  onClick={() => this.onAddCategory()}
+                >
+                  Add Category
+                </Button>
+              )}
+            </div>
+            {console.log(this.state.menuItems)}
+            {console.log(Object.keys(this.state.menuItems).length === 0)}
+            {this.state.areMenuItemsLoaded &&
+              this.state.additionalCategories.length === 0 &&
+              Object.keys(this.state.menuItems).length === 0 && (
+                <div style={{ marginTop: 30 }}>
+                  <h2>To add a menu item, click "Add Category" to start!</h2>
+                </div>
+              )}
+            <Accordion>
+              {this.renderAdditionalMenuItemGroups()}
+              {this.renderMenuItemGroups()}
+            </Accordion>
           </div>
-          <Accordion>
-            {this.renderAdditionalMenuItemGroups()}
-            {this.renderMenuItemGroups()}
-          </Accordion>
-        </div>
-      );
+        );
+      } else {
+        return (
+          <div style={{ marginTop: 10 }}>
+            <h2>It looks like you don't have any restaurants yet!</h2>
+            <p>Click "Manage Restaurants" to add a restaurant first.</p>
+          </div>
+        );
+      }
     } else {
       return <Loader />;
     }

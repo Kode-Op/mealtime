@@ -113,9 +113,17 @@ export default class Restaurant extends Component {
             <div className="RestaurantContainer">
               <div className="RestaurantTitleContainer">
                 <img
-                  src={"https://mealtimebucket.s3-us-west-1.amazonaws.com/" + this.state.restaurant._id + "/small.png"}
+                  src={
+                    "https://mealtimebucket.s3-us-west-1.amazonaws.com/" +
+                    this.state.restaurant._id +
+                    "/small.png"
+                  }
+                  onError={(e) => {
+                    e.target.setAttribute("src", RestaurantImagePlaceholder);
+                    e.target.onerror = null;
+                  }}
                   className="RestaurantImage"
-                  alt={RestaurantImagePlaceholder}
+                  alt="No restaurant found"
                 />
                 <h2 className="RestaurantName">{this.state.restaurant.name}</h2>
               </div>
