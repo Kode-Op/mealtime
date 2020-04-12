@@ -1,21 +1,20 @@
 const mongoose = require('mongoose');
+let MenuItem = require("./menuItem_model");
 
 const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
-    userID: {type: String, required: true, unique: true, trim: true, minlength: 3},
-    restaurantID: {type: String, required: true, unique: true, trim: true, minlength: 3},
+    userID: {type: String, required: true},
+    restaurantID: {type: String, required: true},
+    menuItems:{type: Array, require:true},
+    quantityMenuItems:{type: Array, required:true, items:{type:Number}},
     deliverylocation: {
-        x_coordinate: {
-            type: Number,
-            required: true
-        },
-        y_coordinate: {
-            type: Number,
-            required: true
-        },
+        type: String,
+        required:true
     },
-}, {
+    canceled:{type:Boolean, default:false}
+    }, 
+{
     timestamps: true,
 });
 
