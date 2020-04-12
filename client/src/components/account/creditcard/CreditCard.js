@@ -24,9 +24,8 @@ export default class CreditCard extends Component {
       ccmonth: "",
       ccyear: "",
       ccaddress: "",
-      ccpassword: "",
       successmessage: "",
-      errormessage: ""
+      errormessage: "",
     };
   }
 
@@ -34,7 +33,7 @@ export default class CreditCard extends Component {
     //Load the credit card data associated with the user that's logged in.
     axios
       .get("/api/creditCards/" + this.props.user._id)
-      .then(response => {
+      .then((response) => {
         this.setState({ creditCards: response.data, isLoaded: true });
       })
       .catch(() => {
@@ -43,53 +42,46 @@ export default class CreditCard extends Component {
   }
 
   //Event handlers for each form field
-  onChangeFName = e => {
+  onChangeFName = (e) => {
     this.setState({
-      ccfname: e.target.value
+      ccfname: e.target.value,
     });
   };
-  onChangeLName = e => {
+  onChangeLName = (e) => {
     this.setState({
-      cclname: e.target.value
+      cclname: e.target.value,
     });
   };
-  onChangeNumber = e => {
+  onChangeNumber = (e) => {
     this.setState({
-      ccnumber: e.target.value
+      ccnumber: e.target.value,
     });
   };
-  onChangeCCV = e => {
+  onChangeCCV = (e) => {
     this.setState({
-      ccv: e.target.value
+      ccv: e.target.value,
     });
   };
-  onChangeMonth = e => {
+  onChangeMonth = (e) => {
     this.setState({
-      ccmonth: e.target.value
+      ccmonth: e.target.value,
     });
   };
-  onChangeYear = e => {
+  onChangeYear = (e) => {
     this.setState({
-      ccyear: e.target.value
+      ccyear: e.target.value,
     });
   };
-  onChangeAddress = e => {
+  onChangeAddress = (e) => {
     this.setState({
-      ccaddress: e.target.value
-    });
-  };
-  onChangePassword = e => {
-    this.setState({
-      ccpassword: e.target.value
+      ccaddress: e.target.value,
     });
   };
 
   //Event handlers for when the user submits the forms on the page
-  onAddCard = e => {
+  onAddCard = (e) => {
     e.preventDefault();
 
-    //Currently, password is not required when adding a credit card
-    //TODO: Discuss with teammates whether or not this should be the case
     if (this.validateCard()) {
       let pkg = {
         userId: this.props.user._id,
@@ -100,7 +92,7 @@ export default class CreditCard extends Component {
         exYear: this.state.ccyear,
         ccv: this.state.ccv,
         address: this.state.ccaddress,
-        isDeleted: false
+        isDeleted: false,
       };
 
       axios
@@ -108,26 +100,21 @@ export default class CreditCard extends Component {
         .then(() => {
           this.setState({
             successmessage: "Successfully added card!",
-            errormessage: ""
+            errormessage: "",
           });
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 404) {
             this.setState({
               errormessage:
                 "404 user not found. Please refresh page and try again.",
-              successmessage: ""
-            });
-          } else if (error.response.status === 500) {
-            this.setState({
-              errormessage: "Error! Invalid current password",
-              successmessage: ""
+              successmessage: "",
             });
           } else {
             this.setState({
               errormessage:
                 "400 internal server error. Please try again later.",
-              successmessage: ""
+              successmessage: "",
             });
           }
         });
@@ -135,14 +122,14 @@ export default class CreditCard extends Component {
     e.preventDefault();
   };
 
-  onDeleteCard = cardID => {
-    return function() {
+  onDeleteCard = (cardID) => {
+    return function () {
       axios
         .delete("/api/creditCards/" + cardID)
         .then(() => {
           window.location.reload(false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     };
@@ -182,7 +169,7 @@ export default class CreditCard extends Component {
   //This method renders each credit card that belongs to the user
   creditCardList = () => {
     if (this.state.isLoaded) {
-      return this.state.creditCards.map(currentCard => {
+      return this.state.creditCards.map((currentCard) => {
         return (
           <Card key={currentCard._id}>
             <Accordion.Toggle
@@ -221,7 +208,7 @@ export default class CreditCard extends Component {
 
   //This method creates a dropdown box option for each year, starting with
   //the current year, and ending with the current year + numYears
-  getYearSelection = numYears => {
+  getYearSelection = (numYears) => {
     let start = new Date().getFullYear();
     let rows = [];
     for (let year = start; year <= start + numYears; year++) {
@@ -354,17 +341,6 @@ export default class CreditCard extends Component {
                     name="address"
                     value={this.state.ccaddress}
                     onChange={this.onChangeAddress}
-                    className="CreditCardInputBox"
-                    required
-                  />
-                  <label htmlFor="password" className="ProfileFormTest">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={this.state.ccpassword}
-                    onChange={this.onChangePassword}
                     className="CreditCardInputBox"
                     required
                   />

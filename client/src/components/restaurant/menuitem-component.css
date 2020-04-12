@@ -20,7 +20,7 @@
 }
 
 .MenuItemText {
-  padding: 15px;
+  padding: 8px 15px 8px 15px;
   float: left;
   width: 70%;
   height: 130px;
@@ -30,13 +30,20 @@
   font-weight: bold;
 }
 
+.MenuItemPrice {
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
 .MenuItemDescription {
   color: #444444;
   font-size: 0.9em;
 
   /* Source: https://css-tricks.com/line-clampin/ */
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
+  height: 66px;
+  overflow: hidden;
   -webkit-box-orient: vertical;
 }
 

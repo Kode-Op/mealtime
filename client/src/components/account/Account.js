@@ -78,9 +78,6 @@ export default class Account extends Component {
                       label="Address and phone"
                     />
                   </li>
-                  <li>
-                    <RouteLink to="/account/address" label="Past orders" />
-                  </li>
                 </ul>
               </div>
               <div className="accountrightpane">

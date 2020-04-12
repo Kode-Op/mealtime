@@ -9,6 +9,7 @@ import Navbar from "../../components/nav/Navbar";
 import MenuItemComponent from "../../components/restaurant/menuitem-component.js";
 import GetLogin from "../../utils/GetLogin";
 import Footer from "../footer/Footer";
+import MenuItemOverlay from "./menuitemoverlay";
 
 //Import assets
 import DisplayPrice from "../../assets/displayprice/DisplayPrice";
@@ -34,6 +35,8 @@ export default class Restaurant extends Component {
       id: id,
       menuItems: [],
       restaurant: [],
+      itemSelection: [],
+      itemSelectionMade: false,
     };
   }
 
@@ -93,14 +96,28 @@ export default class Restaurant extends Component {
     this._isMounted = false;
   }
 
+  cancelPopUp = () => {
+    this.setState({
+      itemSelection: [],
+      itemSelectionMade: false,
+    });
+  };
+
+  renderPopUp = (menuitem) => {
+    this.setState({
+      itemSelection: menuitem,
+      itemSelectionMade: true,
+    });
+  };
+
   //This method return each menu item associated with a particular category.
   getMenuItems = (categoryArray) => {
-    console.table(categoryArray);
     return categoryArray.map((currentMenuItem) => {
       return (
         <MenuItemComponent
           key={currentMenuItem._id}
           menuItem={currentMenuItem}
+          renderPopUp={this.renderPopUp}
         />
       );
     });
@@ -113,7 +130,7 @@ export default class Restaurant extends Component {
         return (
           <div key={key[0] + " div"} style={{ width: "100%" }}>
             <div className="RestaurantFilters" key={key[0]}>
-              <h4 style={{ paddingTop: 30 }}>{key[0]}</h4>
+              <h4 style={{ fontWeight: "bold" }}>{key[0]}</h4>
             </div>
             {this.getMenuItems(key[1])}
           </div>
@@ -129,6 +146,12 @@ export default class Restaurant extends Component {
       if (this.state.restaurant) {
         return (
           <div>
+            {this.state.itemSelectionMade && (
+              <MenuItemOverlay
+                menuItem={this.state.itemSelection}
+                cancelPopUp={this.cancelPopUp}
+              />
+            )}
             <Navbar user={this.state.user} />
             <div className="RestaurantContainer">
               <div className="RestaurantTitleContainer">
@@ -143,9 +166,10 @@ export default class Restaurant extends Component {
                     e.target.onerror = null;
                   }}
                   className="RestaurantImage"
-                  alt="No restaurant found"
+                  alt=""
                 />
                 <h2 className="RestaurantName">{this.state.restaurant.name}</h2>
+                <h5>{this.state.restaurant.address}</h5>
               </div>
               <hr />
               <div className="RestaurantFlexContainer">

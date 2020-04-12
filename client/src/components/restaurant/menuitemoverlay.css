@@ -1,0 +1,172 @@
+.MenuItemOverlayBackground {
+  z-index: 2000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  animation: fadeIn 1s;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@keyframes fadeIn {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.MenuItemOverlayPopup {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 auto;
+  width: 625px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  color: black;
+  -webkit-animation: fadeInOverlay 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadeInOverlay 1s; /* Firefox < 16 */
+  -ms-animation: fadeInOverlay 1s; /* Internet Explorer */
+  -o-animation: fadeInOverlay 1s; /* Opera < 12.1 */
+  animation: fadeInOverlay 1s;
+}
+
+@keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.MenuItemOverlayPopup h3 {
+  font-weight: bold;
+}
+
+.MenuItemOverlayPopup img {
+  width: 100%;
+}
+
+.MenuItemOverlayBottomFlex {
+  text-align: center;
+  height: 30px;
+}
+
+.MenuItemOverlayQuantity {
+  margin: 20px 0 0 0;
+  float: left;
+  font-weight: bold;
+}
+
+.MenuItemOverlayMinus {
+  display: inline-block;
+  border: 2px solid #444444;
+  padding: 0 9px 0 9px;
+  margin: 0 10px 0 10px;
+  border-radius: 50%;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+.MenuItemOverlayMinus:hover {
+  cursor: pointer;
+  background-color: #cccccc;
+}
+
+.MenuItemOverlayPlus {
+  display: inline-block;
+  border: 2px solid #444444;
+  padding: 0 7px 0 8px;
+  margin: 0 10px 0 10px;
+  border-radius: 50%;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+.MenuItemOverlayPlus:hover {
+  cursor: pointer;
+  background-color: #cccccc;
+}
+
+.MenuItemOverlayAddToCart {
+  margin: 16px 0 0 0;
+  float: right;
+}
+
+.MenuItemOverlayQuantityInput {
+  width: 30px;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 1.1em;
+}

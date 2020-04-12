@@ -74,20 +74,15 @@ export default class Feed extends Component {
   }
 
   updateAddressHandler = (newAddress) => {
-    /* Update user's address
-    // API route needs to be updated so that a password isn't required in this circumstance
-    // Uncomment after that is completed
     let pkg = {
       address: newAddress,
-      password: 
     };
     axios
       .post("/api/users/updateAddress/" + this.state.user._id, pkg)
       .then()
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
-    */
 
     this.setState((prevState) => ({
       user: {

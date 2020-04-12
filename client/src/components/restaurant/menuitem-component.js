@@ -1,5 +1,5 @@
 //Import libraries
-import React from "react";
+import React, { Component } from "react";
 
 //Import assets
 import MenuItemPlaceholder from "./menuitem-placeholder.png";
@@ -7,16 +7,29 @@ import MenuItemPlaceholder from "./menuitem-placeholder.png";
 //Import stylesheets
 import "./menuitem-component.css";
 
-const MenuItemComponent = props => (
-  <div className="MenuItem">
-    <div className="MenuItemText">
-      <div className="MenuItemName">{props.menuItem.name}</div>
-      <div className="MenuItemDescription">{props.menuItem.description}</div>
-    </div>
-    <div className="MenuItemImage">
-      <img src={MenuItemPlaceholder} alt={props.menuItem.name} />
-    </div>
-  </div>
-);
-
-export default MenuItemComponent;
+export default class MenuItemComponent extends Component {
+  render() {
+    return (
+      <div
+        className="MenuItem"
+        onClick={() => this.props.renderPopUp(this.props.menuItem)}
+      >
+        <div className="MenuItemText">
+          <div className="MenuItemName">{this.props.menuItem.name}</div>
+          <div className="MenuItemDescription">
+            {this.props.menuItem.description}
+          </div>
+          <div className="MenuItemPrice">
+            {(this.props.menuItem.price / 100).toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })}
+          </div>
+        </div>
+        <div className="MenuItemImage">
+          <img src={MenuItemPlaceholder} alt={this.props.menuItem.name} />
+        </div>
+      </div>
+    );
+  }
+}

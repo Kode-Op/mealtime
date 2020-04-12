@@ -10,7 +10,6 @@ export default class Address extends Component {
     //Each variable will store the input field values
     this.state = {
       address: this.props.user.address,
-      password: "",
       phone: this.props.user.phone,
       passwordphone: "",
       errorMessage: "",
@@ -24,11 +23,6 @@ export default class Address extends Component {
   onChangeAddress = e => {
     this.setState({
       address: e.target.value
-    });
-  };
-  onChangePassword = e => {
-    this.setState({
-      password: e.target.value
     });
   };
   onChangePhone = e => {
@@ -46,7 +40,6 @@ export default class Address extends Component {
   onSubmitAddress = e => {
     let pkg = {
       address: this.state.address,
-      password: this.state.password
     };
 
     axios
@@ -64,11 +57,6 @@ export default class Address extends Component {
               "404 user not found. Please refresh page and try again.",
             successMessage: ""
           });
-        } else if (error.response.status === 500) {
-          this.setState({
-            errorMessage: "Error! Invalid password",
-            successMessage: ""
-          });
         } else {
           this.setState({
             errorMessage: "400 internal server error. Please try again later.",
@@ -76,7 +64,6 @@ export default class Address extends Component {
           });
         }
       });
-    this.setState({ password: "" });
     e.preventDefault();
   };
 
@@ -167,17 +154,6 @@ export default class Address extends Component {
                     name="address"
                     value={this.state.address}
                     onChange={this.onChangeAddress}
-                    className="ProfileInputBox"
-                    required
-                  />
-                  <label htmlFor="password" className="ProfileFormTest">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.onChangePassword}
                     className="ProfileInputBox"
                     required
                   />
