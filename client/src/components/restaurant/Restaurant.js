@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import _ from "lodash";
 
 //Import components
 import Navbar from "../../components/nav/Navbar";
@@ -59,7 +60,11 @@ export default class Restaurant extends Component {
     axios
       .get("/api/menuitems/" + this.state.id)
       .then((response) => {
-        this.setState({ menuItems: response.data });
+        const groupedByCategory = _.groupBy(
+          response.data,
+          (menuitem) => menuitem.category
+        );
+        this.setState({ menuItems: groupedByCategory });
       })
       .catch(() => {
         this.setState({ menuItems: null });
@@ -88,15 +93,30 @@ export default class Restaurant extends Component {
     this._isMounted = false;
   }
 
-  //This method returns a menu item for each menu item associated with the restaurant.
-  getMenuItems = () => {
+  //This method return each menu item associated with a particular category.
+  getMenuItems = (categoryArray) => {
+    console.table(categoryArray);
+    return categoryArray.map((currentMenuItem) => {
+      return (
+        <MenuItemComponent
+          key={currentMenuItem._id}
+          menuItem={currentMenuItem}
+        />
+      );
+    });
+  };
+
+  //This method returns each category associated with the restaurant
+  getMenuItemCategories = () => {
     if (this.state.menuItems) {
-      return this.state.menuItems.map((currentMenuItem) => {
+      return Object.entries(this.state.menuItems).map((key) => {
         return (
-          <MenuItemComponent
-            menuItem={currentMenuItem}
-            key={currentMenuItem._id}
-          />
+          <div key={key[0] + " div"} style={{ width: "100%" }}>
+            <div className="RestaurantFilters" key={key[0]}>
+              <h4 style={{ paddingTop: 30 }}>{key[0]}</h4>
+            </div>
+            {this.getMenuItems(key[1])}
+          </div>
         );
       });
     } else {
@@ -140,11 +160,8 @@ export default class Restaurant extends Component {
             </div>
             <div className="RestaurantItemContainer">
               <div className="RestaurantContainer">
-                <div className="RestaurantFilters">
-                  <h4>All Items</h4>
-                </div>
                 <div className="RestaurantMenuCollection">
-                  {this.getMenuItems()}
+                  {this.getMenuItemCategories()}
                 </div>
               </div>
             </div>

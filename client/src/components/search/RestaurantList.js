@@ -91,25 +91,20 @@ export default class RestaurantList extends Component {
   };
 
   //This method returns 7 "types" of restaurant in a for loop to choose from in a filter list.
-  //Eventually, we will get this data from an api call
   getPopularMenuItemTypes = () => {
     let rows = [];
 
     this.state.featuredTags.forEach((currentTag) => {
       rows.push(
         <div>
-          <div className="RestaurantMenuItemType">
-            {" "}
-            <DisplayTag
-              tag={currentTag}
-              size="small"
-              style={{ width: 100 }}
-            />{" "}
+          <div
+            className="RestaurantMenuItemType"
+            onClick={() => this.addFilter(currentTag)}
+          >
+            <DisplayTag tag={currentTag} size="small" style={{ width: 100 }} />
           </div>
           <div className="RestaurantMenuItemTypeDescription">
-            {" "}
             {this.state.tags[currentTag]}
-            {" "}
           </div>
         </div>
       );
@@ -139,8 +134,8 @@ export default class RestaurantList extends Component {
   //This method appends a filter to this.state.appliedFilters if the filter isn't already included in the array
   addFilter = (i) => {
     let filters = this.state.appliedFilters;
-    if (filters.indexOf("Type " + (i + 1)) === -1) {
-      filters.push("Type " + (i + 1));
+    if (filters.indexOf(this.state.tags[i]) === -1) {
+      filters.push(this.state.tags[i]);
       this.setState({ appliedFilters: filters });
     }
   };
