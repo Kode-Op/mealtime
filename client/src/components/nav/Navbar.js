@@ -9,6 +9,9 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+//Import assets
+import ShoppingBagIcon from "./shoppingbag.png";
+
 //Import stylesheets
 import "./Navbar.css";
 
@@ -19,10 +22,12 @@ export default class NavBar extends Component {
     if (window.innerWidth < 1024) {
       this.state = {
         mobileview: true,
+        numMenuItems: 0,
       };
     } else {
       this.state = {
         mobileview: false,
+        numMenuItems: 0,
       };
     }
   }
@@ -83,44 +88,8 @@ export default class NavBar extends Component {
           </Navbar.Collapse>
         </React.Fragment>
       );
-    } else if (this.props.user && !this.props.user.isOwner) {
-      return (
-        <React.Fragment>
-          <Nav.Link as={Link} to="/feed">
-            <div className="linkstyle" style={{ paddingTop: 0 }}>
-              MealTime
-            </div>
-          </Nav.Link>
-          <div className="navzone">
-            <input
-              type="text"
-              name="address"
-              className="navbox"
-              defaultValue={this.props.user.address}
-              placeholder="Enter your address..."
-            />
-            <Link to="/search">
-              <Button className="navgo" variant="danger">
-                >
-              </Button>
-            </Link>
-          </div>
-          <Navbar.Collapse className="justify-content-end">
-            <ButtonToolbar>
-              <div className="NavWelcome">
-                Welcome, {this.props.user.firstName}!
-              </div>
-              <Link to="/account/profile">
-                <div className="NavSettings">Settings</div>
-              </Link>
-              <Link to="/logout">
-                <div className="NavLogout">Logout</div>
-              </Link>
-            </ButtonToolbar>
-          </Navbar.Collapse>
-        </React.Fragment>
-      );
     } else {
+      const { isOwner, firstName, address } = this.props.user;
       return (
         <React.Fragment>
           <Nav.Link as={Link} to="/feed">
@@ -133,7 +102,7 @@ export default class NavBar extends Component {
               type="text"
               name="address"
               className="navbox"
-              defaultValue={this.props.user.address}
+              defaultValue={address}
               placeholder="Enter your address..."
             />
             <Link to="/search">
@@ -144,22 +113,23 @@ export default class NavBar extends Component {
           </div>
           <Navbar.Collapse className="justify-content-end">
             <ButtonToolbar>
-              <div className="NavWelcome" style={{ marginTop: 8 }}>
-                Welcome, {this.props.user.firstName}!
-              </div>
               <NavDropdown
                 title={
-                  <span style={{ color: "#add8e6", fontWeight: "bold" }}>
-                    Your account
+                  <span style={{ color: "#FFFFFF", fontWeight: "bold" }}>
+                    Welcome, {firstName}!
                   </span>
                 }
                 id="nav-dropdown"
                 alignRight
                 className="NavSettingsTitle"
               >
-                <NavDropdown.Item href="/manage/restaurants">
-                  <div className="NavSettingsDropdown">Manage Restaurants</div>
-                </NavDropdown.Item>
+                {isOwner && (
+                  <NavDropdown.Item href="/manage/restaurants">
+                    <div className="NavSettingsDropdown">
+                      Manage Restaurants
+                    </div>
+                  </NavDropdown.Item>
+                )}
                 <NavDropdown.Item href="/account/profile">
                   <div className="NavSettingsDropdown">Settings</div>
                 </NavDropdown.Item>
@@ -168,14 +138,43 @@ export default class NavBar extends Component {
                   <div className="NavLogoutDropdown">Logout</div>
                 </NavDropdown.Item>
               </NavDropdown>
-              {/*
-              <Link to="/manage/restaurants">
-                <div className="NavSettings">Manage Restaurants</div>
-              </Link>
-              <Link to="/logout">
-                <div className="NavLogout">Logout</div>
-              </Link>
-              */}
+              <NavDropdown
+                title={
+                  <div style={{ display: "inline-block" }}>
+                    <img
+                      src={ShoppingBagIcon}
+                      style={{
+                        width: 25,
+                        marginTop: -7,
+                      }}
+                      alt=""
+                    />
+                    {this.state.numMenuItems > 0 && (
+                      <div
+                        style={{
+                          width: 20,
+                          height: 20,
+                          backgroundColor: "red",
+                          color: "white",
+                          position: "absolute",
+                          borderRadius: "50%",
+                          top: 20,
+                          right: 23,
+                          fontSize: "0.8em",
+                        }}
+                      >
+                        {this.state.numMenuItems}
+                      </div>
+                    )}
+                  </div>
+                }
+                alignRight
+              >
+                <div style={{ width: 300, height: 250, padding: 15 }}>
+                  You have nothing in your bag. Please add an item to make an
+                  order.
+                </div>
+              </NavDropdown>
             </ButtonToolbar>
           </Navbar.Collapse>
         </React.Fragment>

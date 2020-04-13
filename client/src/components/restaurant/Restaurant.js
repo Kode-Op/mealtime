@@ -94,9 +94,11 @@ export default class Restaurant extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+    document.body.style.overflow = "unset";
   }
 
   cancelPopUp = () => {
+    document.body.style.overflow = "unset";
     this.setState({
       itemSelection: [],
       itemSelectionMade: false,
@@ -104,6 +106,7 @@ export default class Restaurant extends Component {
   };
 
   renderPopUp = (menuitem) => {
+    document.body.style.overflow = "hidden";
     this.setState({
       itemSelection: menuitem,
       itemSelectionMade: true,

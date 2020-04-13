@@ -18,50 +18,75 @@ export default class MenuItemOverlay extends Component {
 
   onCancelItem = (e) => {
     e.preventDefault();
-    if (e.target === e.currentTarget) {
+    if (
+      e.target === e.currentTarget ||
+      e.target.className === "MenuItemOverlayExitButton"
+    ) {
       this.props.cancelPopUp();
     }
   };
 
   onChangeQuantity = (e) => {
     e.preventDefault();
+
+    if (e.target.value === "") {
+      this.setState({
+        quantity: "",
+      });
+      return;
+    }
+
+    if (isNaN(e.target.value) || e.target.value <= 0 || e.target.value > 100) {
+      return;
+    }
+
     this.setState({
-      quantity: e.target.value,
+      quantity: parseInt(e.target.value, 10),
     });
   };
 
-  addQuantity = () => {
-    let quantity = this.state.quantity + 1;
-    this.setState({
-      quantity: quantity,
-    });
-  };
-
-  removeQuantity = () => {
-    let quantity = this.state.quantity - 1;
-    if (quantity > 0) {
+  addQuantity = (quantity) => {
+    if (++quantity < 100) {
       this.setState({
         quantity: quantity,
       });
     }
   };
 
+  removeQuantity = (quantity) => {
+    if (--quantity > 0) {
+      this.setState({
+        quantity: quantity,
+      });
+    }
+  };
+
+  convertToPrice = (quantity, price) => {
+    return ((price * quantity) / 100).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  };
+
   render() {
+    const { name, description, price } = this.props.menuItem;
+
     return (
       <div
         className="MenuItemOverlayBackground"
         onClick={(e) => this.onCancelItem(e)}
       >
         <div className="MenuItemOverlayPopup">
-          <h3>{this.props.menuItem.name}</h3>
-          <p>{this.props.menuItem.description}</p>
+          <div className="MenuItemOverlayExitButton">✖</div>
+          <h3>{name}</h3>
+          <p>{description}</p>
           <img src={MenuItemPlaceholder} alt="" />
           <div className="MenuItemOverlayBottomFlex">
             <div className="MenuItemOverlayQuantity">
               Quantity:
               <div
                 className="MenuItemOverlayMinus"
-                onClick={() => this.removeQuantity()}
+                onClick={() => this.removeQuantity(this.state.quantity)}
               >
                 -
               </div>
@@ -74,21 +99,17 @@ export default class MenuItemOverlay extends Component {
               />
               <div
                 className="MenuItemOverlayPlus"
-                onClick={() => this.addQuantity()}
+                onClick={() => this.addQuantity(this.state.quantity)}
               >
                 +
               </div>
             </div>
             <div className="MenuItemOverlayAddToCart">
-              <Button variant="success">
-                Add to cart -{" "}
-                {(
-                  (this.props.menuItem.price * this.state.quantity) /
-                  100
-                ).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })}
+              <Button
+                variant={this.state.quantity > 0 ? "success" : "secondary"}
+                disabled={this.state.quantity === ""}
+              >
+                Add to cart - {this.convertToPrice(this.state.quantity, price)}
               </Button>
             </div>
           </div>
