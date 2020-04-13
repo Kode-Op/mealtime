@@ -19,22 +19,37 @@ router.route('/userOrders/:id').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+// Format: GET /api/resturantOrders/Resturant._id
+// Required Fields: none
+// Returns: All orders on a specific resturant
+router.route('/resturantOrders/:id').get((req, res) => {
+    Order.find({restaurantID:req.params.id})
+        .then(orders => res.json(orders))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/add').post((req,res) => {
     const userID = req.body.userID;
     const restaurantID = req.body.restaurantID;
-    const deliverylocation = req.body.deliverylocation;
     const menuItems = req.body.menuItems;
     const quantityMenuItems = req.body.quantityMenuItems;
-    const cancel = req.body.cancel;
+    const prepTime = req.body.prepTime;
+    const deliverylocation = req.body.deliverylocation;
+    const isCanceled = req.body.isCanceled;
+    const isFulfilled = req.body.isFulfilled;
 
     const newItem = new Order({
         userID,
         restaurantID,
         menuItems,
         quantityMenuItems,
+        prepTime,
         deliverylocation,
-        cancel
+        isCanceled,
+        isFulfilled
     });
+
+    setTimeOut(newItem.orderDone(),60000*prepTime);
 
     newItem.save()
         .then(() => res.json('Order added!'))
@@ -56,7 +71,7 @@ router.route("/:id").get((req, res) => {
 router.route("/cancel/:id").post((req, res) => {
     Order.findById(req.params.id)
       .then((orders) =>{
-            orders.cancel = true;
+            orders.isCanceled = true;
         orders
             .save()
             .then(() => res.json("Order Cancelled."))
