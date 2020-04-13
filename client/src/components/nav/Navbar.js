@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 
 //Import assets
-import ShoppingBagIcon from "./shoppingbag.png";
+import ShoppingBagIcon from "../../assets/images/nav/shoppingbag.png";
 
 //Import stylesheets
 import "./Navbar.css";
@@ -47,9 +47,47 @@ export default class NavBar extends Component {
     window.addEventListener("resize", this.getMobileView, false);
   }
 
+  //Remove the event listeners when component unmounts
   componentWillUnmount() {
     window.removeEventListener("resize", this.getMobileView);
   }
+
+  //Display each menu item in the cart
+  //Right now, this is a for loop. Eventually, we will get this data from the user cookies
+  getEachItem = () => {
+    let rows = [];
+    for (let i = 0; i < this.state.numMenuItems; i++) {
+      rows.push(
+        <div>
+          (n) item name(s)<div style={{ float: "right" }}>(item price)</div>
+        </div>
+      );
+    }
+    return rows;
+  };
+
+  //Renders the contents of the box when clicking on the bag icon
+  getItemsInBag = () => {
+    if (this.state.numMenuItems === 0) {
+      return (
+        <div className="NavBag" style={{ color: "#999999" }}>
+          You have nothing in your bag. Please add an item to make an order!
+        </div>
+      );
+    } else {
+      return (
+        <div className="NavBag">
+          <h5>Your order</h5>
+          <hr />
+          {this.getEachItem()}
+          <hr />
+          <Link to="/checkout">
+            <Button>Proceed to checkout</Button>
+          </Link>
+        </div>
+      );
+    }
+  };
 
   //This method renders a navbar with different contents depending on whether
   //or not a user is logged in, and if the user is a restaurant owner.
@@ -170,10 +208,7 @@ export default class NavBar extends Component {
                 }
                 alignRight
               >
-                <div style={{ width: 300, height: 250, padding: 15 }}>
-                  You have nothing in your bag. Please add an item to make an
-                  order.
-                </div>
+                {this.getItemsInBag()}
               </NavDropdown>
             </ButtonToolbar>
           </Navbar.Collapse>
@@ -194,6 +229,37 @@ export default class NavBar extends Component {
           {this.getLogin()}
         </Navbar>
         <div className={this.state.mobileview ? "" : "navspacer"} />
+        {this.state.mobileview && (
+          <div
+            style={{
+              width: "100%",
+              height: 80,
+              padding: 20,
+              backgroundColor: "#DDDDDD",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                margin: "0 auto",
+              }}
+            >
+              <input
+                type="text"
+                name="address"
+                className="navbox"
+                defaultValue={this.props.user ? this.props.user.address : ""}
+                placeholder="Enter your address..."
+              />
+              <Link to="/search">
+                <Button className="navgo" variant="danger">
+                  >
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

@@ -6,6 +6,9 @@ import { Accordion, Card, Button } from "react-bootstrap";
 //Import assets
 import Loader from "../../../assets/loader/Loader";
 
+//Import utilities
+import GetCreditCardByID from "../../../utils/creditcards/GetCreditCardByID";
+
 //Import stylesheets
 import "./CreditCard.css";
 
@@ -31,8 +34,8 @@ export default class CreditCard extends Component {
 
   componentDidMount() {
     //Load the credit card data associated with the user that's logged in.
-    axios
-      .get("/api/creditCards/" + this.props.user._id)
+
+    GetCreditCardByID(this.props.user._id)
       .then((response) => {
         this.setState({ creditCards: response.data, isLoaded: true });
       })

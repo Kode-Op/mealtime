@@ -45,11 +45,21 @@
 }
 
 .navbox {
-  display: none;
+  display: inline-block;
+  width: 78%;
+  height: 100%;
+  margin: 0 10px 0 10px;
+  border-radius: 15px;
+  padding: 5px 20px 0 20px;
+  font-size: 1.05em;
 }
 
 .navgo {
-  display: none;
+  display: inline-block;
+  width: 16%;
+  height: 100%;
+  margin-bottom: 8px;
+  border-radius: 15px !important;
 }
 
 .NavWelcome {
@@ -88,6 +98,17 @@
   color: white !important;
 }
 
+.NavBag {
+  width: 300px;
+  padding: 15px;
+  font-weight: bold;
+  color: #666666;
+}
+
+.NavBag h5 {
+  font-size: 1.2em;
+}
+
 @media only screen and (min-width: 435px) {
   .linkstyle {
     font-size: 1.05em;
@@ -105,24 +126,6 @@
     display: block;
     width: 50vw;
     height: 40px;
-  }
-
-  .navbox {
-    display: inline-block;
-    width: 78%;
-    height: 100%;
-    margin: 0 10px 0 10px;
-    border-radius: 15px;
-    padding: 5px 20px 0 20px;
-    font-size: 1.05em;
-  }
-
-  .navgo {
-    display: inline-block;
-    width: 16%;
-    height: 100%;
-    margin-bottom: 8px;
-    border-radius: 15px !important;
   }
 
   .navspacer {

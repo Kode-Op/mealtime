@@ -14,6 +14,7 @@ import Register from "./components/register/Register";
 import RegisterConfirmation from "./components/register/Confirmation";
 import LoginConfirmation from "./components/login/Confirmation";
 import RestaurantAccount from "./components/account/RestaurantAccount";
+import Checkout from "./components/checkout/Checkout";
 
 //Import stylesheets
 import "./App.css";
@@ -44,6 +45,7 @@ function App() {
           <Route path="/feed" component={Feed} />
           <Route path="/restaurant" component={Restaurant} />
           <Route path="/manage" component={RestaurantAccount} />
+          <Route path="/checkout" component={Checkout} />
         </Switch>
       </div>
     </Router>
