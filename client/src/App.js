@@ -15,6 +15,7 @@ import RegisterConfirmation from "./components/register/Confirmation";
 import LoginConfirmation from "./components/login/Confirmation";
 import RestaurantAccount from "./components/account/RestaurantAccount";
 import Checkout from "./components/checkout/Checkout";
+import OrderHistory from "./components/orderhistory/OrderHistory";
 
 //Import stylesheets
 import "./App.css";
@@ -46,6 +47,7 @@ function App() {
           <Route path="/restaurant" component={Restaurant} />
           <Route path="/manage" component={RestaurantAccount} />
           <Route path="/checkout" component={Checkout} />
+          <Route path="/orderhistory" component={OrderHistory} />
         </Switch>
       </div>
     </Router>

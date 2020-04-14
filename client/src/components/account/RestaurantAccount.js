@@ -8,6 +8,7 @@ import Footer from "../footer/Footer";
 import ManageRestaurants from "./restaurants/ManageRestaurants";
 import ManageMenuItems from "./menuitems/ManageMenuItems";
 import RouteLink from "../routelink/RouteLink";
+import OrderHistory from "../orderhistory/OrderHistory";
 
 //Import assets
 import Loader from "../../assets/loader/Loader";
@@ -72,6 +73,12 @@ export default class RestaurantAccount extends Component {
                       label="Manage Menu Items"
                     />
                   </li>
+                  <li>
+                    <RouteLink
+                      to="/manage/orderhistory"
+                      label="View Order History"
+                    />
+                  </li>
                 </ul>
               </div>
               <div className="accountrightpane">
@@ -92,6 +99,12 @@ export default class RestaurantAccount extends Component {
                   path="/manage/menuitems"
                   render={(props) => (
                     <ManageMenuItems {...props} user={this.state.user} />
+                  )}
+                />
+                <Route
+                  path="/manage/orderhistory"
+                  render={(props) => (
+                    <OrderHistory {...props} user={this.state.user} />
                   )}
                 />
               </div>

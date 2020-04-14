@@ -7,6 +7,7 @@ import Navbar from "../nav/Navbar";
 import Profile from "./profile/Profile";
 import CreditCard from "./creditcard/CreditCard";
 import Address from "./address/Address";
+import OrderHistory from "../orderhistory/OrderHistory";
 import Footer from "../footer/Footer";
 import RouteLink from "../routelink/RouteLink";
 
@@ -78,6 +79,12 @@ export default class Account extends Component {
                       label="Address and phone"
                     />
                   </li>
+                  <li>
+                    <RouteLink
+                      to="/account/orderhistory"
+                      label="View Order History"
+                    />
+                  </li>
                 </ul>
               </div>
               <div className="accountrightpane">
@@ -104,6 +111,12 @@ export default class Account extends Component {
                   path="/account/address"
                   render={(props) => (
                     <Address {...props} user={this.state.user} />
+                  )}
+                />
+                <Route
+                  path="/account/orderhistory"
+                  render={(props) => (
+                    <OrderHistory {...props} user={this.state.user} />
                   )}
                 />
               </div>
