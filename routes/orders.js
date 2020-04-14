@@ -62,6 +62,8 @@ router.route("/add").post((req, res) => {
       address,
     });
 
+    //this.setTimeOut(newItem.orderDone(), 60000 * prepTime);
+
     newOrder
       .save()
       .then(() => res.json("Order added!"))

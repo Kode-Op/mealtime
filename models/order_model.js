@@ -19,6 +19,13 @@ const orderSchema = new Schema(
   }
 );
 
+//orderSchema.methods.orderDone = function () {
+//  if (!isCanceled) {
+//    isFulfilled = true;
+//  }
+//  return isFulfilled;
+//};
+
 const order = mongoose.model("order", orderSchema);
 
 module.exports = order;
