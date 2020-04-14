@@ -21,17 +21,17 @@ export default class OrderHistory extends Component {
       isUserLoaded: false,
       menuitems: [
         {
-          name: "Double Double",
-          price: 400,
+          name: "Tuna Sub",
+          price: 600,
           quantity: 1,
         },
         {
-          name: "Fries",
-          price: 200,
+          name: "Meatball Marinara Sub",
+          price: 500,
           quantity: 1,
         },
         {
-          name: "Milkshake",
+          name: "Chocolate Chip Cookie",
           price: 150,
           quantity: 1,
         },
