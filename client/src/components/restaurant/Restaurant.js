@@ -17,6 +17,9 @@ import DisplayRating from "../../assets/displayrating/DisplayRating";
 import RestaurantImagePlaceholder from "./restaurantimageplaceholder.png";
 import Loader from "../../assets/loader/Loader";
 
+//Import utilities
+import { getFromStorage } from "../../utils/storage";
+
 //Import stylesheet
 import "./Restaurant.css";
 
@@ -37,6 +40,10 @@ export default class Restaurant extends Component {
       restaurant: [],
       itemSelection: [],
       itemSelectionMade: false,
+      menuItemsInBag: [],
+      menuItemsInBagLoaded: false,
+      restaurantInBag: [],
+      restaurantInBagLoaded: false,
     };
   }
 
@@ -90,6 +97,31 @@ export default class Restaurant extends Component {
           });
         }
       });
+
+    //Initialize the value of menuItemsInBag to whatever is in storage
+    let menuItemArray = getFromStorage("shoppingbag");
+    if (menuItemArray !== null) {
+      this.setState({
+        menuItemsInBag: menuItemArray.menuItems,
+        menuItemsInBagLoaded: true,
+      });
+    } else {
+      this.setState({
+        menuItemsInBagLoaded: true,
+      });
+    }
+
+    let restaurantInBagArray = getFromStorage("restaurant");
+    if (restaurantInBagArray !== null) {
+      this.setState({
+        restaurantInBag: restaurantInBagArray,
+        restaurantInBagLoaded: true,
+      });
+    } else {
+      this.setState({
+        restaurantInBagLoaded: true,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -144,8 +176,41 @@ export default class Restaurant extends Component {
     }
   };
 
+  //This updates the bag to include the menuitem added in the
+  //menuitemoverlay component
+  addToBag = (menuItems) => {
+    this.setState({
+      menuItemsInBag: menuItems,
+    });
+  };
+
+  addRestaurantToBag = (restaurant) => {
+    this.setState({
+      restaurantInBag: restaurant,
+    });
+  };
+
+  removeMenuItem = (index) => {
+    let menuItems = this.state.menuItemsInBag;
+    menuItems.splice(index, 1);
+    this.setState({
+      menuItemsInBag: menuItems,
+    });
+
+    if (menuItems.length === 0) {
+      this.setState({
+        restaurantInBag: [],
+      });
+    }
+  };
+
   render() {
-    if (this.state.isPageLoaded && this.state.isUserLoaded) {
+    if (
+      this.state.isPageLoaded &&
+      this.state.isUserLoaded &&
+      this.state.menuItemsInBagLoaded &&
+      this.state.restaurantInBagLoaded
+    ) {
       if (this.state.restaurant) {
         return (
           <div>
@@ -153,9 +218,17 @@ export default class Restaurant extends Component {
               <MenuItemOverlay
                 menuItem={this.state.itemSelection}
                 cancelPopUp={this.cancelPopUp}
+                addToBag={this.addToBag}
+                addRestaurantToBag={this.addRestaurantToBag}
+                restaurant={this.state.restaurant}
               />
             )}
-            <Navbar user={this.state.user} />
+            <Navbar
+              user={this.state.user}
+              menuItems={this.state.menuItemsInBag}
+              restaurant={this.state.restaurantInBag}
+              removeMenuItem={this.removeMenuItem}
+            />
             <div className="RestaurantContainer">
               <div className="RestaurantTitleContainer">
                 <img
@@ -198,7 +271,12 @@ export default class Restaurant extends Component {
       } else {
         return (
           <div>
-            <Navbar user={this.state.user} />
+            <Navbar
+              user={this.state.user}
+              menuItems={this.state.menuItemsInBag}
+              restaurant={this.state.restaurantInBag}
+              removeMenuItem={this.state.removeMenuItem}
+            />
             <br />
             <br />
             <h3>Oops</h3>
