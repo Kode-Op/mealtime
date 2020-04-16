@@ -37,23 +37,6 @@ export default class UserOrderHistory extends Component {
       category: "",
       errorMessage: "",
       successMessage: "",
-      //   menuitems: [
-      //     {
-      //       name: "Tuna Sub",
-      //       price: 600,
-      //       quantity: 1,
-      //     },
-      //     {
-      //       name: "Meatball Marinara Sub",
-      //       price: 500,
-      //       quantity: 1,
-      //     },
-      //     {
-      //       name: "Chocolate Chip Cookie",
-      //       price: 150,
-      //       quantity: 1,
-      //     },
-      //   ],
     };
   }
 
@@ -78,7 +61,7 @@ export default class UserOrderHistory extends Component {
   }
 
   renderMenuItems = () => {
-    return this.state.menuitems.map((currentMenuItem, index) => {
+    return this.state.menuItems.map((currentMenuItem, index) => {
       return (
         <tr key={index}>
           <td>{currentMenuItem.name}</td>
