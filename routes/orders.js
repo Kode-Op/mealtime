@@ -44,14 +44,15 @@ router.route("/add").post((req, res) => {
   const restaurantId = req.body.restaurantId;
   const creditCardId = req.body.creditCardId;
   let lastFour = "";
-  const menuItems = req.body.menuItems;
+  const menuItemIds = req.body.menuItems;
+  let menuItems = [];
   const quantity = req.body.quantity;
   const address = req.body.address;
   const instructions = req.body.instructions;
   const totalPaid = req.body.totalPaid;
   let prepTime = 0;
 
-  if (quantity.length !== menuItems.length) {
+  if (quantity.length !== menuItemIds.length) {
     return res.status(400).json("Error: menuItems and quantity mismatched.");
   }
 
@@ -63,9 +64,10 @@ router.route("/add").post((req, res) => {
       .catch((err) => res.status(400).json("Error: " + err));
   };
 
-  const findTime = (id) => {
+  const findItem = (id) => {
     return MenuItem.findById(id)
       .then((item) => {
+        menuItems.push(item);
         prepTime += item.preptime;
       })
       .catch((err) => res.status(400).json("Error: " + err));
@@ -87,8 +89,8 @@ router.route("/add").post((req, res) => {
   };
 
   const createOrder = async (_) => {
-    for (let i = 0; i < menuItems.length; i++) {
-      const result = await findTime(menuItems[i]);
+    for (let i = 0; i < menuItemIds.length; i++) {
+      const result = await findItem(menuItemIds[i]);
     }
 
     const result1 = await findFour(creditCardId);
