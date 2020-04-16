@@ -3,7 +3,7 @@ let User = require("../models/user_model");
 let CreditCard = require("../models/creditCard_model");
 
 // Format: POST /api/creditCards/add
-// Required Fields: firstName, lastName, userId, number (unique)
+// Required Fields: firstName, lastName, userId, number
 // Returns: Status based on successful/unsuccessful adding of Credit Card
 router.route("/add").post((req, res) => {
   const userId = req.body.userId;
@@ -16,6 +16,10 @@ router.route("/add").post((req, res) => {
   const address = req.body.address;
   const isDeleted = false;
 
+  if (req.body.isDeleted != null) {
+    isDeleted = req.body.isDeleted;
+  }
+
   const newItem = new CreditCard({
     userId,
     firstName,
@@ -25,37 +29,37 @@ router.route("/add").post((req, res) => {
     exYear,
     ccv,
     address,
-    isDeleted
+    isDeleted,
   });
 
   newItem
     .save()
     .then(() => res.json("credit card added!"))
-    .catch(err => res.status(400).json("Error: " + err));
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Format: GET /api/creditCards/User._id
 // Returns: Returns JSON packages of all credit cards associated with a user
-router.get("/:id", function(req, res) {
+router.get("/:id", function (req, res) {
   const user = req.params.id;
 
   CreditCard.find({
     userId: user,
-    isDeleted: false
+    isDeleted: false,
   })
-    .then(CreditCard => res.json(CreditCard))
-    .catch(err => res.status(400).json("Error: " + err));
+    .then((CreditCard) => res.json(CreditCard))
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Format: DELETE /api/creditCards/CreditCard._id
 // Returns: Status based on successful/unsuccessful deletion of Credit Card
 router.route("/:id").delete((req, res) => {
-  CreditCard.findById(req.params.id).then(creditCard => {
+  CreditCard.findById(req.params.id).then((creditCard) => {
     creditCard.isDeleted = true;
     creditCard
       .save()
       .then(() => res.json("Credit Card deleted."))
-      .catch(err => res.status(400).json("Error: " + err));
+      .catch((err) => res.status(400).json("Error: " + err));
   });
 });
 
@@ -65,22 +69,16 @@ router.route("/:id").delete((req, res) => {
 router.route("/updateCard/:id").post((req, res) => {
   var password = req.body.password;
   let userId = "";
-  CreditCard.findById(req.params.id).then(card => {
+  CreditCard.findById(req.params.id).then((card) => {
     if (!card) {
-      return res
-        .status(404)
-        .json("Card Not Found.")
-        .send();
+      return res.status(404).json("Card Not Found.").send();
     } else {
       userId = card.userId;
     }
-    User.findById(userId).then(users => {
+    User.findById(userId).then((users) => {
       if (!users) {
         // not found
-        return res
-          .status(404)
-          .json("User Not Found.")
-          .send();
+        return res.status(404).json("User Not Found.").send();
       } else {
         card.firstName = req.body.firstName;
         card.lastName = req.body.lastName;
@@ -93,7 +91,7 @@ router.route("/updateCard/:id").post((req, res) => {
         card
           .save()
           .then(() => res.json("Card updated."))
-          .catch(err => res.status(400).json("Error: " + err));
+          .catch((err) => res.status(400).json("Error: " + err));
       }
     });
   });
