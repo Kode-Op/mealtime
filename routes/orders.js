@@ -64,11 +64,11 @@ router.route("/add").post((req, res) => {
       .catch((err) => res.status(400).json("Error: " + err));
   };
 
-  const findItem = (id) => {
+  const findItem = (id, amount) => {
     return MenuItem.findById(id)
       .then((item) => {
         menuItems.push(item);
-        prepTime += item.preptime;
+        prepTime += item.preptime * amount;
       })
       .catch((err) => res.status(400).json("Error: " + err));
   };
@@ -90,7 +90,7 @@ router.route("/add").post((req, res) => {
 
   const createOrder = async (_) => {
     for (let i = 0; i < menuItemIds.length; i++) {
-      const result = await findItem(menuItemIds[i]);
+      const result = await findItem(menuItemIds[i], quantity[i]);
     }
 
     const result1 = await findFour(creditCardId);
@@ -113,8 +113,6 @@ router.route("/add").post((req, res) => {
       totalPaid,
     });
 
-    //this.setTimeOut(newItem.orderDone(), 60000 * prepTime);
-
     newOrder
       .save()
       .then(() => res.json("Order added!"))
@@ -129,7 +127,13 @@ router.route("/add").post((req, res) => {
 // Returns: All info on a specific order
 router.route("/:id").get((req, res) => {
   Order.findById(req.params.id)
-    .then((orders) => res.json(orders))
+    .then((orders) =>{
+      orders.orderDone();
+      orders
+        .save()
+        .then(()=>res.json(orders))
+        .catch((err) => res.status(400).json("Error: " + err));
+    })
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
