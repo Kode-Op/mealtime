@@ -14,6 +14,7 @@ const orderSchema = new Schema(
     creditCardId: { type: String, required: true },
     lastFour: { type: String, required: true },
     menuItems: { type: Array, required: true },
+    quantity: { type: Array, required: true },
     prepTime: { type: Number },
     address: { type: String, required: true },
     totalPaid: { type: Number, requred: true },

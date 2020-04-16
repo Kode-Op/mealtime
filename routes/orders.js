@@ -45,10 +45,15 @@ router.route("/add").post((req, res) => {
   const creditCardId = req.body.creditCardId;
   let lastFour = "";
   const menuItems = req.body.menuItems;
+  const quantity = req.body.quantity;
   const address = req.body.address;
   const instructions = req.body.instructions;
   const totalPaid = req.body.totalPaid;
   let prepTime = 0;
+
+  if (quantity.length !== menuItems.length) {
+    return res.status(400).json("Error: menuItems and quantity mismatched.");
+  }
 
   const findFour = (id) => {
     return CreditCard.findById(id)
@@ -99,6 +104,7 @@ router.route("/add").post((req, res) => {
       creditCardId,
       lastFour,
       menuItems,
+      quantity,
       prepTime,
       address,
       instructions,
