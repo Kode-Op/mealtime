@@ -85,7 +85,7 @@ router.route("/byRestaurant/:id").get((req, res) => {
 
 // Format: POST /api/orders/add
 // Required Fields: userId, restaurantId, creditCardId, menuItems[], address,
-//                  custFirst, custLast, custPhone, custAddress
+//                  quantity[], totalPaid
 // Returns: Status based on successful/unsuccessful order creation
 router.route("/add").post((req, res) => {
   const userId = req.body.userId;
