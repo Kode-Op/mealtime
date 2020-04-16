@@ -7,7 +7,7 @@ import Navbar from "../nav/Navbar";
 import Profile from "./profile/Profile";
 import CreditCard from "./creditcard/CreditCard";
 import Address from "./address/Address";
-import OrderHistory from "../orderhistory/OrderHistory";
+import UserOrderHistory from "../orderhistory/UserOrderHistory";
 import Footer from "../footer/Footer";
 import RouteLink from "../routelink/RouteLink";
 
@@ -81,7 +81,7 @@ export default class Account extends Component {
                   </li>
                   <li>
                     <RouteLink
-                      to="/account/orderhistory"
+                      to="/account/userorderhistory"
                       label="View Order History"
                     />
                   </li>
@@ -114,9 +114,9 @@ export default class Account extends Component {
                   )}
                 />
                 <Route
-                  path="/account/orderhistory"
+                  path="/account/userorderhistory"
                   render={(props) => (
-                    <OrderHistory {...props} user={this.state.user} />
+                    <UserOrderHistory {...props} user={this.state.user} />
                   )}
                 />
               </div>
