@@ -27,8 +27,8 @@ router.route("/byUser/:id").get((req, res) => {
 // Returns: All orders on a specific resturant
 router.route("/byRestaurant/:id").get((req, res) => {
   Order.find({ restaurantId: req.params.id })
-    .then((orders) => res.json(orders))
-    .catch((err) => res.status(400).json("Error: " + err));
+  .then((orders) =>res.json(orders))
+  .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Format: POST /api/orders/add
@@ -64,11 +64,11 @@ router.route("/add").post((req, res) => {
       .catch((err) => res.status(400).json("Error: " + err));
   };
 
-  const findItem = (id) => {
+  const findItem = (id, amount) => {
     return MenuItem.findById(id)
       .then((item) => {
         menuItems.push(item);
-        prepTime += item.preptime;
+        prepTime += item.preptime * amount;
       })
       .catch((err) => res.status(400).json("Error: " + err));
   };
@@ -90,7 +90,7 @@ router.route("/add").post((req, res) => {
 
   const createOrder = async (_) => {
     for (let i = 0; i < menuItemIds.length; i++) {
-      const result = await findItem(menuItemIds[i]);
+      const result = await findItem(menuItemIds[i], quantity[i]);
     }
 
     const result1 = await findFour(creditCardId);
@@ -129,7 +129,12 @@ router.route("/add").post((req, res) => {
 // Returns: All info on a specific order
 router.route("/:id").get((req, res) => {
   Order.findById(req.params.id)
-    .then((orders) => res.json(orders))
+    .then((orders) =>{
+      orders.orderDone();
+      orders
+      .save()
+      .then(() => res.json(orders))
+      .catch((err) => res.status(400).json("Error: " + err));})
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
