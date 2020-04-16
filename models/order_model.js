@@ -27,15 +27,6 @@ const orderSchema = new Schema(
   }
 );
 
-orderSchema.methods.orderDone = function () {
-  var startTime = orderSchema.createdAt;
-  var endTime = new Date();
-  var Timepassed = (endTime - startTime)/60000;
-  if(!orderSchema.isCanceled && Timepassed > orderSchema.prepTime){
-    orderSchema.isFulfilled = true;
-  }
-};
-
 const order = mongoose.model("order", orderSchema);
 
 module.exports = order;

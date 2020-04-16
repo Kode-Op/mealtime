@@ -4,12 +4,55 @@ let User = require("../models/user_model");
 let CreditCard = require("../models/creditCard_model");
 let MenuItem = require("../models/menuItem_model");
 
+const setDone = (id) => {
+  return Order.findById(id)
+    .then((order) => {
+      let startTime = order.createdAt;
+      let endTime = new Date();
+      let timePassed = (endTime - startTime) / 60000;
+      if (!order.isCanceled && timePassed > order.prepTime) {
+        order.isFulfilled = true;
+        order
+          .save()
+          .then(() => {
+            console.log("Order Fulfilled.");
+            return Order.findById(id)
+              .then((orderNew) => {
+                console.log("Fulfilled Order updated");
+              })
+              .catch((err) => console.log("Error: " + err));
+          })
+          .catch((err) => console.log("Error: " + err));
+      } else if (order.isCanceled) {
+        console.log("Order cancelled");
+        return null;
+      } else {
+        console.log("Order not yet fulfilled");
+        return null;
+      }
+    })
+    .catch((err) => res.status(400).json("Error: " + err));
+};
+
+const processOrders = async (orders) => {
+  for (let i = 0; i < orders.length; i++) {
+    const result = await setDone(orders[i]);
+    if (!result) {
+      orders[i] = result;
+    }
+    console.log(orders[i]);
+  }
+};
+
 // Format: GET /api/orders/
 // Required Fields: none
 // Returns: All info on all orders
 router.route("/").get((req, res) => {
   Order.find()
-    .then((orders) => res.json(orders))
+    .then((orders) => {
+      processOrders(orders);
+      res.json(orders);
+    })
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
@@ -18,7 +61,10 @@ router.route("/").get((req, res) => {
 // Returns: All orders on a specific user
 router.route("/byUser/:id").get((req, res) => {
   Order.find({ userId: req.params.id })
-    .then((orders) => res.json(orders))
+    .then((orders) => {
+      processOrders(orders);
+      res.json(orders);
+    })
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
@@ -27,7 +73,10 @@ router.route("/byUser/:id").get((req, res) => {
 // Returns: All orders on a specific resturant
 router.route("/byRestaurant/:id").get((req, res) => {
   Order.find({ restaurantId: req.params.id })
-    .then((orders) => res.json(orders))
+    .then((orders) => {
+      processOrders(orders);
+      res.json(orders);
+    })
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
@@ -127,12 +176,9 @@ router.route("/add").post((req, res) => {
 // Returns: All info on a specific order
 router.route("/:id").get((req, res) => {
   Order.findById(req.params.id)
-    .then((orders) =>{
-      orders.orderDone();
-      orders
-        .save()
-        .then(()=>res.json(orders))
-        .catch((err) => res.status(400).json("Error: " + err));
+    .then((orders) => {
+      processOrders(orders);
+      res.json(orders);
     })
     .catch((err) => res.status(400).json("Error: " + err));
 });
