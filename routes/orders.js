@@ -1,5 +1,7 @@
 const router = require("express").Router();
 let Order = require("../models/order_model");
+let User = require("../models/user_model");
+let CreditCard = require("../models/creditCard_model");
 let MenuItem = require("../models/menuItem_model");
 
 // Format: GET /api/orders/
@@ -30,15 +32,31 @@ router.route("/byRestaurant/:id").get((req, res) => {
 });
 
 // Format: POST /api/orders/add
-// Required Fields: userId, restaurantId, creditCardId, menuItems[], address
+// Required Fields: userId, restaurantId, creditCardId, menuItems[], address,
+//                  custFirst, custLast, custPhone, custAddress
 // Returns: Status based on successful/unsuccessful order creation
 router.route("/add").post((req, res) => {
   const userId = req.body.userId;
+  let custFirst = "";
+  let custLast = "";
+  let custPhone = "555-123-4567";
+  let custAddress = "123 Main St, Anywhere USA";
   const restaurantId = req.body.restaurantId;
   const creditCardId = req.body.creditCardId;
+  let lastFour = "";
   const menuItems = req.body.menuItems;
   const address = req.body.address;
+  const instructions = req.body.instructions;
+  const totalPaid = req.body.totalPaid;
   let prepTime = 0;
+
+  const findFour = (id) => {
+    return CreditCard.findById(id)
+      .then((cc) => {
+        lastFour = cc.number.slice(-4);
+      })
+      .catch((err) => res.status(400).json("Error: " + err));
+  };
 
   const findTime = (id) => {
     return MenuItem.findById(id)
@@ -48,18 +66,43 @@ router.route("/add").post((req, res) => {
       .catch((err) => res.status(400).json("Error: " + err));
   };
 
+  const findUser = (id) => {
+    return User.findById(id)
+      .then((user) => {
+        custFirst = user.firstName;
+        custLast = user.lastName;
+        if (user.phone) {
+          custPhone = user.phone;
+        }
+        if (user.address) {
+          custAddress = user.address;
+        }
+      })
+      .catch((err) => res.status(400).json("Error: " + err));
+  };
+
   const createOrder = async (_) => {
     for (let i = 0; i < menuItems.length; i++) {
       const result = await findTime(menuItems[i]);
     }
 
+    const result1 = await findFour(creditCardId);
+    const result2 = await findUser(userId);
+
     const newOrder = new Order({
       userId,
+      custFirst,
+      custLast,
+      custPhone,
+      custAddress,
       restaurantId,
       creditCardId,
+      lastFour,
       menuItems,
       prepTime,
       address,
+      instructions,
+      totalPaid,
     });
 
     //this.setTimeOut(newItem.orderDone(), 60000 * prepTime);
