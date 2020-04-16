@@ -65,11 +65,20 @@ export default class NavBar extends Component {
     } else {
       let menuItemArray = getFromStorage("shoppingbag");
       let restaurant = getFromStorage("restaurant");
+
       this.setState({
         getMenuItemsFromStorage: true,
-        menuItems: menuItemArray.menuItems,
         restaurant: restaurant,
       });
+      if (menuItemArray) {
+        this.setState({
+          menuItems: menuItemArray.menuItems,
+        });
+      } else {
+        this.setState({
+          menuItems: [],
+        });
+      }
     }
 
     //Add an event lister to call getMobileView when the window is resized
@@ -194,7 +203,8 @@ export default class NavBar extends Component {
           </Link>
           <div style={{ color: "grey", fontSize: "0.9em", paddingTop: 20 }}>
             {subTotal < minorder
-              ? "The minimum checkout price is " +
+              ? restaurant.name +
+                " has a minimum checkout price of " +
                 this.convertToPrice(1, minorder)
               : ""}
           </div>
