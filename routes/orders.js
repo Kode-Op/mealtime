@@ -4,43 +4,40 @@ let User = require("../models/user_model");
 let CreditCard = require("../models/creditCard_model");
 let MenuItem = require("../models/menuItem_model");
 
-const setDone = (id) => {
-  return Order.findById(id)
-    .then((order) => {
-      let startTime = order.createdAt;
-      let endTime = new Date();
-      let timePassed = (endTime - startTime) / 60000;
-      if (!order.isCanceled && timePassed > order.prepTime) {
-        order.isFulfilled = true;
-        order
-          .save()
-          .then(() => {
-            console.log("Order Fulfilled.");
-            return Order.findById(id)
-              .then((orderNew) => {
-                console.log("Fulfilled Order updated");
-              })
-              .catch((err) => console.log("Error: " + err));
-          })
-          .catch((err) => console.log("Error: " + err));
-      } else if (order.isCanceled) {
-        console.log("Order cancelled");
-        return null;
-      } else {
-        console.log("Order not yet fulfilled");
-        return null;
-      }
-    })
-    .catch((err) => res.status(400).json("Error: " + err));
+// Helper function to set orders to be fulfilled if prepTime has elapsed
+const setDone = (o) => {
+  return new Promise(function (resolve, reject) {
+    Order.findById(o._id)
+      .then((order) => {
+        let startTime = order.createdAt;
+        let endTime = new Date();
+        let timePassed = (endTime - startTime) / 60000;
+        if (order.isFulfilled || order.isCanceled) {
+          resolve(order);
+        } else if (!order.isCanceled && timePassed > order.prepTime) {
+          order.isFulfilled = true;
+          order
+            .save()
+            .then(() => {
+              Order.findById(o._id)
+                .then((orderNew) => {
+                  resolve(orderNew);
+                })
+                .catch((err) => console.log("Error: " + err));
+            })
+            .catch((err) => console.log("Error: " + err));
+        } else {
+          resolve(order);
+        }
+      })
+      .catch((err) => res.status(400).json("Error: " + err));
+  });
 };
 
+// Helper function to iterate through orders returned from a find() function and call setDone()
 const processOrders = async (orders) => {
   for (let i = 0; i < orders.length; i++) {
-    const result = await setDone(orders[i]);
-    if (!result) {
-      orders[i] = result;
-    }
-    console.log(orders[i]);
+    orders[i] = await setDone(orders[i]);
   }
 };
 
@@ -50,8 +47,11 @@ const processOrders = async (orders) => {
 router.route("/").get((req, res) => {
   Order.find()
     .then((orders) => {
-      processOrders(orders);
-      res.json(orders);
+      const process = async (orders) => {
+        result = await processOrders(orders);
+        res.json(orders);
+      };
+      process(orders);
     })
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -62,8 +62,11 @@ router.route("/").get((req, res) => {
 router.route("/byUser/:id").get((req, res) => {
   Order.find({ userId: req.params.id })
     .then((orders) => {
-      processOrders(orders);
-      res.json(orders);
+      const process = async (orders) => {
+        result = await processOrders(orders);
+        res.json(orders);
+      };
+      process(orders);
     })
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -177,8 +180,11 @@ router.route("/add").post((req, res) => {
 router.route("/:id").get((req, res) => {
   Order.findById(req.params.id)
     .then((orders) => {
-      processOrders(orders);
-      res.json(orders);
+      const process = async (orders) => {
+        result = await processOrders(orders);
+        res.json(orders);
+      };
+      process(orders);
     })
     .catch((err) => res.status(400).json("Error: " + err));
 });
