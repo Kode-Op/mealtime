@@ -71,6 +71,8 @@ export default class Checkout extends Component {
             isUserLoaded: true,
             user: response,
           });
+
+          //When the user is loaded, get that user's credit card info
           this.getCreditCardInfo(response._id);
         }
       })
@@ -87,6 +89,8 @@ export default class Checkout extends Component {
     if (menuItemArray !== null) {
       let menuItemIDArray = this.getMenuItemIDArray(menuItemArray.menuItems);
       let quantityArray = this.getQuantityArray(menuItemArray.menuItems);
+
+      //Calculate subTotal, tax, fee, and totalPaid before saving it in our state
       const subTotal = this.getSubTotal(menuItemArray.menuItems);
       const tax = this.getTax(subTotal);
       const fee = 300;
@@ -107,6 +111,8 @@ export default class Checkout extends Component {
       });
     }
 
+    //Get the restaurant from storage. This is used to display
+    //"Your order from (restaurantName)"
     let restaurantArray = getFromStorage("restaurant");
     if (restaurantArray !== null) {
       this.setState({
@@ -192,51 +198,34 @@ export default class Checkout extends Component {
     });
   };
 
-  getMenuItemIDArray = (menuItems) => {
-    let menuItemIDArray = [];
-
-    menuItems.forEach((currentMenuItem) => {
-      menuItemIDArray.push(currentMenuItem.menuItem._id);
-    });
-
-    return menuItemIDArray;
-  };
-
-  getQuantityArray = (menuItems) => {
-    let quantityArray = [];
-
-    menuItems.forEach((currentMenuItem) => {
-      quantityArray.push(currentMenuItem.quantity);
-    });
-
-    return quantityArray;
-  };
-
-  getCreditCardInfo = (id) => {
-    GetCreditCardByID(id)
-      .then((response) => {
-        this.setState({
-          creditCards: response.data,
-          creditCardsLoaded: true,
-        });
-      })
-      .catch(() => {
-        this.setState({ creditCardsLoaded: true });
-      });
-  };
-
-  removeMenuItem = (index) => {
-    let menuItems = this.state.menuItems;
-    menuItems.splice(index, 1);
+  //Updates the credit card info in the state when the user clicks on one
+  //of their credit cards
+  updateCreditCardInfo = (card) => {
     this.setState({
-      menuItems: menuItems,
+      selectedCardID: card._id,
+      paymentFirstName: card.firstName,
+      paymentLastName: card.lastName,
+      paymentCreditCardNumber: card.number,
+      paymentExpMonth: card.exMonth,
+      paymentExpYear: card.exYear,
+      paymentCCV: card.ccv,
+      paymentBillingAddress: card.address,
     });
+  };
 
-    if (menuItems.length === 0) {
-      this.setState({
-        restaurant: [],
-      });
-    }
+  //Resets the credit card info in the state when the user goes to add a
+  //new card.
+  resetCreditCardInfo = () => {
+    this.setState({
+      selectedCardID: "0",
+      paymentFirstName: "",
+      paymentLastName: "",
+      paymentCreditCardNumber: "",
+      paymentExpMonth: "",
+      paymentExpYear: "",
+      paymentCCV: "",
+      paymentBillingAddress: "",
+    });
   };
 
   //Adds up the quantity * price of all menu items. Returns an integer.
@@ -248,54 +237,48 @@ export default class Checkout extends Component {
     return subTotal;
   };
 
+  //Sales tax rate in California is 7.25%
   getTax = (subtotal) => {
-    //Sales tax rate in California is 7.25%
     return subtotal * 0.0725;
   };
 
-  convertToPrice = (quantity, price) => {
-    return ((price * quantity) / 100).toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
+  //Extracts an array of just the menu item IDs from the menuItem objects.
+  //We need this to post orders to the database
+  getMenuItemIDArray = (menuItems) => {
+    let menuItemIDArray = [];
+    menuItems.forEach((currentMenuItem) => {
+      menuItemIDArray.push(currentMenuItem.menuItem._id);
     });
+    return menuItemIDArray;
   };
 
-  getMenuItems = () => {
-    return this.state.menuItems.map((currentMenuItem) => {
-      return (
-        <div
-          key={currentMenuItem.menuItem._id + " " + currentMenuItem.time}
-          className="CheckoutMenuItem"
-        >
-          <div className="CheckoutMenuItemLeft">
-            {currentMenuItem.quantity} x {currentMenuItem.menuItem.name}
-          </div>
-          <div className="CheckoutMenuItemRight">
-            {this.convertToPrice(
-              currentMenuItem.quantity,
-              currentMenuItem.menuItem.price
-            )}
-          </div>
-        </div>
-      );
+  //Extracts an array of just the quantities from the menuItem objects.
+  //We need this to post orders to the database.
+  getQuantityArray = (menuItems) => {
+    let quantityArray = [];
+    menuItems.forEach((currentMenuItem) => {
+      quantityArray.push(currentMenuItem.quantity);
     });
+    return quantityArray;
   };
 
-  //This method creates a dropdown box option for each year, starting with
-  //the current year, and ending with the current year + numYears
-  getYearSelection = (numYears) => {
-    let start = new Date().getFullYear();
-    let rows = [];
-    for (let year = start; year <= start + numYears; year++) {
-      rows.push(
-        <option value={year} key={year}>
-          {year}
-        </option>
-      );
-    }
-    return rows;
+  //Obtains the credit card info belonging to a particular user
+  getCreditCardInfo = (id) => {
+    GetCreditCardByID(id)
+      .then((response) => {
+        this.setState({
+          creditCards: response.data,
+          creditCardsLoaded: true,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          creditCardsLoaded: true,
+        });
+      });
   };
 
+  //Renders the order summary on the right pane of the page
   getOrderSummary = () => {
     let tip;
     if (this.state.tipByAmount) {
@@ -358,32 +341,54 @@ export default class Checkout extends Component {
     );
   };
 
-  updateCreditCardInfo = (card) => {
-    this.setState({
-      selectedCardID: card._id,
-      paymentFirstName: card.firstName,
-      paymentLastName: card.lastName,
-      paymentCreditCardNumber: card.number,
-      paymentExpMonth: card.exMonth,
-      paymentExpYear: card.exYear,
-      paymentCCV: card.ccv,
-      paymentBillingAddress: card.address,
+  //This method displays the name, quantity and price of each menuItem. Used
+  //In conjunction with getOrderSummary
+  getMenuItems = () => {
+    return this.state.menuItems.map((currentMenuItem) => {
+      return (
+        <div
+          key={currentMenuItem.menuItem._id + " " + currentMenuItem.time}
+          className="CheckoutMenuItem"
+        >
+          <div className="CheckoutMenuItemLeft">
+            {currentMenuItem.quantity} x {currentMenuItem.menuItem.name}
+          </div>
+          <div className="CheckoutMenuItemRight">
+            {this.convertToPrice(
+              currentMenuItem.quantity,
+              currentMenuItem.menuItem.price
+            )}
+          </div>
+        </div>
+      );
     });
   };
 
-  resetCreditCardInfo = () => {
-    this.setState({
-      selectedCardID: "0",
-      paymentFirstName: "",
-      paymentLastName: "",
-      paymentCreditCardNumber: "",
-      paymentExpMonth: "",
-      paymentExpYear: "",
-      paymentCCV: "",
-      paymentBillingAddress: "",
+  //Converts a price to 250, quantity 3, to a string $7.50
+  convertToPrice = (quantity, price) => {
+    return ((price * quantity) / 100).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
     });
   };
 
+  //This method creates a dropdown box option for each year, starting with
+  //the current year, and ending with the current year + numYears
+  getYearSelection = (numYears) => {
+    let start = new Date().getFullYear();
+    let rows = [];
+    for (let year = start; year <= start + numYears; year++) {
+      rows.push(
+        <option value={year} key={year}>
+          {year}
+        </option>
+      );
+    }
+    return rows;
+  };
+
+  //This method renders each credit card in the "Enter payment information"
+  //portion of the form
   renderCreditCardOptions = (creditCards) => {
     return creditCards.map((currentCard) => {
       return (
@@ -403,6 +408,8 @@ export default class Checkout extends Component {
     });
   };
 
+  //This method validates the custom tip entry portion of the form, and then parses
+  //the data to return an integer if it is a valid entry
   submitCustomTip = (tipAmountString) => {
     //Regular expression courtesy of https://stackoverflow.com/questions/8829765/regular-expression-for-dollar-amount-in-javascript
     const priceVerification = /^\$?[0-9]+(\.[0-9][0-9])?$/;
@@ -434,50 +441,15 @@ export default class Checkout extends Component {
     });
   };
 
+  //This method validate all delivery and payment information form inputs from the user
   validateForm = () => {
     let errorMessage = "";
-    if (this.state.selectedCardID === "") {
-      errorMessage = errorMessage.concat("You must select a form of payment\n");
-    } else if (this.state.selectedCardID === "0") {
-      //Adding a new card
 
-      if (this.state.paymentCreditCardNumber.length !== 16) {
-        errorMessage = errorMessage.concat(
-          "Your credit card must have 16 characters.\n"
-        );
-      }
-      if (isNaN(this.state.paymentCreditCardNumber)) {
-        errorMessage = errorMessage.concat(
-          "Your credit card must only contain numbers.\n"
-        );
-      }
-
-      if (isNaN(this.state.paymentCCV)) {
-        errorMessage = errorMessage.concat(
-          "Your CCV must only contain numbers.\n"
-        );
-      }
-
-      if (this.state.paymentCCV.length !== 3) {
-        errorMessage = errorMessage.concat(
-          "Your CCV must have 3 characters.\n"
-        );
-      }
-      if (
-        this.state.paymentExpMonth === "blankmonth" ||
-        this.state.paymentExpMonth === ""
-      ) {
-        errorMessage = errorMessage.concat("You must enter a month.\n");
-      }
-      if (
-        this.state.paymentExpYear === "blankyear" ||
-        this.state.paymentExpYear === ""
-      ) {
-        errorMessage = errorMessage.concat("You must enter a year.\n");
-      }
-    }
-
+    //Validate the phone number to make sure it's 10 digits and only contains numbers
     let phoneNumber;
+
+    //If the phone number is untouched (which means deliveryPhoneNumber is not set), then
+    //get the phone number from this.state.user.phone
     if (this.state.deliveryPhoneNumber !== "") {
       phoneNumber = this.state.deliveryPhoneNumber;
     } else {
@@ -496,8 +468,55 @@ export default class Checkout extends Component {
       );
     }
 
+    //If the custom tip form is being displayed, the user hasn't submitted their entry
     if (this.state.displayCustomTipForm) {
       errorMessage = errorMessage.concat("You must enter a tip amount.\n");
+    }
+
+    //This is already pre-validated from the button so the selectedCardID should never be
+    //blank. Just in case it is, we validate it here anyway
+    if (this.state.selectedCardID === "") {
+      errorMessage = errorMessage.concat("You must select a form of payment\n");
+
+      //Else, if user adds a new card (we don't validate existing cards)
+    } else if (this.state.selectedCardID === "0") {
+      if (this.state.paymentCreditCardNumber.length !== 16) {
+        errorMessage = errorMessage.concat(
+          "Your credit card must have 16 characters.\n"
+        );
+      }
+
+      if (isNaN(this.state.paymentCreditCardNumber)) {
+        errorMessage = errorMessage.concat(
+          "Your credit card must only contain numbers.\n"
+        );
+      }
+
+      if (isNaN(this.state.paymentCCV)) {
+        errorMessage = errorMessage.concat(
+          "Your CCV must only contain numbers.\n"
+        );
+      }
+
+      if (this.state.paymentCCV.length !== 3) {
+        errorMessage = errorMessage.concat(
+          "Your CCV must have 3 characters.\n"
+        );
+      }
+
+      if (
+        this.state.paymentExpMonth === "blankmonth" ||
+        this.state.paymentExpMonth === ""
+      ) {
+        errorMessage = errorMessage.concat("You must enter a month.\n");
+      }
+
+      if (
+        this.state.paymentExpYear === "blankyear" ||
+        this.state.paymentExpYear === ""
+      ) {
+        errorMessage = errorMessage.concat("You must enter a year.\n");
+      }
     }
 
     if (errorMessage) {
@@ -513,16 +532,28 @@ export default class Checkout extends Component {
     return true;
   };
 
+  //This method is called when the user presses the submit button to compete their order
+  //There are two cases when submitting this form:
+
+  //Case 1: The user chooses to pay with a new card. This requires us to first post that credit
+  //card to our database before posting the order
+
+  //Case 2: The user chooses to pay with an existing card, which means we can skip posting
+  //it to the database
   submitCheckout = (e) => {
     e.preventDefault();
     if (this.validateForm()) {
       let address;
+
+      //If the delivery address is untouched (which means deliveryAddress is not set),
+      //then get the address from this.state.user.address;
       if (this.state.deliveryAddress !== "") {
         address = this.state.deliveryAddress;
       } else {
         address = this.state.user.address;
       }
 
+      //Case 1
       if (this.state.selectedCardID === "0") {
         let pkg = {
           userId: this.state.user._id,
@@ -536,21 +567,29 @@ export default class Checkout extends Component {
           isDeleted: !this.state.saveCard,
         };
 
+        //Post the card to the database
         axios
           .post("/api/creditCards/add/", pkg)
           .then(() => {
+            //After we post the card to the database, we need to get its ID
             GetCreditCardByID(this.state.user._id)
               .then((response) => {
+                //The new card ID is found by taking the ID of the most recently
+                //posted card
+                const newCardID = response.data.reverse()[0]._id;
+
                 const pkg2 = {
                   userId: this.state.user._id,
                   restaurantId: this.state.restaurant._id,
-                  creditCardId: response.data.reverse()[0]._id,
+                  creditCardId: newCardID,
                   menuItems: this.state.menuItemIDArray,
                   quantity: this.state.quantityArray,
                   address: address,
                   instructions: this.state.deliveryInstructions,
                   totalPaid: this.state.totalPaid,
                 };
+
+                //Post the order to the database
                 axios
                   .post("/api/orders/add/", pkg2)
                   .then(() => {
@@ -591,6 +630,8 @@ export default class Checkout extends Component {
               submitSuccessMessage: "",
             });
           });
+
+        //Case 2
       } else {
         const pkg = {
           userId: this.state.user._id,
@@ -602,6 +643,8 @@ export default class Checkout extends Component {
           instructions: this.state.deliveryInstructions,
           totalPaid: this.state.totalPaid,
         };
+
+        //Post the order to the database
         axios
           .post("/api/orders/add/", pkg)
           .then(() => {
@@ -609,6 +652,7 @@ export default class Checkout extends Component {
               submitErrorMessage: "",
               submitSuccessMessage: "Successfully added order",
             });
+            //Reset menu items in storage
             setInStorage("restaurant", null).then(() => {
               setInStorage("shoppingbag", null).then(() => {
                 this.setState({
@@ -674,7 +718,7 @@ export default class Checkout extends Component {
                 user={user}
                 menuItems={menuItems}
                 restaurant={restaurant}
-                removeMenuItem={this.removeMenuItem}
+                disableToggle={true}
               />
               <div className="CheckoutContainer">
                 <div className="CheckoutBarMain">
