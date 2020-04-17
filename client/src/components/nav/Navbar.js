@@ -29,6 +29,7 @@ export default class NavBar extends Component {
       menuItems: [],
       getMenuItemsFromStorage: true,
       bagMenuToggle: false,
+      disableToggle: false,
       restaurant: [],
     };
 
@@ -290,7 +291,9 @@ export default class NavBar extends Component {
                     bagMenuToggle: isOpen,
                   });
                 }}
-                show={this.state.bagMenuToggle}
+                show={
+                  this.props.disableToggle ? false : this.state.bagMenuToggle
+                }
               >
                 {this.getItemsInBag()}
               </NavDropdown>
@@ -374,7 +377,9 @@ export default class NavBar extends Component {
                     bagMenuToggle: isOpen,
                   });
                 }}
-                show={this.state.bagMenuToggle}
+                show={
+                  this.props.disableToggle ? false : this.state.bagMenuToggle
+                }
               >
                 {this.getItemsInBag()}
               </NavDropdown>
