@@ -36,8 +36,12 @@ const setDone = (o) => {
 
 // Helper function to iterate through orders returned from a find() function and call setDone()
 const processOrders = async (orders) => {
-  for (let i = 0; i < orders.length; i++) {
-    orders[i] = await setDone(orders[i]);
+  if (orders) {
+    for (let i = 0; i < orders.length; i++) {
+      orders[i] = await setDone(orders[i]);
+    }
+  } else {
+    console.log("Err: Invalid Request");
   }
 };
 
