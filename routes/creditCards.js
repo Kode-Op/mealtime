@@ -38,17 +38,26 @@ router.route("/add").post((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-// Format: GET /api/creditCards/User._id
+// Format: GET /api/creditCards/User._id/showDeleted=Boolean
 // Returns: Returns JSON packages of all credit cards associated with a user
-router.get("/:id", function (req, res) {
+router.get("/:id/:showDeleted?", function (req, res) {
   const user = req.params.id;
+  const showDeleted = req.params.showDeleted;
 
-  CreditCard.find({
-    userId: user,
-    isDeleted: false,
-  })
-    .then((CreditCard) => res.json(CreditCard))
-    .catch((err) => res.status(400).json("Error: " + err));
+  if (showDeleted) {
+    CreditCard.find({
+      userId: user,
+    })
+      .then((CreditCard) => res.json(CreditCard))
+      .catch((err) => res.status(400).json("Error: " + err));
+  } else {
+    CreditCard.find({
+      userId: user,
+      isDeleted: false,
+    })
+      .then((CreditCard) => res.json(CreditCard))
+      .catch((err) => res.status(400).json("Error: " + err));
+  }
 });
 
 // Format: DELETE /api/creditCards/CreditCard._id
