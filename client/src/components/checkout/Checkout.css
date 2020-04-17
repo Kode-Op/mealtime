@@ -101,7 +101,6 @@
 }
 
 .CheckoutCustomTip {
-  margin-bottom: 15px;
   font-size: 100%;
   font-family: inherit;
   border: 0;
@@ -113,6 +112,14 @@
 .CheckoutErrorMessage {
   display: inline-block;
   color: red;
+  font-weight: bold;
+  white-space: pre-wrap;
+  font-size: 0.9em;
+}
+
+.CheckoutSuccessMessage {
+  display: inline-block;
+  color: green;
   font-weight: bold;
   white-space: pre-wrap;
   font-size: 0.9em;

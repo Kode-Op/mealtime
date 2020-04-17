@@ -1,6 +1,8 @@
 //Import libraries
 import React, { Component } from "react";
 import { Button, ListGroup } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
+import axios from "axios";
 
 //Import components
 import Navbar from "../nav/Navbar";
@@ -11,7 +13,7 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
-import { getFromStorage } from "../../utils/storage";
+import { getFromStorage, setInStorage } from "../../utils/storage";
 import GetCreditCardByID from "../../utils/creditcards/GetCreditCardByID";
 
 //Import stylesheets
@@ -28,6 +30,8 @@ export default class Checkout extends Component {
       restaurant: [],
       restaurantLoaded: false,
       menuItems: [],
+      menuItemIDArray: [],
+      quantityArray: [],
       creditcards: [],
       creditCardsLoaded: false,
       menuItemsLoaded: false,
@@ -38,6 +42,7 @@ export default class Checkout extends Component {
       tipByAmount: false,
       selectedCardID: "",
       deliveryAddress: "",
+      deliveryPhoneNumber: "",
       deliveryInstructions: "",
       paymentFirstName: "",
       paymentLastName: "",
@@ -49,6 +54,9 @@ export default class Checkout extends Component {
       saveCard: false,
       customTipErrorMessage: "",
       submitErrorMessage: "",
+      submitSuccessMessage: "",
+      totalPaid: 0,
+      redirect: false,
     };
   }
 
@@ -63,6 +71,7 @@ export default class Checkout extends Component {
             isUserLoaded: true,
             user: response,
           });
+          this.getCreditCardInfo(response._id);
         }
       })
       .catch(() => {
@@ -76,9 +85,21 @@ export default class Checkout extends Component {
     //Initialize the value of menuItems to whatever is in storage
     let menuItemArray = getFromStorage("shoppingbag");
     if (menuItemArray !== null) {
+      let menuItemIDArray = this.getMenuItemIDArray(menuItemArray.menuItems);
+      let quantityArray = this.getQuantityArray(menuItemArray.menuItems);
+      const subTotal = this.getSubTotal(menuItemArray.menuItems);
+      const tax = this.getTax(subTotal);
+      const fee = 300;
+      const totalPaid = Math.round(subTotal + tax + fee);
       this.setState({
         menuItems: menuItemArray.menuItems,
         menuItemsLoaded: true,
+        menuItemIDArray: menuItemIDArray,
+        quantityArray: quantityArray,
+        subTotal: subTotal,
+        tax: tax,
+        fee: fee,
+        totalPaid: totalPaid,
       });
     } else {
       this.setState({
@@ -108,6 +129,12 @@ export default class Checkout extends Component {
     e.preventDefault();
     this.setState({
       deliveryAddress: e.target.value,
+    });
+  };
+  onChangePhoneNumber = (e) => {
+    e.preventDefault();
+    this.setState({
+      deliveryPhoneNumber: e.target.value,
     });
   };
   onChangeDeliveryInstructions = (e) => {
@@ -163,6 +190,26 @@ export default class Checkout extends Component {
     this.setState({
       tipAmountString: e.target.value,
     });
+  };
+
+  getMenuItemIDArray = (menuItems) => {
+    let menuItemIDArray = [];
+
+    menuItems.forEach((currentMenuItem) => {
+      menuItemIDArray.push(currentMenuItem.menuItem._id);
+    });
+
+    return menuItemIDArray;
+  };
+
+  getQuantityArray = (menuItems) => {
+    let quantityArray = [];
+
+    menuItems.forEach((currentMenuItem) => {
+      quantityArray.push(currentMenuItem.quantity);
+    });
+
+    return quantityArray;
   };
 
   getCreditCardInfo = (id) => {
@@ -250,14 +297,11 @@ export default class Checkout extends Component {
   };
 
   getOrderSummary = () => {
-    const subTotal = this.getSubTotal(this.state.menuItems);
-    const tax = this.getTax(subTotal);
-    const fee = 300;
     let tip;
     if (this.state.tipByAmount) {
       tip = this.state.tipAmount;
     } else {
-      tip = subTotal * (this.state.tipPercentage / 100);
+      tip = Math.round((this.state.subTotal * this.state.tipPercentage) / 100);
     }
     return (
       <div className="CheckoutOrderSummary">
@@ -270,19 +314,19 @@ export default class Checkout extends Component {
         <div className="CheckoutTotals">
           <div className="CheckoutMenuItemLeft">Item subtotal</div>
           <div className="CheckoutMenuItemRight">
-            {this.convertToPrice(1, subTotal)}
+            {this.convertToPrice(1, this.state.subTotal)}
           </div>
         </div>
         <div className="CheckoutTotals">
           <div className="CheckoutMenuItemLeft">Delivery Fee</div>
           <div className="CheckoutMenuItemRight">
-            {this.convertToPrice(1, fee)}
+            {this.convertToPrice(1, this.state.fee)}
           </div>
         </div>
         <div className="CheckoutTotals">
           <div className="CheckoutMenuItemLeft">Sales tax</div>
           <div className="CheckoutMenuItemRight">
-            {this.convertToPrice(1, tax)}
+            {this.convertToPrice(1, this.state.tax)}
           </div>
         </div>
         <div className="CheckoutTotals">
@@ -305,8 +349,8 @@ export default class Checkout extends Component {
             <div className="CheckoutMenuItemLeft">Total</div>
             <div className="CheckoutMenuItemRight">
               {this.state.displayCustomTipForm && !this.state.tipByAmount
-                ? this.convertToPrice(1, subTotal + fee + tax)
-                : this.convertToPrice(1, subTotal + fee + tax + tip)}
+                ? this.convertToPrice(1, this.state.totalPaid)
+                : this.convertToPrice(1, this.state.totalPaid + tip)}
             </div>
           </div>
         </div>
@@ -391,7 +435,7 @@ export default class Checkout extends Component {
   };
 
   validateForm = () => {
-    let errorMessage;
+    let errorMessage = "";
     if (this.state.selectedCardID === "") {
       errorMessage = errorMessage.concat("You must select a form of payment\n");
     } else if (this.state.selectedCardID === "0") {
@@ -407,6 +451,13 @@ export default class Checkout extends Component {
           "Your credit card must only contain numbers.\n"
         );
       }
+
+      if (isNaN(this.state.paymentCCV)) {
+        errorMessage = errorMessage.concat(
+          "Your CCV must only contain numbers.\n"
+        );
+      }
+
       if (this.state.paymentCCV.length !== 3) {
         errorMessage = errorMessage.concat(
           "Your CCV must have 3 characters.\n"
@@ -414,7 +465,7 @@ export default class Checkout extends Component {
       }
       if (
         this.state.paymentExpMonth === "blankmonth" ||
-        this.state.errorMessage === ""
+        this.state.paymentExpMonth === ""
       ) {
         errorMessage = errorMessage.concat("You must enter a month.\n");
       }
@@ -426,6 +477,25 @@ export default class Checkout extends Component {
       }
     }
 
+    let phoneNumber;
+    if (this.state.deliveryPhoneNumber !== "") {
+      phoneNumber = this.state.deliveryPhoneNumber;
+    } else {
+      phoneNumber = this.state.user.phone;
+    }
+
+    if (phoneNumber.length !== 10) {
+      errorMessage = errorMessage.concat(
+        "Your phone number must have 10 characters.\n"
+      );
+    }
+
+    if (isNaN(phoneNumber)) {
+      errorMessage = errorMessage.concat(
+        "Your phone number must only contain numbers.\n"
+      );
+    }
+
     if (this.state.displayCustomTipForm) {
       errorMessage = errorMessage.concat("You must enter a tip amount.\n");
     }
@@ -433,6 +503,7 @@ export default class Checkout extends Component {
     if (errorMessage) {
       this.setState({
         submitErrorMessage: errorMessage,
+        submitSuccessMessage: "",
       });
       return false;
     }
@@ -445,11 +516,117 @@ export default class Checkout extends Component {
   submitCheckout = (e) => {
     e.preventDefault();
     if (this.validateForm()) {
-      console.log("Form validated");
-      return true;
+      let address;
+      if (this.state.deliveryAddress !== "") {
+        address = this.state.deliveryAddress;
+      } else {
+        address = this.state.user.address;
+      }
+
+      if (this.state.selectedCardID === "0") {
+        let pkg = {
+          userId: this.state.user._id,
+          firstName: this.state.paymentFirstName,
+          lastName: this.state.paymentLastName,
+          number: this.state.paymentCreditCardNumber,
+          exMonth: this.state.paymentExpMonth,
+          exYear: this.state.paymentExpYear,
+          ccv: this.state.paymentCCV,
+          address: this.state.paymentBillingAddress,
+          isDeleted: !this.state.saveCard,
+        };
+
+        axios
+          .post("/api/creditCards/add/", pkg)
+          .then(() => {
+            GetCreditCardByID(this.state.user._id)
+              .then((response) => {
+                const pkg2 = {
+                  userId: this.state.user._id,
+                  restaurantId: this.state.restaurant._id,
+                  creditCardId: response.data.reverse()[0]._id,
+                  menuItems: this.state.menuItemIDArray,
+                  quantity: this.state.quantityArray,
+                  address: address,
+                  instructions: this.state.deliveryInstructions,
+                  totalPaid: this.state.totalPaid,
+                };
+                axios
+                  .post("/api/orders/add/", pkg2)
+                  .then(() => {
+                    this.setState({
+                      submitErrorMessage: "",
+                      submitSuccessMessage: "Successfully added order",
+                    });
+                    //Reset menu items in storage
+                    setInStorage("restaurant", null).then(() => {
+                      setInStorage("shoppingbag", null).then(() => {
+                        this.setState({
+                          redirect: true,
+                        });
+                      });
+                    });
+                    return true;
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    this.setState({
+                      submitErrorMessage: "An unexpected error has occurred",
+                      submitSuccessMessage: "",
+                    });
+                  });
+              })
+              .catch((error) => {
+                console.log(error);
+                this.setState({
+                  submitErrorMessage: "An unexpected error has occurred",
+                  submitSuccessMessage: "",
+                });
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+            this.setState({
+              submitErrorMessage: "An unexpected error has occurred",
+              submitSuccessMessage: "",
+            });
+          });
+      } else {
+        const pkg = {
+          userId: this.state.user._id,
+          restaurantId: this.state.restaurant._id,
+          creditCardId: this.state.selectedCardID,
+          menuItems: this.state.menuItemIDArray,
+          quantity: this.state.quantityArray,
+          address: address,
+          instructions: this.state.deliveryInstructions,
+          totalPaid: this.state.totalPaid,
+        };
+        axios
+          .post("/api/orders/add/", pkg)
+          .then(() => {
+            this.setState({
+              submitErrorMessage: "",
+              submitSuccessMessage: "Successfully added order",
+            });
+            setInStorage("restaurant", null).then(() => {
+              setInStorage("shoppingbag", null).then(() => {
+                this.setState({
+                  redirect: true,
+                });
+              });
+            });
+            return true;
+          })
+          .catch((error) => {
+            console.log(error);
+            this.setState({
+              submitErrorMessage: "An unexpected error has occurred",
+              submitSuccessMessage: "",
+            });
+          });
+      }
     }
-    console.log("Form not validated");
-    return false;
   };
 
   render() {
@@ -471,18 +648,25 @@ export default class Checkout extends Component {
       paymentCCV,
       paymentBillingAddress,
       deliveryInstructions,
+      deliveryAddress,
+      deliveryPhoneNumber,
       tipPercentage,
       tipAmountString,
       displayCustomTipForm,
       saveCard,
       customTipErrorMessage,
       submitErrorMessage,
+      submitSuccessMessage,
       tipByAmount,
+      redirect,
     } = this.state;
+
+    if (redirect) {
+      return <Redirect to="/feed" />;
+    }
 
     if (isUserLoaded) {
       if (user) {
-        this.getCreditCardInfo(user._id);
         if (restaurantLoaded && menuItemsLoaded && creditCardsLoaded) {
           return (
             <div>
@@ -496,7 +680,7 @@ export default class Checkout extends Component {
                 <div className="CheckoutBarMain">
                   <h4>Enter delivery information</h4>
                   <hr />
-                  <form onSubmit={() => this.submitCheckout}>
+                  <form onSubmit={(e) => this.submitCheckout(e)}>
                     <label htmlFor="address" className="CheckoutFormText">
                       Address
                     </label>
@@ -506,6 +690,18 @@ export default class Checkout extends Component {
                       defaultValue={user.address}
                       onChange={this.onChangeDeliveryAddress}
                       className="CheckoutInputBox"
+                      required
+                    />
+                    <label htmlFor="phone" className="CheckoutFormText">
+                      Phone
+                    </label>
+                    <input
+                      type="text"
+                      name="phone"
+                      defaultValue={user.phone}
+                      onChange={this.onChangePhoneNumber}
+                      className="CheckoutInputBox"
+                      maxLength="10"
                       required
                     />
                     <label
@@ -773,7 +969,11 @@ export default class Checkout extends Component {
                     </button>
                     {displayCustomTipForm && (
                       <div>
-                        <label htmlFor="customTip" className="ProfileFormTest">
+                        <label
+                          htmlFor="customTip"
+                          className="ProfileFormTest"
+                          style={{ paddingTop: 15 }}
+                        >
                           Please enter custom tip amount
                         </label>
                         <input
@@ -782,6 +982,7 @@ export default class Checkout extends Component {
                           className="CheckoutInputBoxSmall"
                           value={tipAmountString}
                           onChange={this.onChangeTipAmountString}
+                          style={{ marginBottom: -10 }}
                         />
                         <Button
                           onClick={() => this.submitCustomTip(tipAmountString)}
@@ -798,7 +999,46 @@ export default class Checkout extends Component {
                     <div className="CheckoutErrorMessage">
                       {submitErrorMessage}
                     </div>
-                    <Button type="submit" variant="success" block>
+                    <div className="CheckoutSuccessMessage">
+                      {submitSuccessMessage}
+                    </div>
+                    <Button
+                      type="submit"
+                      style={{ marginTop: 15 }}
+                      variant={
+                        selectedCardID === "" ||
+                        (deliveryAddress === "" && user.address === "") ||
+                        (deliveryPhoneNumber === "" && user.phone === "") ||
+                        paymentFirstName === "" ||
+                        paymentLastName === "" ||
+                        paymentCreditCardNumber === "" ||
+                        paymentExpMonth === "" ||
+                        paymentExpMonth === "blankmonth" ||
+                        paymentExpYear === "" ||
+                        paymentExpYear === "blankyear" ||
+                        paymentCCV === "" ||
+                        paymentBillingAddress === "" ||
+                        displayCustomTipForm
+                          ? "secondary"
+                          : "success"
+                      }
+                      disabled={
+                        selectedCardID === "" ||
+                        (deliveryAddress === "" && user.address === "") ||
+                        (deliveryPhoneNumber === "" && user.phone === "") ||
+                        paymentFirstName === "" ||
+                        paymentLastName === "" ||
+                        paymentCreditCardNumber === "" ||
+                        paymentExpMonth === "" ||
+                        paymentExpMonth === "blankmonth" ||
+                        paymentExpYear === "" ||
+                        paymentExpYear === "blankyear" ||
+                        paymentCCV === "" ||
+                        paymentBillingAddress === "" ||
+                        displayCustomTipForm
+                      }
+                      block
+                    >
                       Bring on the food!
                     </Button>
                   </form>
@@ -814,12 +1054,7 @@ export default class Checkout extends Component {
         }
       } else {
         //User is not logged in
-        return (
-          <div>
-            <Navbar />
-            TODO
-          </div>
-        );
+        return <Redirect to="/" />;
       }
     } else {
       //User is not loaded
