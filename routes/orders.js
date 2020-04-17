@@ -77,8 +77,10 @@ router.route("/byUser/:id").get((req, res) => {
 router.route("/byRestaurant/:id").get((req, res) => {
   Order.find({ restaurantId: req.params.id })
     .then((orders) => {
-      processOrders(orders);
-      res.json(orders);
+      const process = async (orders) => {
+        result = await processOrders(orders);
+        res.json(orders);
+      };
     })
     .catch((err) => res.status(400).json("Error: " + err));
 });
