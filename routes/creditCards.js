@@ -14,7 +14,7 @@ router.route("/add").post((req, res) => {
   const exYear = req.body.exYear;
   const ccv = req.body.ccv;
   const address = req.body.address;
-  const isDeleted = false;
+  let isDeleted = false;
 
   if (req.body.isDeleted != null) {
     isDeleted = req.body.isDeleted;
