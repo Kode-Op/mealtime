@@ -572,7 +572,10 @@ export default class Checkout extends Component {
           .post("/api/creditCards/add/", pkg)
           .then(() => {
             //After we post the card to the database, we need to get its ID
-            GetCreditCardByID(this.state.user._id)
+            axios
+              .get(
+                "/api/creditCards/" + this.state.user._id + "/showDeleted=true"
+              )
               .then((response) => {
                 //The new card ID is found by taking the ID of the most recently
                 //posted card
