@@ -129,7 +129,7 @@ export default class Profile extends Component {
       };
       axios
         .post("/api/users/updateEmail/" + this.state.userID, pkg)
-        .then((response) => {
+        .then(() => {
           this.setState({
             errorMessageEmail: "",
             successMessageEmail: "Successfully updated email!",

@@ -7,6 +7,7 @@ import MenuItemPlaceholder from "./menuitem-placeholder-large.png";
 
 //Import stylesheets
 import "./menuitemoverlay.css";
+import { setInStorage, getFromStorage } from "../../utils/storage";
 
 export default class MenuItemOverlay extends Component {
   constructor(props) {
@@ -61,6 +62,62 @@ export default class MenuItemOverlay extends Component {
     }
   };
 
+  addToCart = (menuItem, quantity, restaurant) => {
+    let currentStorage = getFromStorage("shoppingbag");
+    let currentRestaurant = getFromStorage("restaurant");
+    let menuItems = [];
+    //If there's no items in the cart, create a new array of length 1
+    //with the menu item and quantity and set it in storage
+    if (currentStorage === null || currentRestaurant === null) {
+      menuItems = [
+        {
+          menuItem,
+          quantity,
+          time: Date.now(),
+        },
+      ];
+      //Since we're communicating to a sibling component (the navbar), we need to call
+      //a change handler in Restaurant.js to pass the menuItems to the navbar as a prop
+      //after setting it in storage
+      setInStorage("shoppingbag", { menuItems }).then(() => {
+        this.props.addToBag(menuItems);
+      });
+      setInStorage("restaurant", restaurant).then(() => {
+        this.props.addRestaurantToBag(restaurant);
+      });
+
+      //Otherwise, append the menu item to the array already set in storage
+    } else {
+      if (restaurant._id === currentRestaurant._id) {
+        menuItems = currentStorage.menuItems.concat({
+          menuItem,
+          quantity,
+          time: Date.now(),
+        });
+        setInStorage("shoppingbag", { menuItems }).then(() => {
+          this.props.addToBag(menuItems);
+        });
+      } else {
+        if (
+          window.confirm(
+            "This will replace the items from " +
+              currentRestaurant.name +
+              ". Do you want to start a new order?"
+          )
+        ) {
+          menuItems = [{ menuItem, quantity, time: Date.now() }];
+          setInStorage("shoppingbag", { menuItems }).then(() => {
+            this.props.addToBag(menuItems);
+          });
+          setInStorage("restaurant", restaurant).then(() => {
+            this.props.addRestaurantToBag(restaurant);
+          });
+        }
+      }
+    }
+    this.props.cancelPopUp();
+  };
+
   convertToPrice = (quantity, price) => {
     return ((price * quantity) / 100).toLocaleString("en-US", {
       style: "currency",
@@ -108,6 +165,13 @@ export default class MenuItemOverlay extends Component {
               <Button
                 variant={this.state.quantity > 0 ? "success" : "secondary"}
                 disabled={this.state.quantity === ""}
+                onClick={() =>
+                  this.addToCart(
+                    this.props.menuItem,
+                    this.state.quantity,
+                    this.props.restaurant
+                  )
+                }
               >
                 Add to cart - {this.convertToPrice(this.state.quantity, price)}
               </Button>

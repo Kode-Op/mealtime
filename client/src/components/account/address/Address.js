@@ -15,29 +15,29 @@ export default class Address extends Component {
       errorMessage: "",
       successMessage: "",
       errorMessagePhone: "",
-      successMessagePhone: ""
+      successMessagePhone: "",
     };
   }
 
   //Event handlers for each form field
-  onChangeAddress = e => {
+  onChangeAddress = (e) => {
     this.setState({
-      address: e.target.value
+      address: e.target.value,
     });
   };
-  onChangePhone = e => {
+  onChangePhone = (e) => {
     this.setState({
-      phone: e.target.value
+      phone: e.target.value,
     });
   };
-  onChangePasswordPhone = e => {
+  onChangePasswordPhone = (e) => {
     this.setState({
-      passwordphone: e.target.value
+      passwordphone: e.target.value,
     });
   };
 
   //Event handlers for when the user submits the forms on the page
-  onSubmitAddress = e => {
+  onSubmitAddress = (e) => {
     let pkg = {
       address: this.state.address,
     };
@@ -47,31 +47,31 @@ export default class Address extends Component {
       .then(() => {
         this.setState({
           errorMessage: "",
-          successMessage: "Successfully updated address!"
+          successMessage: "Successfully updated address!",
         });
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 404) {
           this.setState({
             errorMessage:
               "404 user not found. Please refresh page and try again.",
-            successMessage: ""
+            successMessage: "",
           });
         } else {
           this.setState({
             errorMessage: "400 internal server error. Please try again later.",
-            successMessage: ""
+            successMessage: "",
           });
         }
       });
     e.preventDefault();
   };
 
-  onSubmitPhone = e => {
+  onSubmitPhone = (e) => {
     if (this.phoneValidation()) {
       let pkg = {
         phone: this.state.phone,
-        password: this.state.passwordphone
+        password: this.state.passwordphone,
       };
 
       axios
@@ -79,26 +79,26 @@ export default class Address extends Component {
         .then(() => {
           this.setState({
             errorMessagePhone: "",
-            successMessagePhone: "Successfully updated phone!"
+            successMessagePhone: "Successfully updated phone!",
           });
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 404) {
             this.setState({
               errorMessagePhone:
                 "404 user not found. Please refresh page and try again.",
-              successMessagePhone: ""
+              successMessagePhone: "",
             });
           } else if (error.response.status === 500) {
             this.setState({
               errorMessagePhone: "Error! Invalid password",
-              successMessagePhone: ""
+              successMessagePhone: "",
             });
           } else {
             this.setState({
               errorMessagePhone:
                 "400 internal server error. Please try again later.",
-              successMessagePhone: ""
+              successMessagePhone: "",
             });
           }
         });

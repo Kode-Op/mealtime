@@ -432,7 +432,7 @@ export default class ManageRestaurants extends Component {
         </div>
 
         <label
-          htmlFor="description"
+          htmlFor="tags"
           className="ProfileFormTest"
           style={{ paddingTop: 20 }}
         >

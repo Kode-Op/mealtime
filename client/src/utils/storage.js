@@ -15,13 +15,15 @@ export function getFromStorage(key) {
 }
 
 export function setInStorage(key, obj) {
-  if (!key) {
-    console.error("Error: Key is missing");
-  }
-
-  try {
-    localStorage.setItem(key, JSON.stringify(obj));
-  } catch (err) {
-    console.error(err);
-  }
+  return new Promise((resolve, reject) => {
+    if (!key) {
+      reject("Error: Key is missing");
+    }
+    try {
+      localStorage.setItem(key, JSON.stringify(obj));
+      resolve(key);
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
