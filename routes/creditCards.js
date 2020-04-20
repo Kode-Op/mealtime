@@ -4,7 +4,7 @@ let CreditCard = require("../models/creditCard_model");
 
 // Format: POST /api/creditCards/add
 // Required Fields: firstName, lastName, userId, number
-// Returns: Status based on successful/unsuccessful adding of Credit Card
+// Returns: Status based on successful/unsuccessful adding of Credit Card and CreditCard._id
 router.route("/add").post((req, res) => {
   const userId = req.body.userId;
   const firstName = req.body.firstName;

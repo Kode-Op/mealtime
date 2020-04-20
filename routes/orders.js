@@ -92,7 +92,7 @@ router.route("/byRestaurant/:id").get((req, res) => {
 // Format: POST /api/orders/add
 // Required Fields: userId, restaurantId, creditCardId, menuItems[], address,
 //                  quantity[], totalPaid
-// Returns: Status based on successful/unsuccessful order creation
+// Returns: Status based on successful/unsuccessful order creation and Order._id
 router.route("/add").post((req, res) => {
   const userId = req.body.userId;
   let custFirst = "";
