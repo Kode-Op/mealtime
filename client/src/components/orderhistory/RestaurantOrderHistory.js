@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
 import axios from "axios";
-import _ from "lodash";
+// import _ from "lodash";
 
 //import components
 //import Navbar from "../nav/Navbar";
@@ -90,12 +90,8 @@ export default class RestaurantOrderHistory extends Component {
         additionalCategories: [],
       });
       axios
-        .get("/api/menuitems/" + e.target.value)
+        .get("/api/orders/byRestaurant/" + e.target.value)
         .then((response) => {
-          const groupedByCategory = _.groupBy(
-            response.data,
-            (menuitem) => menuitem.category
-          );
           this.setState({
             restaurantID: restaurantID,
             menuItems: response.data,

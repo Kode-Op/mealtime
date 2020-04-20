@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
 import axios from "axios";
-import _ from "lodash";
+// import _ from "lodash";
 
 //import components
 //import Navbar from "../nav/Navbar";
@@ -92,10 +92,6 @@ export default class RestaurantOrderHistory extends Component {
       axios
         .get("/api/menuitems/" + e.target.value)
         .then((response) => {
-          const groupedByCategory = _.groupBy(
-            response.data,
-            (menuitem) => menuitem.category
-          );
           this.setState({
             restaurantID: restaurantID,
             menuItems: response.data,
@@ -165,7 +161,10 @@ export default class RestaurantOrderHistory extends Component {
         return (
           <div style={{ marginTop: 10 }}>
             <h2>It looks like you haven't made any orders yet!</h2>
-            <p>Use the search bar to find great restaurants to order from near you.</p>
+            <p>
+              Use the search bar to find great restaurants to order from near
+              you.
+            </p>
           </div>
         );
       }
