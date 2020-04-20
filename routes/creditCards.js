@@ -20,22 +20,50 @@ router.route("/add").post((req, res) => {
     isDeleted = req.body.isDeleted;
   }
 
-  const newItem = new CreditCard({
-    userId,
-    firstName,
-    lastName,
-    number,
-    exMonth,
-    exYear,
-    ccv,
-    address,
-    isDeleted,
-  });
+  const makeCard = (card) => {
+    return new Promise(function (resolve, reject) {
+      card
+        .save()
+        .then(() => resolve("Card added!"))
+        .catch((err) => reject("Error: " + err));
+    });
+  };
 
-  newItem
-    .save()
-    .then(() => res.json("credit card added!"))
-    .catch((err) => res.status(400).json("Error: " + err));
+  const retrieveCard = (userid) => {
+    return new Promise(function (resolve, reject) {
+      CreditCard.find({ userId: userid })
+        .then((cards) => {
+          resolve(cards[cards.length - 1]._id);
+        })
+        .catch((err) => res.status(400).json("Error: " + err));
+    });
+  };
+
+  const createCard = async (_) => {
+    const newItem = new CreditCard({
+      userId,
+      firstName,
+      lastName,
+      number,
+      exMonth,
+      exYear,
+      ccv,
+      address,
+      isDeleted,
+    });
+
+    result1 = await makeCard(newItem);
+    result2 = await retrieveCard(userId);
+
+    response = {
+      message: result1,
+      id: result2,
+    };
+
+    res.json(response);
+  };
+
+  createCard();
 });
 
 // Format: GET /api/creditCards/User._id/showDeleted=Boolean
