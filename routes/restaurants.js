@@ -20,6 +20,36 @@ router.route("/byTag/:tag").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+// Format: POST /api/restaurants/filter/
+// Required Fields: tags[], priceLow, priceHigh, ratings
+// Returns: All info on restaurants containing corresponding filter of tags, pricing, and rating
+router.route("/filter").post((req, res) => {
+  const tagArray = req.body.tags;
+  const ratings = Number(req.body.ratings);
+  const priceLow = Number(req.body.priceLow);
+  const priceHigh = Number(req.body.priceHigh);
+  if(tagArray.length>0 && priceHigh > 0){
+    Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
+      .then((restaurants) => res.json(restaurants))
+      .catch((err) => res.status(400).json("Error: " + err));
+  }
+  else if(tagArray.length>0 && priceLow ==0 && priceHigh == 0){
+    Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings}, isDeleted: false })
+      .then((restaurants) => res.json(restaurants))
+      .catch((err) => res.status(400).json("Error: " + err));
+  }
+  else if(tagArray.length ==0 && priceHigh > 0){
+    Restaurant.find({rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
+      .then((restaurants) => res.json(restaurants))
+      .catch((err) => res.status(400).json("Error: " + err));
+  }
+  else if(tagArray.length == 0 && priceLow ==0 && priceHigh == 0){
+    Restaurant.find({rating:{$gte: ratings}, isDeleted: false })
+      .then((restaurants) => res.json(restaurants))
+      .catch((err) => res.status(400).json("Error: " + err));
+  }
+});
+
 // DEPRECATED - DO NOT USE (only for Insomnia use for migration, no max length check, limited error checks)
 // Format: POST /api/restaurants/addTags/._id
 // Required Fields: tags[]
