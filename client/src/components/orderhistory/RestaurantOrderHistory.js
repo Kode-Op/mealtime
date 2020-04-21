@@ -115,7 +115,7 @@ export default class RestaurantOrderHistory extends Component {
   };
 
   renderOrders = () => {
-    return this.state.restaurantOrders.map((currentOrder, index) => {
+    return this.state.restaurantOrders.reverse().map((currentOrder, index) => {
       return (
         <tr key={index}>
           <td>{this.getMenuItemNames(currentOrder.menuItems)}</td>
