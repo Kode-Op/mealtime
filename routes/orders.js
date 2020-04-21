@@ -209,7 +209,7 @@ router.route("/add").post((req, res) => {
 // Required Fields: none
 // Returns: All info on a specific order
 router.route("/:id").get((req, res) => {
-  Order.findById(req.params.id)
+  Order.find({ _id: req.params.id })
     .then((orders) => {
       const process = async (orders) => {
         result = await processOrders(orders);
