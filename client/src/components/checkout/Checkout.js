@@ -56,7 +56,7 @@ export default class Checkout extends Component {
       submitErrorMessage: "",
       submitSuccessMessage: "",
       totalPaid: 0,
-      redirect: false,
+      redirect: "",
     };
   }
 
@@ -570,53 +570,37 @@ export default class Checkout extends Component {
         //Post the card to the database
         axios
           .post("/api/creditCards/add/", pkg)
-          .then(() => {
-            //After we post the card to the database, we need to get its ID
+          .then((response) => {
+            const pkg2 = {
+              userId: this.state.user._id,
+              restaurantId: this.state.restaurant._id,
+              creditCardId: response.data.id,
+              menuItems: this.state.menuItemIDArray,
+              quantity: this.state.quantityArray,
+              address: address,
+              instructions: this.state.deliveryInstructions,
+              totalPaid: this.state.totalPaid,
+            };
+
+            //Post the order to the database
             axios
-              .get(
-                "/api/creditCards/" + this.state.user._id + "/showDeleted=true"
-              )
+              .post("/api/orders/add/", pkg2)
               .then((response) => {
-                //The new card ID is found by taking the ID of the most recently
-                //posted card
-                const newCardID = response.data.reverse()[0]._id;
+                this.setState({
+                  submitErrorMessage: "",
+                  submitSuccessMessage: "Successfully added order",
+                });
 
-                const pkg2 = {
-                  userId: this.state.user._id,
-                  restaurantId: this.state.restaurant._id,
-                  creditCardId: newCardID,
-                  menuItems: this.state.menuItemIDArray,
-                  quantity: this.state.quantityArray,
-                  address: address,
-                  instructions: this.state.deliveryInstructions,
-                  totalPaid: this.state.totalPaid,
-                };
-
-                //Post the order to the database
-                axios
-                  .post("/api/orders/add/", pkg2)
-                  .then(() => {
+                //Reset menu items in storage
+                setInStorage("restaurant", null).then(() => {
+                  setInStorage("shoppingbag", null).then(() => {
                     this.setState({
-                      submitErrorMessage: "",
-                      submitSuccessMessage: "Successfully added order",
-                    });
-                    //Reset menu items in storage
-                    setInStorage("restaurant", null).then(() => {
-                      setInStorage("shoppingbag", null).then(() => {
-                        this.setState({
-                          redirect: true,
-                        });
-                      });
-                    });
-                    return true;
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                    this.setState({
-                      submitErrorMessage: "An unexpected error has occurred",
-                      submitSuccessMessage: "",
+                      redirect: response.data.id,
                     });
                   });
+                });
+
+                return true;
               })
               .catch((error) => {
                 console.log(error);
@@ -650,19 +634,21 @@ export default class Checkout extends Component {
         //Post the order to the database
         axios
           .post("/api/orders/add/", pkg)
-          .then(() => {
+          .then((response) => {
             this.setState({
               submitErrorMessage: "",
               submitSuccessMessage: "Successfully added order",
             });
+
             //Reset menu items in storage
             setInStorage("restaurant", null).then(() => {
               setInStorage("shoppingbag", null).then(() => {
                 this.setState({
-                  redirect: true,
+                  redirect: response.data.id,
                 });
               });
             });
+
             return true;
           })
           .catch((error) => {
@@ -708,8 +694,8 @@ export default class Checkout extends Component {
       redirect,
     } = this.state;
 
-    if (redirect) {
-      return <Redirect to="/feed" />;
+    if (redirect !== "") {
+      return <Redirect to={"/order?id=" + redirect} />;
     }
 
     if (isUserLoaded) {

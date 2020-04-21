@@ -85,6 +85,7 @@ router.route("/byRestaurant/:id").get((req, res) => {
         result = await processOrders(orders);
         res.json(orders);
       };
+      process(orders);
     })
     .catch((err) => res.status(400).json("Error: " + err));
 });
