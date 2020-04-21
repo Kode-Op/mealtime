@@ -1,31 +1,43 @@
 import React, { Component } from "react";
 import axios from "axios";
- 
+
 export default class Upload extends Component {
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+      file: null,
+    };
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
+
   onSubmit(e) {
     e.preventDefault();
-    console.log("was here");
+    let formData = new FormData();
+    formData.append("file", this.state.file);
+    formData.append("path", "myfile.png"); // CHANGE THIS TO BE SAVE PATH
+
+    axios
+      .post("/api/files/upload/", formData)
+      .then((response) => {
+        console.log(response.data.location); // UPLOAD SUCCESSFUL
+      })
+      .catch(() => {
+        console.log("Upload Failed"); // UPLOAD UNSUCCESSFUL
+      });
   }
-  /*
-  <form action="../../../routes/images/upload" method="POST" encType="multipart/form-data">
-  */
+
+  onChange(e) {
+    this.setState({ file: e.target.files[0] });
+  }
+
   render() {
     return (
-  <div className="container">
-    <div className="row">
-      <div className="col-md-6 m-auto">
-        <h1 className="text-center display-4 my-4">File Uploads</h1>
-        <form onSubmit={this.onSubmit} encType="multipart/form-data">
-          <div class="custom-file mb-3">
-            <input type="file" name="file" id="file" class="custom-file-input" accept="image/*"/>
-            <label htmlFor="file" class="custom-file-label">Choose File</label>
-          </div>
-          <input type="submit" value="Submit" class="btn btn-primary btn-block"/>
-        </form>
-      </div>
-    </div>
-  </div>
-      );
-    }
+      <form onSubmit={this.onSubmit}>
+        <h1>File Upload</h1>
+        <input type="file" name="myImage" onChange={this.onChange} />
+        <button type="submit">Upload</button>
+      </form>
+    );
   }
+}
