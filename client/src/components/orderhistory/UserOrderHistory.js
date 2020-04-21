@@ -29,7 +29,7 @@ export default class RestaurantOrderHistory extends Component {
       areMenuItemsLoaded: false,
       restaurantID: "",
       additionalCategories: [],
-      restaurantOrders: [],
+      userOrders: [],
       areOrdersLoaded: false,
 
       //Default menu item values
@@ -47,14 +47,14 @@ export default class RestaurantOrderHistory extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    //Load the restaurant data associated with the user that is logged in.
+    //Load the order data associated with the user that is logged in.
     axios
-      .get("/api/restaurants/byUser/" + this.props.user._id)
+      .get("/api/orders/byUser/" + this.props.user._id)
       .then((response) => {
         if (this._isMounted) {
           this.setState({
-            restaurants: response.data,
-            areRestaurantsLoaded: true,
+            userOrders: response.data,
+            areOrdersLoaded: true,
           });
           console.table(response.data);
         }
@@ -62,7 +62,7 @@ export default class RestaurantOrderHistory extends Component {
       .catch(() => {
         if (this._isMounted) {
           this.setState({
-            areRestaurantsLoaded: true,
+            areOrdersLoaded: true,
           });
         }
       });
@@ -72,50 +72,8 @@ export default class RestaurantOrderHistory extends Component {
     this._isMounted = false;
   }
 
-  getRestaurantSelection = () => {
-    return this.state.restaurants.map((currentRestaurant) => {
-      return (
-        <option key={currentRestaurant._id} value={currentRestaurant._id}>
-          {currentRestaurant.name + " - " + currentRestaurant.address}
-        </option>
-      );
-    });
-  };
-
-  getRestaurantOrders = (e) => {
-    if (e.target.value !== "0") {
-      let restaurantID = e.target.value;
-      this.setState({
-        restaurantSelectionMade: true,
-        additionalCategories: [],
-      });
-      axios
-        .get("/api/orders/byUser/" + e.target.value)
-        .then((response) => {
-          this.setState({
-            restaurantID: restaurantID,
-            restaurantOrders: response.data,
-            areOrdersLoaded: true,
-          });
-          console.table(response.data);
-        })
-        .catch((error) => {
-          this.setState({
-            restaurantOrders: null,
-            areMOrdersLoaded: true,
-          });
-          console.log(error);
-        });
-    } else {
-      this.setState({
-        restaurantSelectionMade: false,
-        areOrdersLoaded: false,
-      });
-    }
-  };
-
   renderOrders = () => {
-    return this.state.restaurantOrders.map((currentOrder, index) => {
+    return this.state.userOrders.reverse().map((currentOrder, index) => {
       return (
         <tr key={index}>
           <td>{this.getMenuItemNames(currentOrder.menuItems)}</td>
@@ -139,22 +97,10 @@ export default class RestaurantOrderHistory extends Component {
   };
 
   render() {
-    if (this.state.areRestaurantsLoaded) {
-      if (this.state.restaurants.length > 0) {
+    if (this.state.areOrdersLoaded) {
+      if (this.state.userOrders.length > 0) {
         return (
           <div>
-            <h2>Please select a restaurant</h2>
-            <div style={{ display: "flex" }}>
-              <select
-                id="0"
-                onChange={this.getRestaurantOrders}
-                className="ManageRestaurantInputBox"
-                style={{ marginBottom: -20 }}
-              >
-                <option value="0"></option>
-                {this.getRestaurantSelection()}
-              </select>
-            </div>
             <div style={{ height: 50 }} />
             <h2>Your Order History</h2>
             <Table>
@@ -172,8 +118,11 @@ export default class RestaurantOrderHistory extends Component {
       } else {
         return (
           <div style={{ marginTop: 10 }}>
-            <h2>It looks like you don't have any restaurants yet!</h2>
-            <p>Click "Manage Restaurants" to add a restaurant first.</p>
+            <h2>It looks like you don't have any orders yet!</h2>
+            <p>
+              Enter your location in our search bar and order from any one of
+              Mealtime's great restaurants.
+            </p>
           </div>
         );
       }
