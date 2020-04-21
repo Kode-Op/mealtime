@@ -85,6 +85,7 @@ router.route("/byRestaurant/:id").get((req, res) => {
         result = await processOrders(orders);
         res.json(orders);
       };
+      process(orders);
     })
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -92,7 +93,7 @@ router.route("/byRestaurant/:id").get((req, res) => {
 // Format: POST /api/orders/add
 // Required Fields: userId, restaurantId, creditCardId, menuItems[], address,
 //                  quantity[], totalPaid
-// Returns: Status based on successful/unsuccessful order creation
+// Returns: Status based on successful/unsuccessful order creation and Order._id
 router.route("/add").post((req, res) => {
   const userId = req.body.userId;
   let custFirst = "";
@@ -146,6 +147,25 @@ router.route("/add").post((req, res) => {
       .catch((err) => res.status(400).json("Error: " + err));
   };
 
+  const placeOrder = (order) => {
+    return new Promise(function (resolve, reject) {
+      order
+        .save()
+        .then(() => resolve("Order added!"))
+        .catch((err) => reject("Error: " + err));
+    });
+  };
+
+  const retrieveOrder = (userid) => {
+    return new Promise(function (resolve, reject) {
+      Order.find({ userId: userid })
+        .then((orders) => {
+          resolve(orders[orders.length - 1]._id);
+        })
+        .catch((err) => res.status(400).json("Error: " + err));
+    });
+  };
+
   const createOrder = async (_) => {
     for (let i = 0; i < menuItemIds.length; i++) {
       const result = await findItem(menuItemIds[i], quantity[i]);
@@ -171,10 +191,15 @@ router.route("/add").post((req, res) => {
       totalPaid,
     });
 
-    newOrder
-      .save()
-      .then(() => res.json("Order added!"))
-      .catch((err) => res.status(400).json("Error: " + err));
+    const result3 = await placeOrder(newOrder);
+    const result4 = await retrieveOrder(userId);
+
+    response = {
+      message: result3,
+      id: result4,
+    };
+
+    res.json(response);
   };
 
   createOrder();
