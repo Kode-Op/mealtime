@@ -16,6 +16,7 @@ import LoginConfirmation from "./components/login/Confirmation";
 import RestaurantAccount from "./components/account/RestaurantAccount";
 import Checkout from "./components/checkout/Checkout";
 import Order from "./components/order/Order";
+import Upload from "./components/upload";
 
 //Import stylesheets
 import "./App.css";
@@ -48,6 +49,7 @@ function App() {
           <Route path="/manage" component={RestaurantAccount} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/order" component={Order} />
+          <Route path="/upload" component={Upload} />
         </Switch>
       </div>
     </Router>
