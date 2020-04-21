@@ -1,10 +1,13 @@
 .OrderCenterDiv {
-  margin: 20px auto;
-  border: 1px solid black;
+  margin: 50px auto;
+  border: 1px solid #cccccc;
   background-color: white;
   padding: 40px;
   width: 100%;
   max-width: 1000px;
-  border-radius: 10px;
-  color: black;
+  border-radius: 20px;
+}
+
+.OrderCenterDiv img {
+  max-width: 100%;
 }
