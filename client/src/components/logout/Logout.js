@@ -8,6 +8,8 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import { getFromStorage } from "../../utils/storage";
+import { TokenLogout } from "../../utils/logout/TokenLogout";
+
 
 export default class Logout extends Component {
   constructor(props) {
@@ -22,8 +24,7 @@ export default class Logout extends Component {
     let token = "";
     if (obj !== null) {
       token = obj.token;
-      axios
-        .get("/api/users/logout/" + token)
+      TokenLogout(token)
         .then(() => {
           this.setState({ isLoaded: true });
         })

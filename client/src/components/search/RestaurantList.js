@@ -1,7 +1,7 @@
 //Import libraries
 import React, { Component } from "react";
 import { ListGroup } from "react-bootstrap";
-import axios from "axios";
+//import axios from "axios";
 
 //Import components
 import Navbar from "../nav/Navbar";
@@ -15,7 +15,8 @@ import DisplayTag from "../../assets/displaytag/DisplayTag";
 import TagBank from "../../utils/Tags";
 
 //Import utilities
-import GetLogin from "../../utils/GetLogin";
+import {GetLogin} from "../../utils/GetLogin";
+import {DataFetch} from "../../utils/search/DataFetch";
 
 //Import stylesheets
 import "./RestaurantList.css";
@@ -39,8 +40,7 @@ export default class RestaurantList extends Component {
     this._isMounted = true;
 
     //Fetch all restaurant data, and load into the restaurants variable
-    axios
-      .get("/api/restaurants")
+    DataFetch("/api/restaurants")
       .then((response) => {
         this.setState({
           restaurants: response.data,

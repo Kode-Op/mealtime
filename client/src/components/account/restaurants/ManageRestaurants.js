@@ -3,13 +3,17 @@ import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
 import { TimePicker } from "antd";
 import moment from "moment";
-import axios from "axios";
+//import axios from "axios";
 
 //Import assets
 import Loader from "../../../assets/loader/Loader";
 
 //Import utilities
 import TagBank from "../../../utils/Tags";
+import { GetRestaurantByID } from "../../../utils/managerestaurants/GetRestaurantByID";
+import { EditRestaurant } from "../../../utils/managerestaurants/EditRestaurant";
+import { AddRestaurant } from "../../../utils/managerestaurants/AddRestaurant";
+import { DeleteRestaurant } from "../../../utils/managerestaurants/DeleteRestaurant";
 
 //Import stylesheets
 import "./ManageRestaurants.css";
@@ -49,8 +53,7 @@ export default class ManageRestaurants extends Component {
     this._isMounted = true;
 
     //Load the restaurant data associated with the user that is logged in.
-    axios
-      .get("/api/restaurants/byOwner/" + this.props.user._id)
+    GetRestaurantByID(this.props.user._id)
       .then((response) => {
         if (this._isMounted) {
           this.setState({
@@ -213,11 +216,11 @@ export default class ManageRestaurants extends Component {
             onChange={(time) => this.onChangeTime(time, dayOfWeek, true)}
             value={
               this.state.hoursofoperation[dayOfWeek][0] !== "0000" ||
-              this.state.hoursofoperation[dayOfWeek][1] !== "0000"
+                this.state.hoursofoperation[dayOfWeek][1] !== "0000"
                 ? [
-                    moment(this.state.hoursofoperation[dayOfWeek][0], "HH:mm"),
-                    moment(this.state.hoursofoperation[dayOfWeek][1], "HH:mm"),
-                  ]
+                  moment(this.state.hoursofoperation[dayOfWeek][0], "HH:mm"),
+                  moment(this.state.hoursofoperation[dayOfWeek][1], "HH:mm"),
+                ]
                 : ""
             }
           />
@@ -231,11 +234,11 @@ export default class ManageRestaurants extends Component {
             onChange={(time) => this.onChangeTime(time, dayOfWeek, false)}
             value={
               this.state.hoursofoperation[dayOfWeek][2] !== "0000" ||
-              this.state.hoursofoperation[dayOfWeek][3] !== "0000"
+                this.state.hoursofoperation[dayOfWeek][3] !== "0000"
                 ? [
-                    moment(this.state.hoursofoperation[dayOfWeek][2], "HH:mm"),
-                    moment(this.state.hoursofoperation[dayOfWeek][3], "HH:mm"),
-                  ]
+                  moment(this.state.hoursofoperation[dayOfWeek][2], "HH:mm"),
+                  moment(this.state.hoursofoperation[dayOfWeek][3], "HH:mm"),
+                ]
                 : ""
             }
           />
@@ -484,8 +487,7 @@ export default class ManageRestaurants extends Component {
         description: this.state.description,
       };
 
-      axios
-        .post("/api/restaurants/update/" + restaurantID, pkg)
+      EditRestaurant(restaurantID, pkg)
         .then(() => {
           this.setState({
             successMessage: "Successfully edited restaurant!",
@@ -520,8 +522,7 @@ export default class ManageRestaurants extends Component {
         tags: this.state.tags,
       };
 
-      axios
-        .post("/api/restaurants/add/", pkg)
+      AddRestaurant(pkg)
         .then(() => {
           this.setState({
             successMessage: "Successfully added restaurant!",
@@ -547,8 +548,7 @@ export default class ManageRestaurants extends Component {
         "WARNING: This will delete your restaurant.\nAre you sure you want to do this?"
       )
     ) {
-      axios
-        .delete("/api/restaurants/" + restaurantID)
+      DeleteRestaurant(restaurantID)
         .then(() => {
           this.setState({
             successMessage: "Successfully deleted restaurant.",

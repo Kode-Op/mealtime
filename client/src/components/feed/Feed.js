@@ -14,6 +14,8 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
+import { UpdateAddress } from "../../utils/Feed/UpdateAddress";
+import { GetRestaurantById } from "../../utils/Feed/GetRestaurantById";
 
 //Import stylesheets
 import "./Feed.css";
@@ -34,8 +36,7 @@ export default class Feed extends Component {
     this._isMounted = true;
 
     //Fetch all restaurant data, and load into the restaurants variable
-    axios
-      .get("/api/restaurants")
+    GetRestaurantById("/api/restaurants")
       .then((response) => {
         if (this._isMounted) {
           this.setState({
@@ -77,8 +78,7 @@ export default class Feed extends Component {
     let pkg = {
       address: newAddress,
     };
-    axios
-      .post("/api/users/updateAddress/" + this.state.user._id, pkg)
+    UpdateAddress(this.state.user._id, pkg)
       .then()
       .catch((error) => {
         console.log(error);
