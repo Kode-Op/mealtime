@@ -29,7 +29,7 @@ export default class RestaurantOrderHistory extends Component {
       areMenuItemsLoaded: false,
       restaurantID: "",
       additionalCategories: [],
-      orders: [],
+      restaurantOrders: [],
       areOrdersLoaded: false,
 
       //Default menu item values
@@ -94,35 +94,47 @@ export default class RestaurantOrderHistory extends Component {
         .then((response) => {
           this.setState({
             restaurantID: restaurantID,
-            menuItems: response.data,
-            areMenuItemsLoaded: true,
+            restaurantOrders: response.data,
+            areOrdersLoaded: true,
           });
           console.table(response.data);
         })
         .catch((error) => {
           this.setState({
-            menuItems: null,
-            areMenuItemsLoaded: true,
+            restaurantOrders: null,
+            areMOrdersLoaded: true,
           });
           console.log(error);
         });
     } else {
       this.setState({
         restaurantSelectionMade: false,
-        areMenuItemsLoaded: false,
+        areOrdersLoaded: false,
       });
     }
   };
 
-  renderMenuItems = () => {
-    return this.state.menuItems.map((currentMenuItem, index) => {
+  renderOrders = () => {
+    return this.state.restaurantOrders.map((currentOrder, index) => {
       return (
         <tr key={index}>
-          <td>{currentMenuItem.name}</td>
-          <td>${currentMenuItem.price / 100}</td>
-          <td>{currentMenuItem.createdAt}</td>
+          <td>{this.getMenuItemNames(currentOrder.menuItems)}</td>
+          <td>{this.getMenuItemPrices(currentOrder.menuItems)}</td>
+          <td>{currentOrder.createdAt}</td>
         </tr>
       );
+    });
+  };
+
+  getMenuItemNames = (menuItems) => {
+    return menuItems.map((currentItem) => {
+      return <div>{currentItem.name}</div>;
+    });
+  };
+
+  getMenuItemPrices = (menuItems) => {
+    return menuItems.map((currentItem) => {
+      return <div>{currentItem.price / 100}</div>;
     });
   };
 
@@ -153,7 +165,7 @@ export default class RestaurantOrderHistory extends Component {
                   <th>Time Order Created</th>
                 </tr>
               </thead>
-              <tbody>{this.renderMenuItems()}</tbody>
+              <tbody>{this.renderOrders()}</tbody>
             </Table>
           </div>
         );
