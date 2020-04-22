@@ -11,11 +11,11 @@ import Loader from "../../../assets/loader/Loader";
 import "./ManageMenuItems.css";
 
 //Import Utils
-import {getRestaurantMenuItems} from "../../../utils/menuitems/GetRestaurantByID";
-import {GetRestaurantMenuitem} from "../../../utils/menuitems/GetRestaurantMenuitem";
-import {AddMenuItem} from "../../../utils/menuitems/AddMenuItem";
-import {EditMenuItem} from "../../../utils/menuitems/EditMenuItem";
-import {DeleteMenuItem} from "../../../utils/menuitems/DeleteMenuitem";
+import getRestaurantMenuItems from "../../../utils/menuitems/GetRestaurantByID";
+import GetRestaurantMenuitem from "../../../utils/menuitems/GetRestaurantMenuitem";
+import AddMenuItem from "../../../utils/menuitems/AddMenuItem";
+import EditMenuItem from "../../../utils/menuitems/EditMenuItem";
+import DeleteMenuItem from "../../../utils/menuitems/DeleteMenuItem";
 
 export default class ManageMenuItems extends Component {
   _isMounted = false;

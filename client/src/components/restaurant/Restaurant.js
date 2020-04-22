@@ -1,7 +1,7 @@
 //Import libraries
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 import _ from "lodash";
 
 //Import components
@@ -10,6 +10,10 @@ import MenuItemComponent from "../../components/restaurant/menuitem-component.js
 import GetLogin from "../../utils/GetLogin";
 import Footer from "../footer/Footer";
 import MenuItemOverlay from "./menuitemoverlay";
+
+//Import utilities
+import GetRestaurantData from "../../utils/restaurants/GetRestaurantData";
+import MenuItems from "../../utils/restaurants/MenuItems";
 
 //Import assets
 import DisplayPrice from "../../assets/displayprice/DisplayPrice";
@@ -45,8 +49,7 @@ export default class Restaurant extends Component {
     this._isMounted = true;
 
     if (this.state.id !== "") {
-      axios
-        .get("/api/restaurants/" + this.state.id)
+      GetRestaurantData(this.state.id)
         .then((response) => {
           this.setState({
             restaurant: response.data,
@@ -60,8 +63,7 @@ export default class Restaurant extends Component {
       this.setState({ restaurant: null, isPageLoaded: true });
     }
 
-    axios
-      .get("/api/menuitems/" + this.state.id)
+    MenuItems(this.state.id)
       .then((response) => {
         const groupedByCategory = _.groupBy(
           response.data,

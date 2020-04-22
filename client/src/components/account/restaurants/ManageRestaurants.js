@@ -10,10 +10,10 @@ import Loader from "../../../assets/loader/Loader";
 
 //Import utilities
 import TagBank from "../../../utils/Tags";
-import { GetRestaurantByID } from "../../../utils/managerestaurants/GetRestaurantByID";
-import { EditRestaurant } from "../../../utils/managerestaurants/EditRestaurant";
-import { AddRestaurant } from "../../../utils/managerestaurants/AddRestaurant";
-import { DeleteRestaurant } from "../../../utils/managerestaurants/DeleteRestaurant";
+import GetRestaurantByID from "../../../utils/managerestaurants/GetRestaurantByID";
+import EditRestaurant from "../../../utils/managerestaurants/EditRestaurant";
+import AddRestaurant from "../../../utils/managerestaurants/AddRestaurant";
+import DeleteRestaurant from "../../../utils/managerestaurants/DeleteRestaurant";
 
 //Import stylesheets
 import "./ManageRestaurants.css";

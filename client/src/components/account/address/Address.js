@@ -5,8 +5,8 @@ import { Button, Accordion, Card } from "react-bootstrap";
 //import axios from "axios";
 
 //Import utilities
-import { UserAddressUpdate } from "../../../utils/address/UserAddressUpdate";
-import { UserPhoneNumberUpdate } from "../../../utils/address/UserPhoneNumberUpdate";
+import UserAddressUpdate from "../../../utils/address/UserAddressUpdate";
+import UserPhoneNumberUpdate  from "../../../utils/address/UserPhoneNumberUpdate";
 
 export default class Address extends Component {
   constructor(props) {

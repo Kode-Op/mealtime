@@ -1,6 +1,6 @@
 //Import libraries
 import React, { Component } from "react";
-import axios from "axios";
+//import axios from "axios";
 import { Redirect } from "react-router-dom";
 
 //Import assets
@@ -8,7 +8,7 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import { getFromStorage } from "../../utils/storage";
-import { TokenLogout } from "../../utils/logout/TokenLogout";
+import TokenLogout from "../../utils/logout/TokenLogout";
 
 
 export default class Logout extends Component {

@@ -8,8 +8,8 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import { setInStorage } from "../../utils/storage";
-import { UserAdd } from "../../utils/register/UserAdd";
-import { UserLogin } from "../../utils/register/UserLogin";
+import UserAdd from "../../utils/register/UserAdd";
+import UserLogin from "../../utils/register/UserLogin";
 
 export default class RegisterConfirmation extends Component {
   constructor(props) {

@@ -7,9 +7,9 @@ import { Accordion, Card, Button } from "react-bootstrap";
 import Loader from "../../../assets/loader/Loader";
 
 //Import utilities
-import {GetCreditCardByID} from "../../../utils/creditcards/GetCreditCardByID";
-import {DelCreditCardByID} from "../../../utils/creditcards/DelCreditCardByID";
-import {AddCreditCard} from "../../../utils/creditcards/AddCreditCard";
+import GetCreditCardByID from "../../../utils/creditcards/GetCreditCardByID";
+import DelCreditCardByID from "../../../utils/creditcards/DelCreditCardByID";
+import AddCreditCard from "../../../utils/creditcards/AddCreditCard";
 
 //Import stylesheets
 import "./CreditCard.css";

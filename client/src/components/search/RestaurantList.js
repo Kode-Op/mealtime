@@ -15,8 +15,8 @@ import DisplayTag from "../../assets/displaytag/DisplayTag";
 import TagBank from "../../utils/Tags";
 
 //Import utilities
-import {GetLogin} from "../../utils/GetLogin";
-import {DataFetch} from "../../utils/search/DataFetch";
+import GetLogin from "../../utils/GetLogin";
+import DataFetch from "../../utils/search/DataFetch";
 
 //Import stylesheets
 import "./RestaurantList.css";

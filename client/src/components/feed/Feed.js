@@ -1,7 +1,7 @@
 //Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 
 //Import components
 import Navbar from "../nav/Navbar";
@@ -14,8 +14,8 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
-import { UpdateAddress } from "../../utils/Feed/UpdateAddress";
-import { GetRestaurantById } from "../../utils/Feed/GetRestaurantById";
+import UpdateAddress from "../../utils/Feed/UpdateAddress";
+import GetRestaurants from "../../utils/Feed/GetRestaurants";
 
 //Import stylesheets
 import "./Feed.css";
@@ -36,7 +36,7 @@ export default class Feed extends Component {
     this._isMounted = true;
 
     //Fetch all restaurant data, and load into the restaurants variable
-    GetRestaurantById("/api/restaurants")
+    GetRestaurants("/api/restaurants")
       .then((response) => {
         if (this._isMounted) {
           this.setState({

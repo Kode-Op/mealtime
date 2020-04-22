@@ -5,10 +5,10 @@ import { Accordion, Card, Button } from "react-bootstrap";
 
 //Import utilities
 import TagBank from "../../../utils/Tags";
-import {UpdateName} from "../../../utils/profile/UpdateName";
-import {UpdateEmail} from "../../../utils/profile/UpdateEmail";
-import {UpdateTags} from "../../../utils/profile/UpdateTags";
-import {UpdatePassword} from "../../../utils/profile/UpdatePassword";
+import UpdateName from "../../../utils/profile/UpdateName";
+import UpdateEmail from "../../../utils/profile/UpdateEmail";
+import UpdateTags from "../../../utils/profile/UpdateTags";
+import UpdatePassword from "../../../utils/profile/UpdatePassword";
 
 
 export default class Profile extends Component {
