@@ -15,11 +15,8 @@ import RegisterConfirmation from "./components/register/Confirmation";
 import LoginConfirmation from "./components/login/Confirmation";
 import RestaurantAccount from "./components/account/RestaurantAccount";
 import Checkout from "./components/checkout/Checkout";
-<<<<<<< HEAD
 import Order from "./components/order/Order";
-=======
 import Upload from "./components/upload";
->>>>>>> fb6e7425f2c199361cd505f55dc4fa16ed20cb52
 
 //Import stylesheets
 import "./App.css";
@@ -51,11 +48,8 @@ function App() {
           <Route path="/restaurant" component={Restaurant} />
           <Route path="/manage" component={RestaurantAccount} />
           <Route path="/checkout" component={Checkout} />
-<<<<<<< HEAD
           <Route path="/order" component={Order} />
-=======
           <Route path="/upload" component={Upload}/>
->>>>>>> fb6e7425f2c199361cd505f55dc4fa16ed20cb52
         </Switch>
       </div>
     </Router>
