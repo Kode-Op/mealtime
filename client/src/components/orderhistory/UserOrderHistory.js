@@ -114,7 +114,7 @@ export default class RestaurantOrderHistory extends Component {
             <Table>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Order</th>
                   <th>Price</th>
                   <th>Quantity</th>
                   <th>Order Total</th>

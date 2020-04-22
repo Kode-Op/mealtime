@@ -121,14 +121,14 @@ export default class RestaurantOrderHistory extends Component {
     return this.state.restaurantOrders.reverse().map((currentOrder, index) => {
       return (
         <tr key={index}>
+          <td>
+            {currentOrder.custFirst} {currentOrder.custLast}
+          </td>
           <td>{this.getMenuItemNames(currentOrder.menuItems)}</td>
           <td>{this.getMenuItemPrices(currentOrder.menuItems)}</td>
           <td>{this.getMenuItemQuantities(currentOrder.quantity)}</td>
           <td>${currentOrder.totalPaid / 100}</td>
           <td>{currentOrder.createdAt}</td>
-          <td>
-            {currentOrder.custFirst} {currentOrder.custLast}
-          </td>
         </tr>
       );
     });
@@ -174,12 +174,12 @@ export default class RestaurantOrderHistory extends Component {
             <Table>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Customer Name</th>
+                  <th>Order</th>
                   <th>Price</th>
                   <th>Quantity</th>
                   <th>Order Total</th>
                   <th>Time Order Created</th>
-                  <th>Customer Name</th>
                 </tr>
               </thead>
               <tbody>{this.renderOrders()}</tbody>
