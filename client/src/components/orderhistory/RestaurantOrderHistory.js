@@ -31,16 +31,19 @@ export default class RestaurantOrderHistory extends Component {
       additionalCategories: [],
       restaurantOrders: [],
       areOrdersLoaded: false,
+      // totalPrice: 0,
 
       //Default menu item values
       name: "",
       price: "$0.00",
+      // totalprice: "$0.00",
       preptime: 0,
       createdAt: "",
       description: "",
       category: "",
       errorMessage: "",
       successMessage: "",
+      length: "",
     };
   }
 
@@ -120,7 +123,12 @@ export default class RestaurantOrderHistory extends Component {
         <tr key={index}>
           <td>{this.getMenuItemNames(currentOrder.menuItems)}</td>
           <td>{this.getMenuItemPrices(currentOrder.menuItems)}</td>
+          <td>{this.getMenuItemQuantities(currentOrder.quantity)}</td>
+          <td>${currentOrder.totalPaid / 100}</td>
           <td>{currentOrder.createdAt}</td>
+          <td>
+            {currentOrder.custFirst} {currentOrder.custLast}
+          </td>
         </tr>
       );
     });
@@ -134,7 +142,13 @@ export default class RestaurantOrderHistory extends Component {
 
   getMenuItemPrices = (menuItems) => {
     return menuItems.map((currentItem) => {
-      return <div>{currentItem.price / 100}</div>;
+      return <div>${currentItem.price / 100}</div>;
+    });
+  };
+
+  getMenuItemQuantities = (quantity) => {
+    return quantity.map((currentQuantity) => {
+      return <div> x{currentQuantity}</div>;
     });
   };
 
@@ -162,7 +176,10 @@ export default class RestaurantOrderHistory extends Component {
                 <tr>
                   <th>Name</th>
                   <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Order Total</th>
                   <th>Time Order Created</th>
+                  <th>Customer Name</th>
                 </tr>
               </thead>
               <tbody>{this.renderOrders()}</tbody>
