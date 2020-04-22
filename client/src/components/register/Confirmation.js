@@ -1,13 +1,15 @@
 //Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 
 //Import assets
 import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import { setInStorage } from "../../utils/storage";
+import UserAdd from "../../utils/register/UserAdd";
+import UserLogin from "../../utils/register/UserLogin";
 
 export default class RegisterConfirmation extends Component {
   constructor(props) {
@@ -29,8 +31,7 @@ export default class RegisterConfirmation extends Component {
         email: this.props.location.state.email,
         password: this.props.location.state.password
       };
-      axios
-        .post("/api/users/add", user)
+      UserAdd(user)
         .then()
         .catch(error => {
           this.setState({
@@ -42,7 +43,7 @@ export default class RegisterConfirmation extends Component {
             email: this.props.location.state.email,
             password: this.props.location.state.password
           };
-          axios.post("/api/users/login", userLogin).then(response => {
+          UserLogin(userLogin).then(response => {
             if (response.data.success) {
               // login successful, token created and saved
               setInStorage("mealtime", { token: response.data.token });
