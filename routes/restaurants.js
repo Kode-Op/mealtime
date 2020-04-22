@@ -28,25 +28,31 @@ router.route("/filter").post((req, res) => {
   const ratings = Number(req.body.ratings);
   const priceLow = Number(req.body.priceLow);
   const priceHigh = Number(req.body.priceHigh);
-  if(tagArray.length>0 && priceHigh > 0){
-    Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
-      .then((restaurants) => res.json(restaurants))
-      .catch((err) => res.status(400).json("Error: " + err));
+
+  if(ratings > 10 || ratings < 0 || priceLow > priceHigh || priceHigh > 5 || priceLow > 5|| priceLow < 0 || priceHigh < 0){
+      res.status(400).json("Error, out of scope of the parameters");
   }
-  else if(tagArray.length>0 && priceLow ==0 && priceHigh == 0){
-    Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings}, isDeleted: false })
-      .then((restaurants) => res.json(restaurants))
-      .catch((err) => res.status(400).json("Error: " + err));
-  }
-  else if(tagArray.length ==0 && priceHigh > 0){
-    Restaurant.find({rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
-      .then((restaurants) => res.json(restaurants))
-      .catch((err) => res.status(400).json("Error: " + err));
-  }
-  else if(tagArray.length == 0 && priceLow ==0 && priceHigh == 0){
-    Restaurant.find({rating:{$gte: ratings}, isDeleted: false })
-      .then((restaurants) => res.json(restaurants))
-      .catch((err) => res.status(400).json("Error: " + err));
+  else{
+    if(tagArray.length>0 && priceHigh > 0){
+      Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
+        .then((restaurants) => res.json(restaurants))
+        .catch((err) => res.status(400).json("Error: " + err));
+    }
+    else if(tagArray.length>0 && priceLow ==0 && priceHigh == 0){
+      Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings}, isDeleted: false })
+        .then((restaurants) => res.json(restaurants))
+        .catch((err) => res.status(400).json("Error: " + err));
+    }
+    else if(tagArray.length ==0 && priceHigh > 0){
+      Restaurant.find({rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
+        .then((restaurants) => res.json(restaurants))
+        .catch((err) => res.status(400).json("Error: " + err));
+    }
+    else if(tagArray.length == 0 && priceLow ==0 && priceHigh == 0){
+      Restaurant.find({rating:{$gte: ratings}, isDeleted: false })
+        .then((restaurants) => res.json(restaurants))
+        .catch((err) => res.status(400).json("Error: " + err));
+    }
   }
 });
 
