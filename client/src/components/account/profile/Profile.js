@@ -138,7 +138,6 @@ export default class Profile extends Component {
 =======
       UpdateEmail(this.state.userID, pkg)
         .then((response) => {
->>>>>>> axiosCall
           this.setState({
             errorMessageEmail: "",
             successMessageEmail: "Successfully updated email!",
