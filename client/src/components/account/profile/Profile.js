@@ -131,11 +131,6 @@ export default class Profile extends Component {
         email: this.state.email,
         password: this.state.passwordemail,
       };
-<<<<<<< HEAD
-      axios
-        .post("/api/users/updateEmail/" + this.state.userID, pkg)
-        .then(() => {
-=======
       UpdateEmail(this.state.userID, pkg)
         .then((response) => {
           this.setState({
