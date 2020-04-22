@@ -7,6 +7,7 @@ import axios from "axios";
 //Import components
 import Navbar from "../nav/Navbar";
 import Footer from "../footer/Footer";
+import CheckoutOverlay from "./CheckoutOverlay";
 
 //Import assets
 import Loader from "../../assets/loader/Loader";
@@ -698,399 +699,386 @@ export default class Checkout extends Component {
       return <Redirect to={"/order?id=" + redirect} />;
     }
 
-    if (isUserLoaded) {
-      if (user) {
-        if (restaurantLoaded && menuItemsLoaded && creditCardsLoaded) {
-          return (
-            <div>
-              <Navbar
-                user={user}
-                menuItems={menuItems}
-                restaurant={restaurant}
-                disableToggle={true}
-              />
-              <div className="CheckoutContainer">
-                <div className="CheckoutBarMain">
-                  <h4>Enter delivery information</h4>
-                  <hr />
-                  <form onSubmit={(e) => this.submitCheckout(e)}>
-                    <label htmlFor="address" className="CheckoutFormText">
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      name="address"
-                      defaultValue={user.address}
-                      onChange={this.onChangeDeliveryAddress}
-                      className="CheckoutInputBox"
-                      required
-                    />
-                    <label htmlFor="phone" className="CheckoutFormText">
-                      Phone
-                    </label>
-                    <input
-                      type="text"
-                      name="phone"
-                      defaultValue={user.phone}
-                      onChange={this.onChangePhoneNumber}
-                      className="CheckoutInputBox"
-                      maxLength="10"
-                      required
-                    />
-                    <label
-                      htmlFor="deliveryinstructions"
-                      className="CheckoutFormText"
-                    >
-                      Add delivery instructions
-                    </label>
-                    <textarea
-                      className="CheckoutTextArea"
-                      name="deliveryinstructions"
-                      value={deliveryInstructions}
-                      onChange={this.onChangeDeliveryInstructions}
-                    />
-                    <h4>Enter payment information</h4>
-                    <hr />
-                    <ListGroup variant="flush">
-                      {this.renderCreditCardOptions(creditCards)}
-                      <ListGroup.Item
-                        onClick={() => this.resetCreditCardInfo()}
-                        variant={selectedCardID === "0" ? "secondary" : ""}
-                        style={{ cursor: "pointer" }}
-                      >
-                        New card+
-                      </ListGroup.Item>
-                    </ListGroup>
-                    <div style={{ height: 30 }} /> {/* Spacer */}
-                    {selectedCardID === "0" && (
-                      <div>
-                        <div className="CheckoutCreditCardContainer">
-                          <div>
-                            <label htmlFor="fname" className="ProfileFormTest">
-                              First name
-                            </label>
-                            <input
-                              type="text"
-                              name="fname"
-                              value={paymentFirstName}
-                              onChange={this.onChangePaymentFirstName}
-                              className="CheckoutInputBoxSmall"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <label htmlFor="lname" className="ProfileFormTest">
-                              Last name
-                            </label>
-                            <input
-                              type="text"
-                              name="lname"
-                              value={paymentLastName}
-                              onChange={this.onChangePaymentLastName}
-                              className="CheckoutInputBoxSmall"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <label htmlFor="number" className="ProfileFormTest">
-                              Credit card number
-                            </label>
-                            <input
-                              type="text"
-                              name="number"
-                              value={paymentCreditCardNumber}
-                              onChange={this.onChangePaymentCreditCardNumber}
-                              maxLength="16"
-                              className="CheckoutInputBoxSmall"
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label htmlFor="month" className="ProfileFormTest">
-                              Exp. Month
-                            </label>
-
-                            <select
-                              id="month"
-                              className="CheckoutInputBoxSmall"
-                              value={paymentExpMonth}
-                              onChange={this.onChangePaymentExpMonth}
-                            >
-                              <option value="blankmonth"></option>
-                              <option value="1">01 - January</option>
-                              <option value="2">02 - February</option>
-                              <option value="3">03 - March</option>
-                              <option value="4">04 - April</option>
-                              <option value="5">05 - May</option>
-                              <option value="6">06 - June</option>
-                              <option value="7">07 - July</option>
-                              <option value="8">08 - August</option>
-                              <option value="9">09 - September</option>
-                              <option value="10">10 - October</option>
-                              <option value="11">11 - November</option>
-                              <option value="12">12 - December</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label htmlFor="year" className="ProfileFormTest">
-                              Exp. Year
-                            </label>
-                            <select
-                              id="year"
-                              className="CheckoutInputBoxSmall"
-                              value={paymentExpYear}
-                              onChange={this.onChangePaymentExpYear}
-                            >
-                              <option value="blankyear"></option>
-                              {this.getYearSelection(10)}
-                            </select>
-                          </div>
-                          <div>
-                            <label htmlFor="ccv" className="ProfileFormTest">
-                              CCV
-                            </label>
-                            <input
-                              type="text"
-                              maxLength="3"
-                              name="ccv"
-                              value={paymentCCV}
-                              onChange={this.onChangePaymentCCV}
-                              className="CheckoutInputBoxSmall"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="address"
-                              className="ProfileFormTest"
-                            >
-                              Billing address
-                            </label>
-                            <input
-                              type="text"
-                              name="address"
-                              value={paymentBillingAddress}
-                              onChange={this.onChangePaymentBillingAddress}
-                              className="CheckoutInputBoxSmall"
-                              required
-                            />
-                          </div>
-                        </div>
-                        <input
-                          type="checkBox"
-                          name="saveCard"
-                          checked={saveCard}
-                          onChange={() =>
-                            this.setState({
-                              saveCard: !saveCard,
-                            })
-                          }
-                        />{" "}
-                        <label htmlFor="saveCard">Save this card?</label>
-                      </div>
-                    )}
-                    <h4>Add a tip for your driver</h4>
-                    <hr />
+    if (restaurantLoaded && menuItemsLoaded && isUserLoaded) {
+      return (
+        <div>
+          {user.length === 0 && <CheckoutOverlay />}
+          <Navbar
+            user={user}
+            menuItems={menuItems}
+            restaurant={restaurant}
+            disableToggle={true}
+          />
+          <div className="CheckoutContainer">
+            <div className="CheckoutBarMain">
+              <h4>Enter delivery information</h4>
+              <hr />
+              <form onSubmit={(e) => this.submitCheckout(e)}>
+                <label htmlFor="address" className="CheckoutFormText">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  defaultValue={user.address}
+                  onChange={this.onChangeDeliveryAddress}
+                  className="CheckoutInputBox"
+                  required
+                />
+                <label htmlFor="phone" className="CheckoutFormText">
+                  Phone
+                </label>
+                <input
+                  type="text"
+                  name="phone"
+                  defaultValue={user.phone}
+                  onChange={this.onChangePhoneNumber}
+                  className="CheckoutInputBox"
+                  maxLength="10"
+                  required
+                />
+                <label
+                  htmlFor="deliveryinstructions"
+                  className="CheckoutFormText"
+                >
+                  Add delivery instructions
+                </label>
+                <textarea
+                  className="CheckoutTextArea"
+                  name="deliveryinstructions"
+                  value={deliveryInstructions}
+                  onChange={this.onChangeDeliveryInstructions}
+                />
+                <h4>Enter payment information</h4>
+                <hr />
+                <ListGroup variant="flush">
+                  {creditCardsLoaded &&
+                    this.renderCreditCardOptions(creditCards)}
+                  <ListGroup.Item
+                    onClick={() => this.resetCreditCardInfo()}
+                    variant={selectedCardID === "0" ? "secondary" : ""}
+                    style={{ cursor: "pointer" }}
+                  >
+                    New card+
+                  </ListGroup.Item>
+                </ListGroup>
+                <div style={{ height: 30 }} /> {/* Spacer */}
+                {selectedCardID === "0" && (
+                  <div>
                     <div className="CheckoutCreditCardContainer">
-                      <Button
-                        variant={
-                          tipPercentage === 0 &&
-                          !displayCustomTipForm &&
-                          !tipByAmount
-                            ? "primary"
-                            : "secondary"
-                        }
-                        onClick={() =>
-                          this.setState({
-                            tipPercentage: 0,
-                            tipByAmount: false,
-                            displayCustomTipForm: false,
-                          })
-                        }
-                        style={{ width: 200, margin: "0 20px 20px 0" }}
-                      >
-                        No tip
-                      </Button>
-                      <Button
-                        variant={
-                          tipPercentage === 15 &&
-                          !displayCustomTipForm &&
-                          !tipByAmount
-                            ? "primary"
-                            : "secondary"
-                        }
-                        onClick={() =>
-                          this.setState({
-                            tipPercentage: 15,
-                            tipByAmount: false,
-                            displayCustomTipForm: false,
-                          })
-                        }
-                        style={{ width: 200, margin: "0 20px 20px 0" }}
-                      >
-                        15%
-                      </Button>
-                      <Button
-                        variant={
-                          tipPercentage === 18 &&
-                          !displayCustomTipForm &&
-                          !tipByAmount
-                            ? "primary"
-                            : "secondary"
-                        }
-                        onClick={() =>
-                          this.setState({
-                            tipPercentage: 18,
-                            tipByAmount: false,
-                            displayCustomTipForm: false,
-                          })
-                        }
-                        style={{ width: 200, margin: "0 20px 20px 0" }}
-                      >
-                        18%
-                      </Button>
-                      <Button
-                        variant={
-                          tipPercentage === 20 &&
-                          !displayCustomTipForm &&
-                          !tipByAmount
-                            ? "primary"
-                            : "secondary"
-                        }
-                        onClick={() =>
-                          this.setState({
-                            tipPercentage: 20,
-                            tipByAmount: false,
-                            displayCustomTipForm: false,
-                          })
-                        }
-                        style={{ width: 200, margin: "0 20px 20px 0" }}
-                      >
-                        20%
-                      </Button>
-                      <Button
-                        variant={
-                          tipPercentage === 25 &&
-                          !displayCustomTipForm &&
-                          !tipByAmount
-                            ? "primary"
-                            : "secondary"
-                        }
-                        onClick={() =>
-                          this.setState({
-                            tipPercentage: 25,
-                            tipByAmount: false,
-                            displayCustomTipForm: false,
-                          })
-                        }
-                        style={{ width: 200, margin: "0 20px 20px 0" }}
-                      >
-                        25%
-                      </Button>
-                    </div>
-                    <button
-                      className="CheckoutCustomTip"
-                      onClick={() =>
-                        this.setState({
-                          displayCustomTipForm: !displayCustomTipForm,
-                        })
-                      }
-                      type="button"
-                    >
-                      Add a custom tip
-                    </button>
-                    {displayCustomTipForm && (
                       <div>
-                        <label
-                          htmlFor="customTip"
-                          className="ProfileFormTest"
-                          style={{ paddingTop: 15 }}
-                        >
-                          Please enter custom tip amount
+                        <label htmlFor="fname" className="ProfileFormTest">
+                          First name
                         </label>
                         <input
                           type="text"
-                          name="customTip"
+                          name="fname"
+                          value={paymentFirstName}
+                          onChange={this.onChangePaymentFirstName}
                           className="CheckoutInputBoxSmall"
-                          value={tipAmountString}
-                          onChange={this.onChangeTipAmountString}
-                          style={{ marginBottom: -10 }}
+                          required
                         />
-                        <Button
-                          onClick={() => this.submitCustomTip(tipAmountString)}
-                          style={{ marginRight: 20 }}
-                        >
-                          Submit custom tip
-                        </Button>
-                        <div className="CheckoutErrorMessage">
-                          {customTipErrorMessage}
-                        </div>
                       </div>
-                    )}
-                    <div style={{ height: 20 }} /> {/* Spacer */}
-                    <div className="CheckoutErrorMessage">
-                      {submitErrorMessage}
+                      <div>
+                        <label htmlFor="lname" className="ProfileFormTest">
+                          Last name
+                        </label>
+                        <input
+                          type="text"
+                          name="lname"
+                          value={paymentLastName}
+                          onChange={this.onChangePaymentLastName}
+                          className="CheckoutInputBoxSmall"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="number" className="ProfileFormTest">
+                          Credit card number
+                        </label>
+                        <input
+                          type="text"
+                          name="number"
+                          value={paymentCreditCardNumber}
+                          onChange={this.onChangePaymentCreditCardNumber}
+                          maxLength="16"
+                          className="CheckoutInputBoxSmall"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="month" className="ProfileFormTest">
+                          Exp. Month
+                        </label>
+
+                        <select
+                          id="month"
+                          className="CheckoutInputBoxSmall"
+                          value={paymentExpMonth}
+                          onChange={this.onChangePaymentExpMonth}
+                        >
+                          <option value="blankmonth"></option>
+                          <option value="1">01 - January</option>
+                          <option value="2">02 - February</option>
+                          <option value="3">03 - March</option>
+                          <option value="4">04 - April</option>
+                          <option value="5">05 - May</option>
+                          <option value="6">06 - June</option>
+                          <option value="7">07 - July</option>
+                          <option value="8">08 - August</option>
+                          <option value="9">09 - September</option>
+                          <option value="10">10 - October</option>
+                          <option value="11">11 - November</option>
+                          <option value="12">12 - December</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="year" className="ProfileFormTest">
+                          Exp. Year
+                        </label>
+                        <select
+                          id="year"
+                          className="CheckoutInputBoxSmall"
+                          value={paymentExpYear}
+                          onChange={this.onChangePaymentExpYear}
+                        >
+                          <option value="blankyear"></option>
+                          {this.getYearSelection(10)}
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="ccv" className="ProfileFormTest">
+                          CCV
+                        </label>
+                        <input
+                          type="text"
+                          maxLength="3"
+                          name="ccv"
+                          value={paymentCCV}
+                          onChange={this.onChangePaymentCCV}
+                          className="CheckoutInputBoxSmall"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="address" className="ProfileFormTest">
+                          Billing address
+                        </label>
+                        <input
+                          type="text"
+                          name="address"
+                          value={paymentBillingAddress}
+                          onChange={this.onChangePaymentBillingAddress}
+                          className="CheckoutInputBoxSmall"
+                          required
+                        />
+                      </div>
                     </div>
-                    <div className="CheckoutSuccessMessage">
-                      {submitSuccessMessage}
-                    </div>
-                    <Button
-                      type="submit"
-                      style={{ marginTop: 15 }}
-                      variant={
-                        selectedCardID === "" ||
-                        (deliveryAddress === "" && user.address === "") ||
-                        (deliveryPhoneNumber === "" && user.phone === "") ||
-                        paymentFirstName === "" ||
-                        paymentLastName === "" ||
-                        paymentCreditCardNumber === "" ||
-                        paymentExpMonth === "" ||
-                        paymentExpMonth === "blankmonth" ||
-                        paymentExpYear === "" ||
-                        paymentExpYear === "blankyear" ||
-                        paymentCCV === "" ||
-                        paymentBillingAddress === "" ||
-                        displayCustomTipForm
-                          ? "secondary"
-                          : "success"
+                    <input
+                      type="checkBox"
+                      name="saveCard"
+                      checked={saveCard}
+                      onChange={() =>
+                        this.setState({
+                          saveCard: !saveCard,
+                        })
                       }
-                      disabled={
-                        selectedCardID === "" ||
-                        (deliveryAddress === "" && user.address === "") ||
-                        (deliveryPhoneNumber === "" && user.phone === "") ||
-                        paymentFirstName === "" ||
-                        paymentLastName === "" ||
-                        paymentCreditCardNumber === "" ||
-                        paymentExpMonth === "" ||
-                        paymentExpMonth === "blankmonth" ||
-                        paymentExpYear === "" ||
-                        paymentExpYear === "blankyear" ||
-                        paymentCCV === "" ||
-                        paymentBillingAddress === "" ||
-                        displayCustomTipForm
-                      }
-                      block
-                    >
-                      Bring on the food!
-                    </Button>
-                  </form>
+                    />{" "}
+                    <label htmlFor="saveCard">Save this card?</label>
+                  </div>
+                )}
+                <h4>Add a tip for your driver</h4>
+                <hr />
+                <div className="CheckoutCreditCardContainer">
+                  <Button
+                    variant={
+                      tipPercentage === 0 &&
+                      !displayCustomTipForm &&
+                      !tipByAmount
+                        ? "primary"
+                        : "secondary"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tipPercentage: 0,
+                        tipByAmount: false,
+                        displayCustomTipForm: false,
+                      })
+                    }
+                    style={{ width: 200, margin: "0 20px 20px 0" }}
+                  >
+                    No tip
+                  </Button>
+                  <Button
+                    variant={
+                      tipPercentage === 15 &&
+                      !displayCustomTipForm &&
+                      !tipByAmount
+                        ? "primary"
+                        : "secondary"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tipPercentage: 15,
+                        tipByAmount: false,
+                        displayCustomTipForm: false,
+                      })
+                    }
+                    style={{ width: 200, margin: "0 20px 20px 0" }}
+                  >
+                    15%
+                  </Button>
+                  <Button
+                    variant={
+                      tipPercentage === 18 &&
+                      !displayCustomTipForm &&
+                      !tipByAmount
+                        ? "primary"
+                        : "secondary"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tipPercentage: 18,
+                        tipByAmount: false,
+                        displayCustomTipForm: false,
+                      })
+                    }
+                    style={{ width: 200, margin: "0 20px 20px 0" }}
+                  >
+                    18%
+                  </Button>
+                  <Button
+                    variant={
+                      tipPercentage === 20 &&
+                      !displayCustomTipForm &&
+                      !tipByAmount
+                        ? "primary"
+                        : "secondary"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tipPercentage: 20,
+                        tipByAmount: false,
+                        displayCustomTipForm: false,
+                      })
+                    }
+                    style={{ width: 200, margin: "0 20px 20px 0" }}
+                  >
+                    20%
+                  </Button>
+                  <Button
+                    variant={
+                      tipPercentage === 25 &&
+                      !displayCustomTipForm &&
+                      !tipByAmount
+                        ? "primary"
+                        : "secondary"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tipPercentage: 25,
+                        tipByAmount: false,
+                        displayCustomTipForm: false,
+                      })
+                    }
+                    style={{ width: 200, margin: "0 20px 20px 0" }}
+                  >
+                    25%
+                  </Button>
                 </div>
-                <div className="CheckoutBarRight">{this.getOrderSummary()}</div>
-              </div>
-              <Footer />
+                <button
+                  className="CheckoutCustomTip"
+                  onClick={() =>
+                    this.setState({
+                      displayCustomTipForm: !displayCustomTipForm,
+                    })
+                  }
+                  type="button"
+                >
+                  Add a custom tip
+                </button>
+                {displayCustomTipForm && (
+                  <div>
+                    <label
+                      htmlFor="customTip"
+                      className="ProfileFormTest"
+                      style={{ paddingTop: 15 }}
+                    >
+                      Please enter custom tip amount
+                    </label>
+                    <input
+                      type="text"
+                      name="customTip"
+                      className="CheckoutInputBoxSmall"
+                      value={tipAmountString}
+                      onChange={this.onChangeTipAmountString}
+                      style={{ marginBottom: -10 }}
+                    />
+                    <Button
+                      onClick={() => this.submitCustomTip(tipAmountString)}
+                      style={{ marginRight: 20 }}
+                    >
+                      Submit custom tip
+                    </Button>
+                    <div className="CheckoutErrorMessage">
+                      {customTipErrorMessage}
+                    </div>
+                  </div>
+                )}
+                <div style={{ height: 20 }} /> {/* Spacer */}
+                <div className="CheckoutErrorMessage">{submitErrorMessage}</div>
+                <div className="CheckoutSuccessMessage">
+                  {submitSuccessMessage}
+                </div>
+                <Button
+                  type="submit"
+                  style={{ marginTop: 15 }}
+                  variant={
+                    selectedCardID === "" ||
+                    (deliveryAddress === "" && user.address === "") ||
+                    (deliveryPhoneNumber === "" && user.phone === "") ||
+                    paymentFirstName === "" ||
+                    paymentLastName === "" ||
+                    paymentCreditCardNumber === "" ||
+                    paymentExpMonth === "" ||
+                    paymentExpMonth === "blankmonth" ||
+                    paymentExpYear === "" ||
+                    paymentExpYear === "blankyear" ||
+                    paymentCCV === "" ||
+                    paymentBillingAddress === "" ||
+                    displayCustomTipForm
+                      ? "secondary"
+                      : "success"
+                  }
+                  disabled={
+                    selectedCardID === "" ||
+                    (deliveryAddress === "" && user.address === "") ||
+                    (deliveryPhoneNumber === "" && user.phone === "") ||
+                    paymentFirstName === "" ||
+                    paymentLastName === "" ||
+                    paymentCreditCardNumber === "" ||
+                    paymentExpMonth === "" ||
+                    paymentExpMonth === "blankmonth" ||
+                    paymentExpYear === "" ||
+                    paymentExpYear === "blankyear" ||
+                    paymentCCV === "" ||
+                    paymentBillingAddress === "" ||
+                    displayCustomTipForm
+                  }
+                  block
+                >
+                  Bring on the food!
+                </Button>
+              </form>
             </div>
-          );
-        } else {
-          //Credit card, menu item, or restaurant data not loaded
-          return <Loader />;
-        }
-      } else {
-        //User is not logged in
-        return <Redirect to="/" />;
-      }
+            <div className="CheckoutBarRight">{this.getOrderSummary()}</div>
+          </div>
+          <Footer />
+        </div>
+      );
     } else {
-      //User is not loaded
+      //Credit card, menu item, restaurant data, or user not loaded
       return <Loader />;
     }
   }

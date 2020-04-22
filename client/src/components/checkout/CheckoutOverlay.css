@@ -1,0 +1,31 @@
+.CheckoutOverlayBackground {
+  z-index: 999999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  animation: fadeIn 1s;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@keyframes fadeIn {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.CheckoutOverlayPopup {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 auto;
+  width: 600px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  color: black;
+}
