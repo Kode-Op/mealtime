@@ -1,13 +1,15 @@
 //Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 
 //Import assets
 import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import { setInStorage } from "../../utils/storage";
+import TokenCreation  from "../../utils/login/TokenCreation";
+
 
 export default class LoginConfirmation extends Component {
   constructor(props) {
@@ -29,8 +31,7 @@ export default class LoginConfirmation extends Component {
         password: this.props.location.state.password,
       };
 
-      axios
-        .post("/api/users/login", user)
+      TokenCreation(user)
         .then((response) => {
           // login successful, token created and saved
           setInStorage("mealtime", { token: response.data.token });

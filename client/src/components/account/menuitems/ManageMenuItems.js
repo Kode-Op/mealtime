@@ -1,7 +1,7 @@
 //Import libraries
 import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
-import axios from "axios";
+//import axios from "axios";
 import _ from "lodash";
 
 //Import assets
@@ -9,6 +9,13 @@ import Loader from "../../../assets/loader/Loader";
 
 //Import stylesheets
 import "./ManageMenuItems.css";
+
+//Import Utils
+import getRestaurantMenuItems from "../../../utils/menuitems/GetRestaurantByID";
+import GetRestaurantMenuitem from "../../../utils/menuitems/GetRestaurantMenuitem";
+import AddMenuItem from "../../../utils/menuitems/AddMenuItem";
+import EditMenuItem from "../../../utils/menuitems/EditMenuItem";
+import DeleteMenuItem from "../../../utils/menuitems/DeleteMenuItem";
 
 export default class ManageMenuItems extends Component {
   _isMounted = false;
@@ -39,8 +46,7 @@ export default class ManageMenuItems extends Component {
     this._isMounted = true;
 
     //Load the restaurant data associated with the user that is logged in.
-    axios
-      .get("/api/restaurants/byOwner/" + this.props.user._id)
+    getRestaurantMenuItems(this.props.user._id)
       .then((response) => {
         if (this._isMounted) {
           this.setState({
@@ -184,8 +190,7 @@ export default class ManageMenuItems extends Component {
         restaurantSelectionMade: true,
         additionalCategories: [],
       });
-      axios
-        .get("/api/menuitems/" + e.target.value)
+      GetRestaurantMenuitem(e.target.value)
         .then((response) => {
           const groupedByCategory = _.groupBy(
             response.data,
@@ -301,8 +306,7 @@ export default class ManageMenuItems extends Component {
       };
 
       console.log(pkg);
-      axios
-        .post("/api/menuItems/add/", pkg)
+      AddMenuItem(pkg)
         .then(() => {
           this.setState({
             successMessage: "Successfully added menu item!",
@@ -333,8 +337,7 @@ export default class ManageMenuItems extends Component {
       };
 
       console.log(pkg);
-      axios
-        .post("/api/menuItems/update/" + id, pkg)
+      EditMenuItem(id, pkg)
         .then(() => {
           this.setState({
             successMessage: "Successfully edited menu item!",
@@ -360,8 +363,7 @@ export default class ManageMenuItems extends Component {
         "WARNING: This will delete your menu item.\nAre you sure you want to do this?"
       )
     ) {
-      axios
-        .delete("/api/menuItems/" + id)
+      DeleteMenuItem(id)
         .then(() => {
           this.setState({
             successMessage: "Successfully deleted menu item",

@@ -1,7 +1,12 @@
 //Import Libraries
 import React, { Component } from "react";
 import { Button, Accordion, Card } from "react-bootstrap";
-import axios from "axios";
+
+//import axios from "axios";
+
+//Import utilities
+import UserAddressUpdate from "../../../utils/address/UserAddressUpdate";
+import UserPhoneNumberUpdate  from "../../../utils/address/UserPhoneNumberUpdate";
 
 export default class Address extends Component {
   constructor(props) {
@@ -42,8 +47,8 @@ export default class Address extends Component {
       address: this.state.address,
     };
 
-    axios
-      .post("/api/users/updateAddress/" + this.props.user._id, pkg)
+    /*address update*/
+    UserAddressUpdate(this.props.user._id, pkg)
       .then(() => {
         this.setState({
           errorMessage: "",
@@ -74,8 +79,8 @@ export default class Address extends Component {
         password: this.state.passwordphone,
       };
 
-      axios
-        .post("/api/users/updatePhone/" + this.props.user._id, pkg)
+      /*Phone number update*/
+      UserPhoneNumberUpdate(this.props.user._id, pkg)
         .then(() => {
           this.setState({
             errorMessagePhone: "",

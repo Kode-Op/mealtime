@@ -1,6 +1,6 @@
 //Import libraries
 import React, { Component } from "react";
-import axios from "axios";
+//import axios from "axios";
 import { Accordion, Card, Button } from "react-bootstrap";
 
 //Import assets
@@ -8,6 +8,8 @@ import Loader from "../../../assets/loader/Loader";
 
 //Import utilities
 import GetCreditCardByID from "../../../utils/creditcards/GetCreditCardByID";
+import DelCreditCardByID from "../../../utils/creditcards/DelCreditCardByID";
+import AddCreditCard from "../../../utils/creditcards/AddCreditCard";
 
 //Import stylesheets
 import "./CreditCard.css";
@@ -98,8 +100,7 @@ export default class CreditCard extends Component {
         isDeleted: false,
       };
 
-      axios
-        .post("/api/creditCards/add/", pkg)
+      AddCreditCard(pkg)
         .then(() => {
           this.setState({
             successmessage: "Successfully added card!",
@@ -127,8 +128,7 @@ export default class CreditCard extends Component {
 
   onDeleteCard = (cardID) => {
     return function () {
-      axios
-        .delete("/api/creditCards/" + cardID)
+      DelCreditCardByID(cardID)
         .then(() => {
           window.location.reload(false);
         })
