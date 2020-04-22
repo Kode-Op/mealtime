@@ -10,7 +10,6 @@ import UpdateEmail from "../../../utils/profile/UpdateEmail";
 import UpdateTags from "../../../utils/profile/UpdateTags";
 import UpdatePassword from "../../../utils/profile/UpdatePassword";
 
-
 export default class Profile extends Component {
   constructor(props) {
     super(props);
