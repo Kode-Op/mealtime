@@ -125,7 +125,8 @@ export default class Profile extends Component {
     e.preventDefault();
   };
 
-  onSubmitEmail(e) {
+  onSubmitEmail = (e) => {
+    e.preventDefault();
     if (this.validateEmail()) {
       let pkg = {
         email: this.state.email,
@@ -133,7 +134,7 @@ export default class Profile extends Component {
       };
 
       UpdateUserEmail(this.state.userID, pkg)
-        .then((response) => {
+        .then(() => {
           this.setState({
             errorMessageEmail: "",
             successMessageEmail: "Successfully updated email!",
@@ -160,8 +161,7 @@ export default class Profile extends Component {
           }
         });
     }
-    e.preventDefault();
-  }
+  };
 
   onSubmitPreferences = (e) => {
     e.preventDefault();
@@ -194,7 +194,8 @@ export default class Profile extends Component {
       });
   };
 
-  onSubmitPassword(e) {
+  onSubmitPassword = (e) => {
+    e.preventDefault();
     if (this.validatePassword()) {
       let pkg = {
         oldPassword: this.state.passwordcurrent,
@@ -228,8 +229,7 @@ export default class Profile extends Component {
           }
         });
     }
-    e.preventDefault();
-  }
+  };
 
   //This helper function verifies that the email address is in the format email@website.domain
   validateEmail = () => {
