@@ -180,23 +180,50 @@ router.route("/add").post((req, res) => {
   const isDeleted = false;
   const tags = req.body.tags;
 
-  const newItem = new Restaurant({
-    name,
-    price,
-    rating,
-    description,
-    minorder,
-    address,
-    hoursofoperation,
-    ownerId,
-    isDeleted,
-    tags,
-  });
+  const makeRestaurant = (restaurant) => {
+    return new Promise(function (resolve, reject) {
+      restaurant
+        .save()
+        .then(() => resolve("Restaurant added!"))
+        .catch((err) => reject("Error: " + err));
+    });
+  };
+  
+  const retrieveRestaurant = (ownerId) => {
+    return new Promise(function (resolve, reject) {
+      Restaurant.find({ ownerId: ownerId })
+        .then((restaurants) => {
+          resolve(restaurants[restaurants.length - 1]._id);
+        })
+        .catch((err) => res.status(400).json("Error: " + err));
+    });
+  };
 
-  newItem
-    .save()
-    .then(() => res.json("Restaurant added! Id: " + newItem.id))
-    .catch((err) => res.status(400).json("Error: " + err));
+  const createRestaurant = async (_) => {
+    const newItem = new Restaurant({
+      name,
+      price,
+      rating,
+      description,
+      minorder,
+      address,
+      hoursofoperation,
+      ownerId,
+      isDeleted,
+      tags,
+    });
+
+    result1 = await makeRestaurant(newItem);
+    result2 = await retrieveRestaurant(ownerId);
+
+    response = {
+      message: result1,
+      id: result2,
+    };
+
+    res.json(response);
+  }
+  createRestaurant();
 });
 
 // DEPRECATED - DO NOT USE (only for Insomnia use for migration, very little error checking)
