@@ -22,10 +22,16 @@ router.route("/byTag/:tag").get((req, res) => {
 });
 
 // Format: POST /api/restaurants/filter/
-// Required Fields: tags[], priceLow, priceHigh, ratings, userId
+// Required Fields: tags[], priceLow, priceHigh, ratings, userId (optional)
 // Returns: All info on restaurants containing corresponding filter of tags, pricing, and rating
 router.route("/filter").post((req, res) => {
-  const userId = req.body.userId;
+  let notLoggedIn = false;
+  let userId = "";
+  if (req.body.userId) {
+    userId = req.body.userId;
+  } else {
+    notLoggedIn = true;
+  }
   const tagArray = req.body.tags;
   const ratings = Number(req.body.ratings);
   const priceLow = Number(req.body.priceLow);
@@ -132,14 +138,18 @@ router.route("/filter").post((req, res) => {
     });
   };
 
-  const handleRestaurants = async (_) => {
+  const handleRestaurants = async (noUser) => {
     let restaurantList = await retrieveRestaurants();
-    const userTags = await grabTags(userId);
-    const results = await sortByTag(restaurantList, userTags);
-    res.json(results);
+    if (!noUser) {
+      const userTags = await grabTags(userId);
+      const results = await sortByTag(restaurantList, userTags);
+      res.json(results);
+    } else {
+      res.json(restaurantList);
+    }
   };
 
-  handleRestaurants();
+  handleRestaurants(notLoggedIn);
 });
 
 // DEPRECATED - DO NOT USE (only for Insomnia use for migration, no max length check, limited error checks)
@@ -274,7 +284,7 @@ router.route("/add").post((req, res) => {
         .catch((err) => reject("Error: " + err));
     });
   };
-  
+
   const retrieveRestaurant = (ownerId) => {
     return new Promise(function (resolve, reject) {
       Restaurant.find({ ownerId: ownerId })
@@ -308,7 +318,7 @@ router.route("/add").post((req, res) => {
     };
 
     res.json(response);
-  }
+  };
   createRestaurant();
 });
 
