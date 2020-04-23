@@ -11,11 +11,12 @@ import Loader from "../../../assets/loader/Loader";
 import "./ManageMenuItems.css";
 
 //Import Utils
-import getRestaurantMenuItems from "../../../utils/menuitems/GetRestaurantByID";
+import getRestaurantMenuItems from "../../../utils/managerestaurants/GetRestaurantByID";
 import GetRestaurantMenuitem from "../../../utils/menuitems/GetRestaurantMenuitem";
 import AddMenuItem from "../../../utils/menuitems/AddMenuItem";
 import EditMenuItem from "../../../utils/menuitems/EditMenuItem";
 import DeleteMenuItem from "../../../utils/menuitems/DeleteMenuItem";
+import UploadFile from "../../../utils/uploadfile/UploadFile";
 
 export default class ManageMenuItems extends Component {
   _isMounted = false;
@@ -40,10 +41,14 @@ export default class ManageMenuItems extends Component {
       category: "",
       errorMessage: "",
       successMessage: "",
+      thumbnail: null,
+      largeImage: null,
     };
   }
   componentDidMount() {
     this._isMounted = true;
+
+    console.log(this.props.user._id);
 
     //Load the restaurant data associated with the user that is logged in.
     getRestaurantMenuItems(this.props.user._id)
@@ -97,6 +102,12 @@ export default class ManageMenuItems extends Component {
     this.setState({
       description: e.target.value,
     });
+  };
+  onChangeThumbnail = (e) => {
+    this.setState({ thumbnail: e.target.files[0] });
+  };
+  onChangeLargeImage = (e) => {
+    this.setState({ largeImage: e.target.files[0] });
   };
 
   getForm = (category, id) => {
@@ -157,6 +168,22 @@ export default class ManageMenuItems extends Component {
           className="ManageRestaurantTextArea"
           required
         />
+        <br />
+        <br />
+        <label htmlFor="largeImage" className="ProfileFormTest">
+          Please upload an image for your menu item (must be 550x350px)
+        </label>
+        <input
+          type="file"
+          name="largeImage"
+          onChange={this.onChangeLargeImage}
+        />
+        <br />
+        <br />
+        <label htmlFor="thumbnail" className="ProfileFormTest">
+          Please upload an thumbnail for your menu item (must be 150x130px)
+        </label>
+        <input type="file" name="thumbnail" onChange={this.onChangeThumbnail} />
         <div className="ProfileErrorMessage">{this.state.errorMessage}</div>
         <div className="ProfileSuccessMessage">{this.state.successMessage}</div>
       </React.Fragment>
@@ -240,6 +267,8 @@ export default class ManageMenuItems extends Component {
       description: menuitem.description,
       errorMessage: "",
       successMessage: "",
+      thumbnail: null,
+      largeImage: null,
     });
   };
 
@@ -252,6 +281,8 @@ export default class ManageMenuItems extends Component {
       description: "",
       errorMessage: "",
       successMessage: "",
+      thumbnail: null,
+      largeImage: null,
     });
   };
 
@@ -307,12 +338,43 @@ export default class ManageMenuItems extends Component {
 
       console.log(pkg);
       AddMenuItem(pkg)
-        .then(() => {
+        .then((response) => {
           this.setState({
-            successMessage: "Successfully added menu item!",
+            successMessage: "Successfully added restaurant!",
             errorMessage: "",
           });
-          window.location.reload(true);
+          if (this.state.thumbnail !== null || this.state.largeImage !== null) {
+            //If appliciable, upload images
+            if (this.state.thumbnail !== null) {
+              let formData = new FormData();
+              formData.append("file", this.state.thumbnail);
+              formData.append("path", response.data.id + "/small.png");
+
+              UploadFile(formData)
+                .then(() => {
+                  window.location.reload(true);
+                })
+                .catch(() => {
+                  console.log("Image upload failed");
+                });
+            }
+
+            if (this.state.largeImage !== null) {
+              let formData = new FormData();
+              formData.append("file", this.state.largeImage);
+              formData.append("path", response.data.id + "/large.png");
+
+              UploadFile(formData)
+                .then(() => {
+                  window.location.reload(true);
+                })
+                .catch(() => {
+                  console.log("Image upload failed");
+                });
+            }
+          } else {
+            window.location.reload(true);
+          }
         })
         .catch((error) => {
           this.setState({
@@ -328,6 +390,31 @@ export default class ManageMenuItems extends Component {
   onUpdateMenuItem = (e, id) => {
     e.preventDefault();
     if (this.validateForm()) {
+      //If appliciable, upload images
+      if (this.state.thumbnail !== null) {
+        let formData = new FormData();
+        formData.append("file", this.state.thumbnail);
+        formData.append("path", id + "/small.png");
+
+        UploadFile(formData)
+          .then()
+          .catch(() => {
+            console.log("Image upload failed");
+          });
+      }
+
+      if (this.state.largeImage !== null) {
+        let formData = new FormData();
+        formData.append("file", this.state.largeImage);
+        formData.append("path", id + "/large.png");
+
+        UploadFile(formData)
+          .then()
+          .catch(() => {
+            console.log("Image upload failed");
+          });
+      }
+
       let pkg = {
         name: this.state.name,
         price: this.parsePrice(this.state.price),
@@ -336,7 +423,6 @@ export default class ManageMenuItems extends Component {
         description: this.state.description,
       };
 
-      console.log(pkg);
       EditMenuItem(id, pkg)
         .then(() => {
           this.setState({

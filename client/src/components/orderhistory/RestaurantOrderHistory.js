@@ -31,12 +31,10 @@ export default class RestaurantOrderHistory extends Component {
       additionalCategories: [],
       restaurantOrders: [],
       areOrdersLoaded: false,
-      // totalPrice: 0,
 
       //Default menu item values
       name: "",
       price: "$0.00",
-      // totalprice: "$0.00",
       preptime: 0,
       createdAt: "",
       description: "",

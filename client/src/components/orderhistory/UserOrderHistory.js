@@ -2,13 +2,6 @@
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
 import axios from "axios";
-// import _ from "lodash";
-
-//import components
-//import Navbar from "../nav/Navbar";
-
-//import utilities
-//import GetLogin from "../../utils/GetLogin";
 
 //import assests
 import Loader from "../../assets/loader/Loader";

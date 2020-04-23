@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
 import { TimePicker } from "antd";
 import moment from "moment";
-//import axios from "axios";
 
 //Import assets
 import Loader from "../../../assets/loader/Loader";
@@ -14,6 +13,7 @@ import GetRestaurantByID from "../../../utils/managerestaurants/GetRestaurantByI
 import EditRestaurant from "../../../utils/managerestaurants/EditRestaurant";
 import AddRestaurant from "../../../utils/managerestaurants/AddRestaurant";
 import DeleteRestaurant from "../../../utils/managerestaurants/DeleteRestaurant";
+import UploadFile from "../../../utils/uploadfile/UploadFile";
 
 //Import stylesheets
 import "./ManageRestaurants.css";
@@ -46,6 +46,8 @@ export default class ManageRestaurants extends Component {
       tags: [],
       tagbank: TagBank,
       hoursofoperation: hourmatrix,
+      thumbnail: null,
+      largeImage: null,
     };
   }
 
@@ -99,6 +101,12 @@ export default class ManageRestaurants extends Component {
   onChangeDescription = (e) => {
     this.setState({ description: e.target.value });
     e.preventDefault();
+  };
+  onChangeThumbnail = (e) => {
+    this.setState({ thumbnail: e.target.files[0] });
+  };
+  onChangeLargeImage = (e) => {
+    this.setState({ largeImage: e.target.files[0] });
   };
 
   //This method converts a given time the format we represent times with,
@@ -176,6 +184,8 @@ export default class ManageRestaurants extends Component {
       tags: restaurant.tags,
       description: restaurant.description,
       hoursofoperation: restaurant.hoursofoperation,
+      thumbnail: null,
+      largeImage: null,
     });
   };
 
@@ -199,6 +209,8 @@ export default class ManageRestaurants extends Component {
       tags: [],
       description: "",
       hoursofoperation: hourmatrix,
+      thumbnail: null,
+      largeImage: null,
     });
   };
 
@@ -216,11 +228,11 @@ export default class ManageRestaurants extends Component {
             onChange={(time) => this.onChangeTime(time, dayOfWeek, true)}
             value={
               this.state.hoursofoperation[dayOfWeek][0] !== "0000" ||
-                this.state.hoursofoperation[dayOfWeek][1] !== "0000"
+              this.state.hoursofoperation[dayOfWeek][1] !== "0000"
                 ? [
-                  moment(this.state.hoursofoperation[dayOfWeek][0], "HH:mm"),
-                  moment(this.state.hoursofoperation[dayOfWeek][1], "HH:mm"),
-                ]
+                    moment(this.state.hoursofoperation[dayOfWeek][0], "HH:mm"),
+                    moment(this.state.hoursofoperation[dayOfWeek][1], "HH:mm"),
+                  ]
                 : ""
             }
           />
@@ -234,11 +246,11 @@ export default class ManageRestaurants extends Component {
             onChange={(time) => this.onChangeTime(time, dayOfWeek, false)}
             value={
               this.state.hoursofoperation[dayOfWeek][2] !== "0000" ||
-                this.state.hoursofoperation[dayOfWeek][3] !== "0000"
+              this.state.hoursofoperation[dayOfWeek][3] !== "0000"
                 ? [
-                  moment(this.state.hoursofoperation[dayOfWeek][2], "HH:mm"),
-                  moment(this.state.hoursofoperation[dayOfWeek][3], "HH:mm"),
-                ]
+                    moment(this.state.hoursofoperation[dayOfWeek][2], "HH:mm"),
+                    moment(this.state.hoursofoperation[dayOfWeek][3], "HH:mm"),
+                  ]
                 : ""
             }
           />
@@ -433,7 +445,6 @@ export default class ManageRestaurants extends Component {
           <div style={{ width: 100 }}>Saturday:</div>
           {this.getTime(6)}
         </div>
-
         <label
           htmlFor="tags"
           className="ProfileFormTest"
@@ -466,6 +477,22 @@ export default class ManageRestaurants extends Component {
           className="ManageRestaurantTextArea"
           required
         />
+        <br />
+        <br />
+        <label htmlFor="largeImage" className="ProfileFormTest">
+          Please upload an image for your restaurant (must be 650x650px)
+        </label>
+        <input
+          type="file"
+          name="largeImage"
+          onChange={this.onChangeLargeImage}
+        />
+        <br />
+        <br />
+        <label htmlFor="thumbnail" className="ProfileFormTest">
+          Please upload an thumbnail for your restaurant (must be 150x100px)
+        </label>
+        <input type="file" name="thumbnail" onChange={this.onChangeThumbnail} />
         <div className="ProfileErrorMessage">{this.state.errorMessage}</div>
         <div className="ProfileSuccessMessage">{this.state.successMessage}</div>
       </React.Fragment>
@@ -476,6 +503,31 @@ export default class ManageRestaurants extends Component {
   onUpdateRestaurant = (e, restaurantID) => {
     e.preventDefault();
     if (this.validateForm()) {
+      //If appliciable, upload images
+      if (this.state.thumbnail !== null) {
+        let formData = new FormData();
+        formData.append("file", this.state.thumbnail);
+        formData.append("path", restaurantID + "/small.png");
+
+        UploadFile(formData)
+          .then()
+          .catch(() => {
+            console.log("Image upload failed");
+          });
+      }
+
+      if (this.state.largeImage !== null) {
+        let formData = new FormData();
+        formData.append("file", this.state.largeImage);
+        formData.append("path", restaurantID + "/large.png");
+
+        UploadFile(formData)
+          .then()
+          .catch(() => {
+            console.log("Image upload failed");
+          });
+      }
+
       let pkg = {
         minorder: this.parseMinOrder(this.state.minorder),
         address: this.state.address,
@@ -523,11 +575,43 @@ export default class ManageRestaurants extends Component {
       };
 
       AddRestaurant(pkg)
-        .then(() => {
+        .then((response) => {
           this.setState({
             successMessage: "Successfully added restaurant!",
             errorMessage: "",
           });
+          if (this.state.thumbnail !== null || this.state.largeImage !== null) {
+            //If appliciable, upload images
+            if (this.state.thumbnail !== null) {
+              let formData = new FormData();
+              formData.append("file", this.state.thumbnail);
+              formData.append("path", response.data.id + "/small.png");
+
+              UploadFile(formData)
+                .then(() => {
+                  window.location.reload(true);
+                })
+                .catch(() => {
+                  console.log("Image upload failed");
+                });
+            }
+
+            if (this.state.largeImage !== null) {
+              let formData = new FormData();
+              formData.append("file", this.state.largeImage);
+              formData.append("path", response.data.id + "/large.png");
+
+              UploadFile(formData)
+                .then(() => {
+                  window.location.reload(true);
+                })
+                .catch(() => {
+                  console.log("Image upload failed");
+                });
+            }
+          } else {
+            window.location.reload(true);
+          }
         })
         .catch((error) => {
           this.setState({

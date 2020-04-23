@@ -25,7 +25,7 @@
   margin: 0 auto;
   width: 625px;
   background-color: white;
-  padding: 40px;
+  padding: 10px 40px 40px 40px;
   border-radius: 10px;
   color: black;
   -webkit-animation: fadeInOverlay 1s; /* Safari, Chrome and Opera > 12.1 */
@@ -175,7 +175,7 @@
   height: 25px;
   width: 25px;
   position: relative;
-  top: -35px;
+  top: -5px;
   left: 550px;
   color: red;
   cursor: pointer;

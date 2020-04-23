@@ -126,7 +126,7 @@ export default class MenuItemOverlay extends Component {
   };
 
   render() {
-    const { name, description, price } = this.props.menuItem;
+    const { _id, name, description, price } = this.props.menuItem;
 
     return (
       <div
@@ -137,7 +137,18 @@ export default class MenuItemOverlay extends Component {
           <div className="MenuItemOverlayExitButton">✖</div>
           <h3>{name}</h3>
           <p>{description}</p>
-          <img src={MenuItemPlaceholder} alt="" />
+          <img
+            src={
+              "https://mealtimebucket.s3-us-west-1.amazonaws.com/" +
+              _id +
+              "/large.png"
+            }
+            onError={(e) => {
+              e.target.setAttribute("src", MenuItemPlaceholder);
+              e.target.onerror = null;
+            }}
+            alt=""
+          />
           <div className="MenuItemOverlayBottomFlex">
             <div className="MenuItemOverlayQuantity">
               Quantity:
