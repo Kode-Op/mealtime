@@ -50,7 +50,6 @@ function App() {
           <Route path="/checkout" component={Checkout} />
           <Route path="/order" component={Order} />
           <Route path="/upload" component={Upload} />
-          <Route path="/upload" component={Upload} />
         </Switch>
       </div>
     </Router>
