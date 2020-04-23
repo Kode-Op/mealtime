@@ -94,12 +94,13 @@ router.route("/filter").post((req, res) => {
 
       for(let i = 0; i<tags.length; i++){
         
-          for(let j= 0; j<remaining;){console.log(j);
+          for(let j= 0; j<remaining;){
             let added = false;
             for(let k = 0; k<unsortedList[j].tags.length && !added ;k++){
               if(unsortedList[j].tags[k] == tags[i]){
                 sortedList.push(unsortedList[j]);
-                unsortedList.slice(j,1);
+                unsortedList[j] = unsortedList.pop();
+                console.log(unsortedList[j])
                 added = true;
                 remaining -= 1;
               }
@@ -109,7 +110,7 @@ router.route("/filter").post((req, res) => {
               }
           }
       }
-
+      
       for(let i = 0; i<remaining;i++){
         sortedList.push(unsortedList[i]);
       }
