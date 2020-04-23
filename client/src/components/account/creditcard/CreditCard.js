@@ -1,15 +1,16 @@
 //Import libraries
 import React, { Component } from "react";
-//import axios from "axios";
 import { Accordion, Card, Button } from "react-bootstrap";
 
 //Import assets
 import Loader from "../../../assets/loader/Loader";
 
 //Import utilities
-import GetCreditCardByID from "../../../utils/creditcards/GetCreditCardByID";
-import DelCreditCardByID from "../../../utils/creditcards/DelCreditCardByID";
-import AddCreditCard from "../../../utils/creditcards/AddCreditCard";
+import {
+  GetCreditCardByID,
+  DeleteCreditCard,
+  AddCreditCard,
+} from "../../../utils/axios/CreditCards";
 
 //Import stylesheets
 import "./CreditCard.css";
@@ -128,7 +129,7 @@ export default class CreditCard extends Component {
 
   onDeleteCard = (cardID) => {
     return function () {
-      DelCreditCardByID(cardID)
+      DeleteCreditCard(cardID)
         .then(() => {
           window.location.reload(false);
         })

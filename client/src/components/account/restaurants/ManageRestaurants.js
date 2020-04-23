@@ -9,11 +9,15 @@ import Loader from "../../../assets/loader/Loader";
 
 //Import utilities
 import TagBank from "../../../utils/Tags";
-import GetRestaurantByID from "../../../utils/managerestaurants/GetRestaurantByID";
-import EditRestaurant from "../../../utils/managerestaurants/EditRestaurant";
-import AddRestaurant from "../../../utils/managerestaurants/AddRestaurant";
-import DeleteRestaurant from "../../../utils/managerestaurants/DeleteRestaurant";
-import UploadFile from "../../../utils/uploadfile/UploadFile";
+
+import {
+  GetRestaurantByUserID,
+  AddRestaurant,
+  UpdateRestaurant,
+  DeleteRestaurant,
+} from "../../../utils/axios/Restaurants";
+
+import UploadFile from "../../../utils/axios/Files";
 
 //Import stylesheets
 import "./ManageRestaurants.css";
@@ -55,7 +59,7 @@ export default class ManageRestaurants extends Component {
     this._isMounted = true;
 
     //Load the restaurant data associated with the user that is logged in.
-    GetRestaurantByID(this.props.user._id)
+    GetRestaurantByUserID(this.props.user._id)
       .then((response) => {
         if (this._isMounted) {
           this.setState({
@@ -539,7 +543,7 @@ export default class ManageRestaurants extends Component {
         description: this.state.description,
       };
 
-      EditRestaurant(restaurantID, pkg)
+      UpdateRestaurant(restaurantID, pkg)
         .then(() => {
           this.setState({
             successMessage: "Successfully edited restaurant!",

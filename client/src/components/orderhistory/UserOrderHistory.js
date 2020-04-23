@@ -1,10 +1,12 @@
 //import libraries
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
-import axios from "axios";
 
 //import assests
 import Loader from "../../assets/loader/Loader";
+
+//Import utilities
+import { GetOrdersByUserID } from "../../utils/axios/Orders";
 
 export default class RestaurantOrderHistory extends Component {
   _isMounted = false;
@@ -41,8 +43,7 @@ export default class RestaurantOrderHistory extends Component {
     this._isMounted = true;
 
     //Load the order data associated with the user that is logged in.
-    axios
-      .get("/api/orders/byUser/" + this.props.user._id)
+    GetOrdersByUserID(this.props.user._id)
       .then((response) => {
         if (this._isMounted) {
           this.setState({

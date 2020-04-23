@@ -75,7 +75,7 @@ export default class RestaurantAccount extends Component {
                   </li>
                   <li>
                     <RouteLink
-                      to="/manage/restaurantorderhistory"
+                      to="/manage/history"
                       label="View Order History"
                     />
                   </li>
@@ -102,7 +102,7 @@ export default class RestaurantAccount extends Component {
                   )}
                 />
                 <Route
-                  path="/manage/restaurantorderhistory"
+                  path="/manage/history"
                   render={(props) => (
                     <RestaurantOrderHistory {...props} user={this.state.user} />
                   )}

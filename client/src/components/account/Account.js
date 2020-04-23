@@ -81,7 +81,7 @@ export default class Account extends Component {
                   </li>
                   <li>
                     <RouteLink
-                      to="/account/userorderhistory"
+                      to="/account/history"
                       label="View Order History"
                     />
                   </li>
@@ -114,7 +114,7 @@ export default class Account extends Component {
                   )}
                 />
                 <Route
-                  path="/account/userorderhistory"
+                  path="/account/history"
                   render={(props) => (
                     <UserOrderHistory {...props} user={this.state.user} />
                   )}

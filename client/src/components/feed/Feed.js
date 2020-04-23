@@ -1,7 +1,6 @@
 //Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-//import axios from "axios";
 
 //Import components
 import Navbar from "../nav/Navbar";
@@ -13,9 +12,9 @@ import Footer from "../footer/Footer";
 import Loader from "../../assets/loader/Loader";
 
 //Import utilities
+import { UpdateUserAddress } from "../../utils/axios/Users";
+import { GetRestaurants } from "../../utils/axios/Restaurants";
 import GetLogin from "../../utils/GetLogin";
-import UpdateAddress from "../../utils/Feed/UpdateAddress";
-import GetRestaurants from "../../utils/Feed/GetRestaurants";
 
 //Import stylesheets
 import "./Feed.css";
@@ -78,7 +77,7 @@ export default class Feed extends Component {
     let pkg = {
       address: newAddress,
     };
-    UpdateAddress(this.state.user._id, pkg)
+    UpdateUserAddress(this.state.user._id, pkg)
       .then()
       .catch((error) => {
         console.log(error);

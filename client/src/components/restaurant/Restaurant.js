@@ -1,7 +1,6 @@
 //Import libraries
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-//import axios from "axios";
 import _ from "lodash";
 
 //Import components
@@ -12,8 +11,8 @@ import Footer from "../footer/Footer";
 import MenuItemOverlay from "./menuitemoverlay";
 
 //Import utilities
-import GetRestaurantData from "../../utils/restaurants/GetRestaurantData";
-import MenuItems from "../../utils/restaurants/MenuItems";
+import { GetRestaurantByID } from "../../utils/axios/Restaurants";
+import { GetMenuItemsByRestaurantID } from "../../utils/axios/MenuItems";
 
 //Import assets
 import DisplayPrice from "../../assets/displayprice/DisplayPrice";
@@ -56,7 +55,7 @@ export default class Restaurant extends Component {
     this._isMounted = true;
 
     if (this.state.id !== "") {
-      GetRestaurantData(this.state.id)
+      GetRestaurantByID(this.state.id)
         .then((response) => {
           this.setState({
             restaurant: response.data,
@@ -70,7 +69,7 @@ export default class Restaurant extends Component {
       this.setState({ restaurant: null, isPageLoaded: true });
     }
 
-    MenuItems(this.state.id)
+    GetMenuItemsByRestaurantID(this.state.id)
       .then((response) => {
         const groupedByCategory = _.groupBy(
           response.data,

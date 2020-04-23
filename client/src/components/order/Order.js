@@ -1,7 +1,6 @@
 //Import libraries
 import React, { Component } from "react";
 import { Redirect, Link } from "react-router-dom";
-import axios from "axios";
 
 //Import components
 import Navbar from "../nav/Navbar";
@@ -13,6 +12,7 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
+import { GetOrderByID } from "../../utils/axios/Orders";
 
 //Import stylesheets
 import "./Order.css";
@@ -69,8 +69,7 @@ export default class Order extends Component {
 
   //This functions gets the order data. Set on a 30 second timer
   async loadOrder() {
-    return axios
-      .get("/api/orders/" + this.state.id)
+    return GetOrderByID(this.state.id)
       .then((response) => {
         //Convert createdAt from an ISO Date format to the JavaScript standard string format
         let readyTime = new Date(response.data[0].createdAt);

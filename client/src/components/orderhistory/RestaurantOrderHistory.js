@@ -1,17 +1,13 @@
 //import libraries
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
-import axios from "axios";
-// import _ from "lodash";
-
-//import components
-//import Navbar from "../nav/Navbar";
-
-//import utilities
-//import GetLogin from "../../utils/GetLogin";
 
 //import assests
 import Loader from "../../assets/loader/Loader";
+
+//Import utilities
+import { GetRestaurantByUserID } from "../../utils/axios/Restaurants";
+import { GetOrdersByRestaurantID } from "../../utils/axios/Orders";
 
 export default class RestaurantOrderHistory extends Component {
   _isMounted = false;
@@ -49,8 +45,7 @@ export default class RestaurantOrderHistory extends Component {
     this._isMounted = true;
 
     //Load the restaurant data associated with the user that is logged in.
-    axios
-      .get("/api/restaurants/byOwner/" + this.props.user._id)
+    GetRestaurantByUserID(this.props.user._id)
       .then((response) => {
         if (this._isMounted) {
           this.setState({
@@ -90,8 +85,7 @@ export default class RestaurantOrderHistory extends Component {
         restaurantSelectionMade: true,
         additionalCategories: [],
       });
-      axios
-        .get("/api/orders/byRestaurant/" + e.target.value)
+      GetOrdersByRestaurantID(e.target.value)
         .then((response) => {
           this.setState({
             restaurantID: restaurantID,

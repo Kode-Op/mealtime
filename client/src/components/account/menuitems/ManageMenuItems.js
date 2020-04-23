@@ -1,7 +1,6 @@
 //Import libraries
 import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
-//import axios from "axios";
 import _ from "lodash";
 
 //Import assets
@@ -11,12 +10,16 @@ import Loader from "../../../assets/loader/Loader";
 import "./ManageMenuItems.css";
 
 //Import Utils
-import getRestaurantMenuItems from "../../../utils/managerestaurants/GetRestaurantByID";
-import GetRestaurantMenuitem from "../../../utils/menuitems/GetRestaurantMenuitem";
-import AddMenuItem from "../../../utils/menuitems/AddMenuItem";
-import EditMenuItem from "../../../utils/menuitems/EditMenuItem";
-import DeleteMenuItem from "../../../utils/menuitems/DeleteMenuItem";
-import UploadFile from "../../../utils/uploadfile/UploadFile";
+import { GetRestaurantByUserID } from "../../../utils/axios/Restaurants";
+
+import {
+  GetMenuItemsByRestaurantID,
+  AddMenuItem,
+  UpdateMenuItem,
+  DeleteMenuItem,
+} from "../../../utils/axios/MenuItems";
+
+import UploadFile from "../../../utils/axios/Files";
 
 export default class ManageMenuItems extends Component {
   _isMounted = false;
@@ -51,7 +54,7 @@ export default class ManageMenuItems extends Component {
     console.log(this.props.user._id);
 
     //Load the restaurant data associated with the user that is logged in.
-    getRestaurantMenuItems(this.props.user._id)
+    GetRestaurantByUserID(this.props.user._id)
       .then((response) => {
         if (this._isMounted) {
           this.setState({
@@ -217,7 +220,7 @@ export default class ManageMenuItems extends Component {
         restaurantSelectionMade: true,
         additionalCategories: [],
       });
-      GetRestaurantMenuitem(e.target.value)
+      GetMenuItemsByRestaurantID(e.target.value)
         .then((response) => {
           const groupedByCategory = _.groupBy(
             response.data,
@@ -340,7 +343,7 @@ export default class ManageMenuItems extends Component {
       AddMenuItem(pkg)
         .then((response) => {
           this.setState({
-            successMessage: "Successfully added restaurant!",
+            successMessage: "Successfully added menu item!",
             errorMessage: "",
           });
           if (this.state.thumbnail !== null || this.state.largeImage !== null) {
@@ -423,7 +426,7 @@ export default class ManageMenuItems extends Component {
         description: this.state.description,
       };
 
-      EditMenuItem(id, pkg)
+      UpdateMenuItem(id, pkg)
         .then(() => {
           this.setState({
             successMessage: "Successfully edited menu item!",

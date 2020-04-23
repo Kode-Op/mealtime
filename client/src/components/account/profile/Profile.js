@@ -1,14 +1,15 @@
 //Import libraries
 import React, { Component } from "react";
 import { Accordion, Card, Button } from "react-bootstrap";
-//import axios from "axios";
 
 //Import utilities
 import TagBank from "../../../utils/Tags";
-import UpdateName from "../../../utils/profile/UpdateName";
-import UpdateEmail from "../../../utils/profile/UpdateEmail";
-import UpdateTags from "../../../utils/profile/UpdateTags";
-import UpdatePassword from "../../../utils/profile/UpdatePassword";
+import {
+  UpdateUserName,
+  UpdateUserEmail,
+  UpdateUserTags,
+  UpdateUserPassword,
+} from "../../../utils/axios/Users";
 
 export default class Profile extends Component {
   constructor(props) {
@@ -94,7 +95,7 @@ export default class Profile extends Component {
       password: this.state.passwordname,
     };
 
-    UpdateName(this.state.userID, pkg)
+    UpdateUserName(this.state.userID, pkg)
       .then(() => {
         this.setState({
           errorMessageName: "",
@@ -130,7 +131,8 @@ export default class Profile extends Component {
         email: this.state.email,
         password: this.state.passwordemail,
       };
-      UpdateEmail(this.state.userID, pkg)
+
+      UpdateUserEmail(this.state.userID, pkg)
         .then((response) => {
           this.setState({
             errorMessageEmail: "",
@@ -167,7 +169,7 @@ export default class Profile extends Component {
       tags: this.state.tags,
     };
 
-    UpdateTags(this.state.userID, pkg)
+    UpdateUserTags(this.state.userID, pkg)
       .then(() => {
         this.setState({
           errorMessageTags: "",
@@ -198,7 +200,7 @@ export default class Profile extends Component {
         oldPassword: this.state.passwordcurrent,
         newPassword: this.state.passwordnew,
       };
-      UpdatePassword(this.state.userID, pkg)
+      UpdateUserPassword(this.state.userID, pkg)
         .then(() => {
           this.setState({
             errorMessagePassword: "",

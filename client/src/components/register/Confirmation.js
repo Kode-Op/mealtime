@@ -1,15 +1,13 @@
 //Import libraries
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-//import axios from "axios";
 
 //Import assets
 import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import { setInStorage } from "../../utils/storage";
-import UserAdd from "../../utils/register/UserAdd";
-import UserLogin from "../../utils/register/UserLogin";
+import { AddUser, AddUserToken } from "../../utils/axios/Users";
 
 export default class RegisterConfirmation extends Component {
   constructor(props) {
@@ -19,7 +17,7 @@ export default class RegisterConfirmation extends Component {
       accountCreated: false,
       isLoaded: false,
       redirect: false,
-      message: ""
+      message: "",
     };
 
     //this.props.location.state will only be undefined if this page
@@ -29,21 +27,21 @@ export default class RegisterConfirmation extends Component {
         firstName: this.props.location.state.firstName,
         lastName: this.props.location.state.lastName,
         email: this.props.location.state.email,
-        password: this.props.location.state.password
+        password: this.props.location.state.password,
       };
-      UserAdd(user)
+      AddUser(user)
         .then()
-        .catch(error => {
+        .catch((error) => {
           this.setState({
-            message: JSON.stringify(error.message)
+            message: JSON.stringify(error.message),
           });
         })
         .then(() => {
           let userLogin = {
             email: this.props.location.state.email,
-            password: this.props.location.state.password
+            password: this.props.location.state.password,
           };
-          UserLogin(userLogin).then(response => {
+          AddUserToken(userLogin).then((response) => {
             if (response.data.success) {
               // login successful, token created and saved
               setInStorage("mealtime", { token: response.data.token });
@@ -51,20 +49,20 @@ export default class RegisterConfirmation extends Component {
             } else {
               this.setState({
                 // login failed - should not be possible
-                message: JSON.stringify(response.message)
+                message: JSON.stringify(response.message),
               });
             }
           });
         })
         .then(() => {
           this.setState({
-            isLoaded: true
+            isLoaded: true,
           });
         });
     } else {
       this.state = {
         isLoaded: true,
-        message: "An unexpected error has occured"
+        message: "An unexpected error has occured",
       };
     }
   }
@@ -90,8 +88,8 @@ export default class RegisterConfirmation extends Component {
             to={{
               pathname: "/register",
               state: {
-                errorMessage: "An account with that email already exists. \n"
-              }
+                errorMessage: "An account with that email already exists. \n",
+              },
             }}
           />
         );

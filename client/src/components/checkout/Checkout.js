@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import { Button, ListGroup } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
-import axios from "axios";
 
 //Import components
 import Navbar from "../nav/Navbar";
@@ -15,7 +14,11 @@ import Loader from "../../assets/loader/Loader";
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
 import { getFromStorage, setInStorage } from "../../utils/storage";
-import GetCreditCardByID from "../../utils/creditcards/GetCreditCardByID";
+import { AddOrder } from "../../utils/axios/Orders";
+import {
+  GetCreditCardByID,
+  AddCreditCard,
+} from "../../utils/axios/CreditCards";
 
 //Import stylesheets
 import "./Checkout.css";
@@ -569,8 +572,7 @@ export default class Checkout extends Component {
         };
 
         //Post the card to the database
-        axios
-          .post("/api/creditCards/add/", pkg)
+        AddCreditCard(pkg)
           .then((response) => {
             const pkg2 = {
               userId: this.state.user._id,
@@ -584,8 +586,7 @@ export default class Checkout extends Component {
             };
 
             //Post the order to the database
-            axios
-              .post("/api/orders/add/", pkg2)
+            AddOrder(pkg2)
               .then((response) => {
                 this.setState({
                   submitErrorMessage: "",
@@ -633,8 +634,7 @@ export default class Checkout extends Component {
         };
 
         //Post the order to the database
-        axios
-          .post("/api/orders/add/", pkg)
+        AddOrder(pkg)
           .then((response) => {
             this.setState({
               submitErrorMessage: "",
