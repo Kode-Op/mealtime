@@ -88,7 +88,33 @@ router.route("/filter").post((req, res) => {
 
   const sortByTag = (restList, tags) => {
     return new Promise(function (resolve, reject) {
-      resolve(restList);
+      let sortedList = [];
+      let unsortedList = restList;
+      let remaining = restList.length;
+
+      for(let i = 0; i<tags.length; i++){
+        
+          for(let j= 0; j<remaining;){console.log(j);
+            let added = false;
+            for(let k = 0; k<unsortedList[j].tags.length && !added ;k++){
+              if(unsortedList[j].tags[k] == tags[i]){
+                sortedList.push(unsortedList[j]);
+                unsortedList.slice(j,1);
+                added = true;
+                remaining -= 1;
+              }
+            }
+              if(added){
+                j++;
+              }
+          }
+      }
+
+      for(let i = 0; i<remaining;i++){
+        sortedList.push(unsortedList[i]);
+      }
+
+      resolve(sortedList);
     });
   };
 
