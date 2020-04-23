@@ -1,5 +1,6 @@
 const router = require("express").Router();
 let Restaurant = require("../models/restaurant_model");
+let User = require("../models/user_model");
 
 // Format: GET /api/restaurants/
 // Required Fields: none
@@ -21,39 +22,85 @@ router.route("/byTag/:tag").get((req, res) => {
 });
 
 // Format: POST /api/restaurants/filter/
-// Required Fields: tags[], priceLow, priceHigh, ratings
+// Required Fields: tags[], priceLow, priceHigh, ratings, userId
 // Returns: All info on restaurants containing corresponding filter of tags, pricing, and rating
 router.route("/filter").post((req, res) => {
+  const userId = req.body.userId;
   const tagArray = req.body.tags;
   const ratings = Number(req.body.ratings);
   const priceLow = Number(req.body.priceLow);
   const priceHigh = Number(req.body.priceHigh);
 
-  if(ratings > 10 || ratings < 0 || priceLow > priceHigh || priceHigh > 5 || priceLow > 5|| priceLow < 0 || priceHigh < 0){
-      res.status(400).json("Error, out of scope of the parameters");
-  }
-  else{
-    if(tagArray.length>0 && priceHigh > 0){
-      Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
-        .then((restaurants) => res.json(restaurants))
+  const retrieveRestaurants = () => {
+    return new Promise(function (resolve, reject) {
+      if (
+        ratings > 10 ||
+        ratings < 0 ||
+        priceLow > priceHigh ||
+        priceHigh > 5 ||
+        priceLow > 5 ||
+        priceLow < 0 ||
+        priceHigh < 0
+      ) {
+        res.status(400).json("Error, out of scope of the parameters");
+      } else {
+        if (tagArray.length > 0 && priceHigh > 0) {
+          Restaurant.find({
+            tags: { $all: tagArray },
+            rating: { $gte: ratings },
+            price: { $gte: priceLow, $lte: priceHigh },
+            isDeleted: false,
+          })
+            .then((restaurants) => resolve(restaurants))
+            .catch((err) => res.status(400).json("Error: " + err));
+        } else if (tagArray.length > 0 && priceLow == 0 && priceHigh == 0) {
+          Restaurant.find({
+            tags: { $all: tagArray },
+            rating: { $gte: ratings },
+            isDeleted: false,
+          })
+            .then((restaurants) => resolve(restaurants))
+            .catch((err) => res.status(400).json("Error: " + err));
+        } else if (tagArray.length == 0 && priceHigh > 0) {
+          Restaurant.find({
+            rating: { $gte: ratings },
+            price: { $gte: priceLow, $lte: priceHigh },
+            isDeleted: false,
+          })
+            .then((restaurants) => resolve(restaurants))
+            .catch((err) => res.status(400).json("Error: " + err));
+        } else if (tagArray.length == 0 && priceLow == 0 && priceHigh == 0) {
+          Restaurant.find({ rating: { $gte: ratings }, isDeleted: false })
+            .then((restaurants) => resolve(restaurants))
+            .catch((err) => res.status(400).json("Error: " + err));
+        }
+      }
+    });
+  };
+
+  const grabTags = (id) => {
+    return new Promise(function (resolve, reject) {
+      User.findById(id)
+        .then((user) => resolve(user.tags))
         .catch((err) => res.status(400).json("Error: " + err));
-    }
-    else if(tagArray.length>0 && priceLow ==0 && priceHigh == 0){
-      Restaurant.find({ tags:{$all:tagArray}, rating:{$gte: ratings}, isDeleted: false })
-        .then((restaurants) => res.json(restaurants))
-        .catch((err) => res.status(400).json("Error: " + err));
-    }
-    else if(tagArray.length ==0 && priceHigh > 0){
-      Restaurant.find({rating:{$gte: ratings},  price:{$gte:priceLow, $lte:priceHigh}, isDeleted: false })
-        .then((restaurants) => res.json(restaurants))
-        .catch((err) => res.status(400).json("Error: " + err));
-    }
-    else if(tagArray.length == 0 && priceLow ==0 && priceHigh == 0){
-      Restaurant.find({rating:{$gte: ratings}, isDeleted: false })
-        .then((restaurants) => res.json(restaurants))
-        .catch((err) => res.status(400).json("Error: " + err));
-    }
-  }
+    });
+  };
+
+  const sortByTag = (restList, tags) => {
+    return new Promise(function (resolve, reject) {
+      resolve(restList);
+    });
+  };
+
+  const handleRestaurants = async (_) => {
+    let restaurantList = await retrieveRestaurants();
+    const userTags = await grabTags(userId);
+    const results = await sortByTag(restaurantList, userTags);
+
+    res.json(results);
+  };
+
+  handleRestaurants();
 });
 
 // DEPRECATED - DO NOT USE (only for Insomnia use for migration, no max length check, limited error checks)
