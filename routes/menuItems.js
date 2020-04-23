@@ -23,7 +23,7 @@ router.get("/:id", function (req, res) {
 
 // Format: POST /api/menuItems/add
 // Required Fields: restaurantId, name, price, preptime, description, category
-// Returns: Status based on successful/unsuccessful menuItem creation
+// Returns: Status based on successful/unsuccessful menuItem creation, and menuItem._id
 router.route("/add").post((req, res) => {
   const restaurantId = req.body.restaurantId;
   const name = req.body.name;
@@ -32,19 +32,47 @@ router.route("/add").post((req, res) => {
   const description = req.body.description;
   const category = req.body.category;
 
-  const newItem = new MenuItem({
-    restaurantId,
-    name,
-    price,
-    preptime,
-    description,
-    category,
-  });
+  const addItem = (item) => {
+    return new Promise(function (resolve, reject) {
+      item
+        .save()
+        .then(() => resolve("MenuItem added!"))
+        .catch((err) => res.status(400).json("Error: " + err));
+    });
+  };
 
-  newItem
-    .save()
-    .then(() => res.json("MenuItem added!"))
-    .catch((err) => res.status(400).json("Error: " + err));
+  const retrieveItem = (restid) => {
+    return new Promise(function (resolve, reject) {
+      MenuItem.find({ restaurantId: restid })
+        .then((items) => {
+          resolve(items[items.length - 1]._id);
+        })
+        .catch((err) => res.status(400).json("Error: " + err));
+    });
+  };
+
+  const createItem = async (_) => {
+    const newItem = new MenuItem({
+      restaurantId,
+      name,
+      price,
+      preptime,
+      description,
+      category,
+    });
+
+    const result1 = await addItem(newItem);
+    const result2 = await retrieveItem(restaurantId);
+
+    response = {
+      message: result1,
+      id: result2,
+    };
+
+    res.json(response);
+  };
+
+  createItem();
 });
 
 // Format: POST /api/menuItems/update/MenuItem._id
