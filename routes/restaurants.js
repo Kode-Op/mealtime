@@ -87,34 +87,47 @@ router.route("/filter").post((req, res) => {
   };
 
   const sortByTag = (restList, tags) => {
-    return new Promise(function (resolve, reject) {
+    return new Promise(async function (resolve, reject) {
       let sortedList = [];
-      let unsortedList = restList;
-      let remaining = restList.length;
 
-      for(let i = 0; i<tags.length; i++){
-        
-          for(let j= 0; j<remaining;){
-            let added = false;
-            for(let k = 0; k<unsortedList[j].tags.length && !added ;k++){
-              if(unsortedList[j].tags[k] == tags[i]){
-                sortedList.push(unsortedList[j]);
-                unsortedList[j] = unsortedList.pop();
-                console.log(unsortedList[j])
-                added = true;
-                remaining -= 1;
+      const contains = (list, key) => {
+        return new Promise(function (resolve, reject) {
+          for (let i = 0; i < list.length; i++) {
+            if (list[i] == key) {
+              resolve(true);
+            }
+          }
+          resolve(false);
+        });
+      };
+
+      const move = (toList, fromList, index) => {
+        return new Promise(function (resolve, reject) {
+          toList.push(fromList[index]);
+          fromList.splice(index, 1);
+          index--;
+          resolve(index);
+        });
+      };
+
+      const internalSort = (_) => {
+        return new Promise(async function (resole, reject) {
+          for (let i = 0; i < tags.length; i++) {
+            for (let j = 0; j < restList.length; j++) {
+              let doesContain = await contains(restList[j].tags, tags[i]);
+              if (doesContain) {
+                j = await move(sortedList, restList, j);
               }
             }
-              if(added){
-                j++;
-              }
           }
-      }
-      
-      for(let i = 0; i<remaining;i++){
-        sortedList.push(unsortedList[i]);
-      }
+          for (let i = 0; i < restList.length; i++) {
+            sortedList.push(restList[i]);
+          }
+          resolve(sortedList);
+        });
+      };
 
+      result = await internalSort();
       resolve(sortedList);
     });
   };
@@ -123,7 +136,6 @@ router.route("/filter").post((req, res) => {
     let restaurantList = await retrieveRestaurants();
     const userTags = await grabTags(userId);
     const results = await sortByTag(restaurantList, userTags);
-
     res.json(results);
   };
 
