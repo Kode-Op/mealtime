@@ -1,0 +1,112 @@
+.UserOrderHistoryOverlayBackground {
+  z-index: 999999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  animation: fadeIn 1s;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@keyframes fadeIn {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.UserOrderHistoryOverlayPopup {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 auto;
+  width: 600px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  color: black;
+  text-align: center;
+  -webkit-animation: fadeInOverlay 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadeInOverlay 1s; /* Firefox < 16 */
+  -ms-animation: fadeInOverlay 1s; /* Internet Explorer */
+  -o-animation: fadeInOverlay 1s; /* Opera < 12.1 */
+  animation: fadeInOverlay 1s;
+}
+
+@keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.UserOrderHistoryOverlayExitButton {
+  height: 25px;
+  width: 25px;
+  position: relative;
+  top: -40px;
+  left: 525px;
+  color: red;
+  cursor: pointer;
+  font-size: 1.5em;
+}

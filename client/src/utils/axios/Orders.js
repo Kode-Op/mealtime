@@ -16,3 +16,7 @@ export function GetOrdersByRestaurantID(id) {
 export function GetOrdersByUserID(id) {
   return axios.get("/api/orders/byUser/" + id);
 }
+
+export function DeleteOrder(id) {
+  return axios.get("/api/orders/cancel/" + id);
+}

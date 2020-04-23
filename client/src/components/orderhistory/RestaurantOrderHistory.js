@@ -2,7 +2,10 @@
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
 
-//import assests
+//Import components
+import UserOrderHistoryOverlay from "./UserOrderHistoryOverlay";
+
+//import assets
 import Loader from "../../assets/loader/Loader";
 
 //Import utilities
@@ -16,28 +19,13 @@ export default class RestaurantOrderHistory extends Component {
     super(props);
 
     this.state = {
-      user: [],
-      isUserLoaded: false,
       restaurants: [],
       areRestaurantsLoaded: false,
       restaurantSelectionMade: false,
-      menuItems: [],
-      areMenuItemsLoaded: false,
       restaurantID: "",
-      additionalCategories: [],
       restaurantOrders: [],
       areOrdersLoaded: false,
-
-      //Default menu item values
-      name: "",
-      price: "$0.00",
-      preptime: 0,
-      createdAt: "",
-      description: "",
-      category: "",
-      errorMessage: "",
-      successMessage: "",
-      length: "",
+      cancelBox: "",
     };
   }
 
@@ -52,7 +40,6 @@ export default class RestaurantOrderHistory extends Component {
             restaurants: response.data,
             areRestaurantsLoaded: true,
           });
-          console.table(response.data);
         }
       })
       .catch(() => {
@@ -67,6 +54,21 @@ export default class RestaurantOrderHistory extends Component {
   componentWillUnmount() {
     this._isMounted = false;
   }
+
+  cancelPopUp = () => {
+    this.setState({
+      cancelBox: "",
+    });
+  };
+
+  cancelOrder = (order, status) => {
+    document.body.style.overflow = "hidden";
+    if (status === "Pending") {
+      this.setState({
+        cancelBox: order._id,
+      });
+    }
+  };
 
   getRestaurantSelection = () => {
     return this.state.restaurants.map((currentRestaurant) => {
@@ -89,10 +91,9 @@ export default class RestaurantOrderHistory extends Component {
         .then((response) => {
           this.setState({
             restaurantID: restaurantID,
-            restaurantOrders: response.data,
+            restaurantOrders: response.data.reverse(),
             areOrdersLoaded: true,
           });
-          console.table(response.data);
         })
         .catch((error) => {
           this.setState({
@@ -110,45 +111,103 @@ export default class RestaurantOrderHistory extends Component {
   };
 
   renderOrders = () => {
-    return this.state.restaurantOrders.reverse().map((currentOrder, index) => {
+    return this.state.restaurantOrders.map((currentOrder, index) => {
+      const date = new Date(currentOrder.createdAt).toString().substring(4, 15);
+      const time = new Date(currentOrder.createdAt)
+        .toString()
+        .substring(16, 24);
+      let status;
+      let statusButtonColor;
+      let statusCursor;
+      if (currentOrder.isCanceled) {
+        status = "Canceled";
+        statusButtonColor = "#FF6633";
+        statusCursor = "default";
+      } else if (currentOrder.isFulfilled) {
+        status = "Fulfilled";
+        statusButtonColor = "#75B53C";
+        statusCursor = "default";
+      } else {
+        status = "Pending";
+        statusButtonColor = "#FFA000";
+        statusCursor = "pointer";
+      }
       return (
         <tr key={index}>
+          <td>
+            <div
+              className="UserOrderHistoryButton"
+              style={{
+                backgroundColor: statusButtonColor,
+                cursor: statusCursor,
+              }}
+              onClick={() => this.cancelOrder(currentOrder, status)}
+            >
+              {status}
+            </div>
+          </td>
           <td>
             {currentOrder.custFirst} {currentOrder.custLast}
           </td>
           <td>{this.getMenuItemNames(currentOrder.menuItems)}</td>
           <td>{this.getMenuItemPrices(currentOrder.menuItems)}</td>
           <td>{this.getMenuItemQuantities(currentOrder.quantity)}</td>
-          <td>${currentOrder.totalPaid / 100}</td>
-          <td>{currentOrder.createdAt}</td>
+          <td>
+            {(currentOrder.totalPaid / 100).toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })}
+          </td>
+          <td>••••••••••••{currentOrder.lastFour}</td>
+          <td>{date + ", " + time}</td>
         </tr>
       );
     });
   };
 
   getMenuItemNames = (menuItems) => {
-    return menuItems.map((currentItem) => {
-      return <div>{currentItem.name}</div>;
+    return menuItems.map((currentItem, index) => {
+      return <div key={index}>{currentItem.name}</div>;
     });
   };
 
   getMenuItemPrices = (menuItems) => {
-    return menuItems.map((currentItem) => {
-      return <div>${currentItem.price / 100}</div>;
+    return menuItems.map((currentItem, index) => {
+      return (
+        <div key={index}>
+          {(currentItem.price / 100).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          })}
+        </div>
+      );
     });
   };
 
   getMenuItemQuantities = (quantity) => {
-    return quantity.map((currentQuantity) => {
-      return <div> x{currentQuantity}</div>;
+    return quantity.map((currentQuantity, index) => {
+      return <div key={index}> x{currentQuantity}</div>;
     });
   };
 
   render() {
-    if (this.state.areRestaurantsLoaded) {
-      if (this.state.restaurants.length > 0) {
+    const {
+      areRestaurantsLoaded,
+      restaurants,
+      restaurantSelectionMade,
+      cancelBox,
+    } = this.state;
+
+    if (areRestaurantsLoaded) {
+      if (restaurants.length > 0) {
         return (
           <div>
+            {cancelBox !== "" && (
+              <UserOrderHistoryOverlay
+                cancelPopUp={this.cancelPopUp}
+                orderID={cancelBox}
+              />
+            )}
             <h2>Please select a restaurant</h2>
             <div style={{ display: "flex" }}>
               <select
@@ -162,20 +221,26 @@ export default class RestaurantOrderHistory extends Component {
               </select>
             </div>
             <div style={{ height: 50 }} />
-            <h2>Your Order History</h2>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Customer Name</th>
-                  <th>Order</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Order Total</th>
-                  <th>Time Order Created</th>
-                </tr>
-              </thead>
-              <tbody>{this.renderOrders()}</tbody>
-            </Table>
+            {restaurantSelectionMade && (
+              <div>
+                <h2>Order History</h2>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Status</th>
+                      <th>Customer Name</th>
+                      <th>Order</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Order Total</th>
+                      <th>Credit Card</th>
+                      <th>Time Order Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>{this.renderOrders()}</tbody>
+                </Table>
+              </div>
+            )}
           </div>
         );
       } else {
