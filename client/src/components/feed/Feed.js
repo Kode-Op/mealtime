@@ -13,7 +13,7 @@ import Loader from "../../assets/loader/Loader";
 
 //Import utilities
 import { UpdateUserAddress } from "../../utils/axios/Users";
-import { GetRestaurants } from "../../utils/axios/Restaurants";
+import { GetFilteredRestaurants } from "../../utils/axios/Restaurants";
 import GetLogin from "../../utils/GetLogin";
 
 //Import stylesheets
@@ -34,22 +34,6 @@ export default class Feed extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    //Fetch all restaurant data, and load into the restaurants variable
-    GetRestaurants("/api/restaurants")
-      .then((response) => {
-        if (this._isMounted) {
-          this.setState({
-            restaurants: response.data,
-            areRestaurantsLoaded: true,
-          });
-        }
-      })
-      .catch(() => {
-        if (this._isMounted) {
-          this.setState({ areRestaurantsLoaded: true });
-        }
-      });
-
     //Get "user" and "isUserLoaded" from the GetLogin utility
     GetLogin()
       .then((response) => {
@@ -59,6 +43,31 @@ export default class Feed extends Component {
             user: response,
           });
         }
+
+        const pkg = {
+          userId: response._id,
+          tags: [],
+          ratings: 0,
+          priceLow: 0,
+          priceHigh: 0,
+        };
+
+        //Fetch all restaurant data, and load into the restaurants variable
+        GetFilteredRestaurants(pkg)
+          .then((response) => {
+            console.log(response);
+            if (this._isMounted) {
+              this.setState({
+                restaurants: response.data,
+                areRestaurantsLoaded: true,
+              });
+            }
+          })
+          .catch(() => {
+            if (this._isMounted) {
+              this.setState({ areRestaurantsLoaded: true });
+            }
+          });
       })
       .catch(() => {
         if (this._isMounted) {

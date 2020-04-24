@@ -24,3 +24,7 @@ export function GetRestaurantByID(id) {
 export function GetRestaurants() {
   return axios.get("/api/restaurants");
 }
+
+export function GetFilteredRestaurants(pkg) {
+  return axios.post("/api/restaurants/filter/", pkg);
+}

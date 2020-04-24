@@ -15,6 +15,24 @@
   border-bottom: 1px solid lightgray;
 }
 
+.RestaurantListLeftPane h4 {
+  font-weight: bold;
+  font-size: 1.6em;
+}
+
+.RestaurantListLeftPane h5 {
+  padding-top: 20px;
+}
+
+.RestaurantListLeftPane img {
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+}
+
+.RestaurantListLeftPane img:hover {
+  cursor: pointer;
+}
+
 .RestaurantListRightPane {
   width: 100%;
   padding-top: 10px;
@@ -75,7 +93,8 @@
 }
 
 .RestaurantListAppliedFilter {
-  width: 90px;
+  min-width: 90px;
+  max-width: 170px;
   display: inline-flex;
   margin-bottom: 10px;
   margin-left: 1.8vw;

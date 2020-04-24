@@ -11,10 +11,17 @@ import Loader from "../../assets/loader/Loader";
 import Footer from "../footer/Footer";
 import DisplayTag from "../../assets/displaytag/DisplayTag";
 import TagBank from "../../utils/Tags";
+import Star from "./star.png";
+import StarSelected from "./starselected.png";
+import Dollar from "./dollar.png";
+import DollarSelected from "./dollarselected.png";
 
 //Import utilities
 import GetLogin from "../../utils/GetLogin";
-import { GetRestaurants } from "../../utils/axios/Restaurants";
+import {
+  GetRestaurants,
+  GetFilteredRestaurants,
+} from "../../utils/axios/Restaurants";
 
 //Import stylesheets
 import "./RestaurantList.css";
@@ -31,23 +38,44 @@ export default class RestaurantList extends Component {
       restaurants: [],
       appliedFilters: [],
       featuredTags: [5, 14, 16, 18, 22, 24, 25],
+      starHover: 0,
+      starSelected: 0,
+      priceLow: 0,
+      priceLowHover: 0,
+      priceHigh: 5,
+      priceHighHover: 5,
     };
   }
 
-  componentDidMount() {
-    this._isMounted = true;
+  renderRestaurants = (appliedFilters, rating, priceLow, priceHigh) => {
+    const pkg = {
+      userId: this.state.user ? this.state.user._id : null,
+      tags: appliedFilters,
+      ratings: rating * 2,
+      priceLow: priceLow,
+      priceHigh: priceHigh,
+    };
 
-    //Fetch all restaurant data, and load into the restaurants variable
-    GetRestaurants()
+    console.log(pkg);
+
+    GetFilteredRestaurants(pkg)
       .then((response) => {
-        this.setState({
-          restaurants: response.data,
-          areRestaurantsLoaded: true,
-        });
+        if (this._isMounted) {
+          this.setState({
+            restaurants: response.data,
+            areRestaurantsLoaded: true,
+          });
+        }
       })
       .catch(() => {
-        this.setState({ areRestaurantsLoaded: true });
+        if (this._isMounted) {
+          this.setState({ areRestaurantsLoaded: true });
+        }
       });
+  };
+
+  componentDidMount() {
+    this._isMounted = true;
 
     //Get "user" and "isUserLoaded" from the GetLogin utility
     GetLogin()
@@ -58,6 +86,9 @@ export default class RestaurantList extends Component {
             user: response,
           });
         }
+
+        //Fetch all restaurant data, sorted by user preference
+        this.renderRestaurants([], 0, 0, 5);
       })
       .catch(() => {
         if (this._isMounted) {
@@ -65,6 +96,18 @@ export default class RestaurantList extends Component {
             isUserLoaded: true,
           });
         }
+
+        //Fetch all restaurant data, and load into the restaurants variable
+        GetRestaurants()
+          .then((response) => {
+            this.setState({
+              restaurants: response.data,
+              areRestaurantsLoaded: true,
+            });
+          })
+          .catch(() => {
+            this.setState({ areRestaurantsLoaded: true });
+          });
       });
   }
 
@@ -92,9 +135,9 @@ export default class RestaurantList extends Component {
   getPopularMenuItemTypes = () => {
     let rows = [];
 
-    this.state.featuredTags.forEach((currentTag) => {
+    this.state.featuredTags.forEach((currentTag, index) => {
       rows.push(
-        <div>
+        <div key={index}>
           <div
             className="RestaurantMenuItemType"
             onClick={() => this.addFilter(currentTag)}
@@ -110,18 +153,103 @@ export default class RestaurantList extends Component {
     return rows;
   };
 
+  getDollarSigns = (price) => {
+    switch (price) {
+      case 1:
+        return "$";
+      case 2:
+        return "$$";
+      case 3:
+        return "$$$";
+      case 4:
+        return "$$$$";
+      case 5:
+        return "$$$$$";
+      default:
+        return "";
+    }
+  };
+
   //Returns types of filters applied to the search. For now, this is just a static number.
   getAppliedFilters = () => {
+    const {
+      starSelected,
+      priceLow,
+      priceHigh,
+      appliedFilters,
+      tags,
+    } = this.state;
     let rows = [];
 
-    this.state.appliedFilters.map((item, i) =>
+    if (starSelected > 0) {
+      rows.push(
+        <div
+          className="RestaurantListAppliedFilter"
+          onClick={() => this.setRating(starSelected)}
+        >
+          <div style={{ margin: "0 auto" }}>
+            {starSelected}
+            {starSelected !== 5 ? "+" : ""} stars
+          </div>
+        </div>
+      );
+    }
+
+    if (priceLow === priceHigh) {
+      rows.push(
+        <div
+          className="RestaurantListAppliedFilter"
+          onClick={() => this.resetPrice()}
+        >
+          <div style={{ margin: "0 auto", width: 400 }}>
+            Price: {this.getDollarSigns(priceLow)}
+          </div>
+        </div>
+      );
+    } else if (priceLow === 0 && priceHigh !== 5) {
+      rows.push(
+        <div
+          className="RestaurantListAppliedFilter"
+          onClick={() => this.resetPrice()}
+        >
+          <div style={{ margin: "0 auto", width: 400 }}>
+            Max price: {this.getDollarSigns(priceHigh)}
+          </div>
+        </div>
+      );
+    } else if (priceLow !== 0 && priceHigh === 5) {
+      rows.push(
+        <div
+          className="RestaurantListAppliedFilter"
+          onClick={() => this.resetPrice()}
+        >
+          <div style={{ margin: "0 auto", width: 400 }}>
+            Min price: {this.getDollarSigns(priceLow)}
+          </div>
+        </div>
+      );
+    } else if (priceLow !== 0 && priceHigh !== 5) {
+      rows.push(
+        <div
+          className="RestaurantListAppliedFilter"
+          onClick={() => this.resetPrice()}
+        >
+          <div style={{ margin: "0 auto", width: 400 }}>
+            Price: {this.getDollarSigns(priceLow)}-
+            {this.getDollarSigns(priceHigh)}
+          </div>
+        </div>
+      );
+    }
+
+    appliedFilters.map((item, i) =>
       rows.push(
         <div
           className="RestaurantListAppliedFilter"
           key={i}
           onClick={() => this.removeFilter(i)}
         >
-          <div style={{ margin: "0 auto" }}>{this.state.appliedFilters[i]}</div>
+          <div style={{ margin: "0 auto" }}>{tags[item]}</div>
         </div>
       )
     );
@@ -132,9 +260,17 @@ export default class RestaurantList extends Component {
   //This method appends a filter to this.state.appliedFilters if the filter isn't already included in the array
   addFilter = (i) => {
     let filters = this.state.appliedFilters;
-    if (filters.indexOf(this.state.tags[i]) === -1) {
-      filters.push(this.state.tags[i]);
+    if (filters.indexOf(i) === -1) {
+      filters.push(i);
       this.setState({ appliedFilters: filters });
+
+      //Rerender the restaurants
+      this.renderRestaurants(
+        filters,
+        this.state.starSelected,
+        this.state.priceLow,
+        this.state.priceHigh
+      );
     }
   };
 
@@ -143,6 +279,113 @@ export default class RestaurantList extends Component {
     let filters = this.state.appliedFilters;
     filters.splice(i, 1);
     this.setState({ appliedFilters: filters });
+
+    //Rerender the restaurants
+    this.renderRestaurants(
+      filters,
+      this.state.starSelected,
+      this.state.priceLow,
+      this.state.priceHigh
+    );
+  };
+
+  resetPrice = () => {
+    this.setState({
+      priceLow: 0,
+      priceLowHover: 0,
+      priceHigh: 5,
+      priceHighHover: 5,
+    });
+    this.renderRestaurants(
+      this.state.appliedFilters,
+      this.state.starSelected,
+      0,
+      5
+    );
+  };
+
+  setRating = (rating) => {
+    if (rating !== this.state.starSelected) {
+      this.setState({
+        starSelected: rating,
+      });
+      this.renderRestaurants(
+        this.state.appliedFilters,
+        rating,
+        this.state.priceLow,
+        this.state.priceHigh
+      );
+    } else {
+      this.setState({
+        starSelected: 0,
+        starHover: 0,
+      });
+      this.renderRestaurants(
+        this.state.appliedFilters,
+        0,
+        this.state.priceLow,
+        this.state.priceHigh
+      );
+    }
+  };
+
+  setPriceLow = (price) => {
+    if (price !== this.state.priceLow) {
+      this.setState({
+        priceLow: price,
+      });
+    } else {
+      this.setState({
+        priceLow: 0,
+        priceLowHover: 0,
+      });
+      price = 0;
+    }
+
+    let priceHigh = this.state.priceHigh;
+    if (price > priceHigh) {
+      this.setState({
+        priceHigh: price,
+        priceHighHover: price,
+      });
+      priceHigh = price;
+    }
+
+    this.renderRestaurants(
+      this.state.appliedFilters,
+      this.state.starSelected,
+      price,
+      priceHigh
+    );
+  };
+
+  setPriceHigh = (price) => {
+    if (price !== this.state.priceHigh) {
+      this.setState({
+        priceHigh: price,
+      });
+    } else {
+      this.setState({
+        priceHigh: 5,
+        priceHighHover: 5,
+      });
+      price = 5;
+    }
+
+    let priceLow = this.state.priceLow;
+    if (price < priceLow) {
+      this.setState({
+        priceLow: price,
+        priceLowHover: price,
+      });
+      priceLow = price;
+    }
+    this.renderRestaurants(
+      this.state.appliedFilters,
+      this.state.starSelected,
+      priceLow,
+      price
+    );
   };
 
   render() {
@@ -152,7 +395,175 @@ export default class RestaurantList extends Component {
           <div className="RestaurantListContainer">
             <Navbar user={this.state.user} />
             <div className="RestaurantListLeftPane">
-              Filters selection will go here
+              <h4>Filters</h4>
+              <h5>Rating</h5>
+              <img
+                src={this.state.starHover >= 1 ? StarSelected : Star}
+                alt="1 and above"
+                onMouseEnter={() => {
+                  this.setState({ starHover: 1 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ starHover: this.state.starSelected });
+                }}
+                onClick={() => this.setRating(1)}
+              />
+              <img
+                src={this.state.starHover >= 2 ? StarSelected : Star}
+                alt="2 and above"
+                onMouseEnter={() => {
+                  this.setState({ starHover: 2 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ starHover: this.state.starSelected });
+                }}
+                onClick={() => this.setRating(2)}
+              />
+              <img
+                src={this.state.starHover >= 3 ? StarSelected : Star}
+                alt="3 and above"
+                onMouseEnter={() => {
+                  this.setState({ starHover: 3 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ starHover: this.state.starSelected });
+                }}
+                onClick={() => this.setRating(3)}
+              />
+              <img
+                src={this.state.starHover >= 4 ? StarSelected : Star}
+                alt="4 and above"
+                onMouseEnter={() => {
+                  this.setState({ starHover: 4 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ starHover: this.state.starSelected });
+                }}
+                onClick={() => this.setRating(4)}
+              />
+              <img
+                src={this.state.starHover >= 5 ? StarSelected : Star}
+                alt="5 and above"
+                onMouseEnter={() => {
+                  this.setState({ starHover: 5 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ starHover: this.state.starSelected });
+                }}
+                onClick={() => this.setRating(5)}
+              />
+              <h5>Minimum price</h5>
+              <img
+                src={this.state.priceLowHover >= 1 ? DollarSelected : Dollar}
+                alt="1 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceLowHover: 1 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceLowHover: this.state.priceLow });
+                }}
+                onClick={() => this.setPriceLow(1)}
+              />
+              <img
+                src={this.state.priceLowHover >= 2 ? DollarSelected : Dollar}
+                alt="2 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceLowHover: 2 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceLowHover: this.state.priceLow });
+                }}
+                onClick={() => this.setPriceLow(2)}
+              />
+              <img
+                src={this.state.priceLowHover >= 3 ? DollarSelected : Dollar}
+                alt="3 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceLowHover: 3 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceLowHover: this.state.priceLow });
+                }}
+                onClick={() => this.setPriceLow(3)}
+              />
+              <img
+                src={this.state.priceLowHover >= 4 ? DollarSelected : Dollar}
+                alt="4 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceLowHover: 4 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceLowHover: this.state.priceLow });
+                }}
+                onClick={() => this.setPriceLow(4)}
+              />
+              <img
+                src={this.state.priceLowHover >= 5 ? DollarSelected : Dollar}
+                alt="5 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceLowHover: 5 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceLowHover: this.state.priceLow });
+                }}
+                onClick={() => this.setPriceLow(5)}
+              />
+              <h5>Maximum price</h5>
+              <img
+                src={this.state.priceHighHover >= 1 ? DollarSelected : Dollar}
+                alt="1 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceHighHover: 1 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceHighHover: this.state.priceHigh });
+                }}
+                onClick={() => this.setPriceHigh(1)}
+              />
+              <img
+                src={this.state.priceHighHover >= 2 ? DollarSelected : Dollar}
+                alt="2 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceHighHover: 2 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceHighHover: this.state.priceHigh });
+                }}
+                onClick={() => this.setPriceHigh(2)}
+              />
+              <img
+                src={this.state.priceHighHover >= 3 ? DollarSelected : Dollar}
+                alt="3 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceHighHover: 3 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceHighHover: this.state.priceHigh });
+                }}
+                onClick={() => this.setPriceHigh(3)}
+              />
+              <img
+                src={this.state.priceHighHover >= 4 ? DollarSelected : Dollar}
+                alt="4 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceHighHover: 4 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceHighHover: this.state.priceHigh });
+                }}
+                onClick={() => this.setPriceHigh(4)}
+              />
+              <img
+                src={this.state.priceHighHover >= 5 ? DollarSelected : Dollar}
+                alt="5 and above"
+                onMouseEnter={() => {
+                  this.setState({ priceHighHover: 5 });
+                }}
+                onMouseOut={() => {
+                  this.setState({ priceHighHover: this.state.priceHigh });
+                }}
+                onClick={() => this.setPriceHigh(5)}
+              />
             </div>
             <div className="RestaurantListRightPane">
               <div className="RestaurantListMostPopular">
@@ -168,7 +579,14 @@ export default class RestaurantList extends Component {
                 </div>
               </div>
               <ListGroup className="RestaurantListGroup">
-                {this.restaurantList()}
+                {this.state.restaurants.length > 0 ? (
+                  this.restaurantList()
+                ) : (
+                  <p style={{ paddingLeft: 20 }}>
+                    Sorry, we couldn't find any restaurants! Please broaden your
+                    search criteria and try again.
+                  </p>
+                )}
               </ListGroup>
             </div>
           </div>
