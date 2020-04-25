@@ -18,26 +18,6 @@
   font-weight: bold;
 }
 
-.RestaurantFlexContainer {
-  display: flex;
-  text-align: center;
-}
-
-.RestaurantRating {
-  width: 33%;
-  border-right: 1px solid lightgrey;
-}
-
-.RestaurantPrice {
-  width: 33%;
-  border-right: 1px solid lightgrey;
-}
-
-.RestaurantDistance {
-  color: grey;
-  width: 33%;
-}
-
 .RestaurantItemContainer {
   background-color: #f6f6f6;
   min-height: 80vh;

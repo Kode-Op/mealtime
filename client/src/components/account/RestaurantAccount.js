@@ -22,7 +22,10 @@ export default class RestaurantAccount extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      user: [],
+      isUserLoaded: false,
+    };
   }
 
   componentDidMount() {
@@ -52,12 +55,14 @@ export default class RestaurantAccount extends Component {
   }
 
   render() {
-    if (this.state.isUserLoaded) {
-      if (this.state.user) {
+    const { isUserLoaded, user } = this.state;
+
+    if (isUserLoaded) {
+      if (user) {
         return (
           <div>
             <div className="accountcontainer">
-              <Navbar user={this.state.user} />
+              <Navbar user={user} />
               <div className="accountleftpane">
                 <h2>Your restaurants</h2>
                 <ul>
@@ -86,25 +91,23 @@ export default class RestaurantAccount extends Component {
                   exact
                   path="/manage/"
                   render={(props) => (
-                    <ManageRestaurants {...props} user={this.state.user} />
+                    <ManageRestaurants {...props} user={user} />
                   )}
                 />
                 <Route
                   path="/manage/restaurants"
                   render={(props) => (
-                    <ManageRestaurants {...props} user={this.state.user} />
+                    <ManageRestaurants {...props} user={user} />
                   )}
                 />
                 <Route
                   path="/manage/menuitems"
-                  render={(props) => (
-                    <ManageMenuItems {...props} user={this.state.user} />
-                  )}
+                  render={(props) => <ManageMenuItems {...props} user={user} />}
                 />
                 <Route
                   path="/manage/history"
                   render={(props) => (
-                    <RestaurantOrderHistory {...props} user={this.state.user} />
+                    <RestaurantOrderHistory {...props} user={user} />
                   )}
                 />
               </div>

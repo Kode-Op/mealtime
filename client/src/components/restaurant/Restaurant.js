@@ -57,16 +57,28 @@ export default class Restaurant extends Component {
     if (this.state.id !== "") {
       GetRestaurantByID(this.state.id)
         .then((response) => {
-          this.setState({
-            restaurant: response.data,
-            isPageLoaded: true,
-          });
+          if (this._isMounted) {
+            this.setState({
+              restaurant: response.data,
+              isPageLoaded: true,
+            });
+          }
         })
         .catch(() => {
-          this.setState({ restaurant: null, isPageLoaded: true });
+          if (this._isMounted) {
+            this.setState({
+              restaurant: null,
+              isPageLoaded: true,
+            });
+          }
         });
     } else {
-      this.setState({ restaurant: null, isPageLoaded: true });
+      if (this._isMounted) {
+        this.setState({
+          restaurant: null,
+          isPageLoaded: true,
+        });
+      }
     }
 
     GetMenuItemsByRestaurantID(this.state.id)
@@ -75,10 +87,18 @@ export default class Restaurant extends Component {
           response.data,
           (menuitem) => menuitem.category
         );
-        this.setState({ menuItems: groupedByCategory });
+        if (this._isMounted) {
+          this.setState({
+            menuItems: groupedByCategory,
+          });
+        }
       })
       .catch(() => {
-        this.setState({ menuItems: null });
+        if (this._isMounted) {
+          this.setState({
+            menuItems: null,
+          });
+        }
       });
 
     //Get "user" and "isUserLoaded" from the GetLogin utility
@@ -102,26 +122,35 @@ export default class Restaurant extends Component {
     //Initialize the value of menuItemsInBag to whatever is in storage
     let menuItemArray = getFromStorage("shoppingbag");
     if (menuItemArray !== null) {
-      this.setState({
-        menuItemsInBag: menuItemArray.menuItems,
-        menuItemsInBagLoaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          menuItemsInBag: menuItemArray.menuItems,
+          menuItemsInBagLoaded: true,
+        });
+      }
     } else {
-      this.setState({
-        menuItemsInBagLoaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          menuItemsInBagLoaded: true,
+        });
+      }
     }
 
+    //Initialize the value of restaurantInBag to whatever is in storage
     let restaurantInBagArray = getFromStorage("restaurant");
     if (restaurantInBagArray !== null) {
-      this.setState({
-        restaurantInBag: restaurantInBagArray,
-        restaurantInBagLoaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          restaurantInBag: restaurantInBagArray,
+          restaurantInBagLoaded: true,
+        });
+      }
     } else {
-      this.setState({
-        restaurantInBagLoaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          restaurantInBagLoaded: true,
+        });
+      }
     }
   }
 
@@ -130,20 +159,26 @@ export default class Restaurant extends Component {
     document.body.style.overflow = "unset";
   }
 
+  //This method resets itemSelection and itemSelectionMade. Passed as a prop to MenuItemOverlay
   cancelPopUp = () => {
     document.body.style.overflow = "unset";
-    this.setState({
-      itemSelection: [],
-      itemSelectionMade: false,
-    });
+    if (this._isMounted) {
+      this.setState({
+        itemSelection: [],
+        itemSelectionMade: false,
+      });
+    }
   };
 
+  //The method sets itemSelection and itemSelectionMade. Used to render MenuItemOverlay
   renderPopUp = (menuitem) => {
     document.body.style.overflow = "hidden";
-    this.setState({
-      itemSelection: menuitem,
-      itemSelectionMade: true,
-    });
+    if (this._isMounted) {
+      this.setState({
+        itemSelection: menuitem,
+        itemSelectionMade: true,
+      });
+    }
   };
 
   //This method return each menu item associated with a particular category.
@@ -180,25 +215,35 @@ export default class Restaurant extends Component {
   //This updates the bag to include the menuitem added in the
   //menuitemoverlay component
   addToBag = (menuItems) => {
-    this.setState({
-      menuItemsInBag: menuItems,
-    });
+    if (this._isMounted) {
+      this.setState({
+        menuItemsInBag: menuItems,
+      });
+    }
   };
 
+  //This updates the bag to include the restaurant added in the
+  //menuitemoverlay component
   addRestaurantToBag = (restaurant) => {
-    this.setState({
-      restaurantInBag: restaurant,
-    });
+    if (this._isMounted) {
+      this.setState({
+        restaurantInBag: restaurant,
+      });
+    }
   };
 
+  //This method memoves a menuitem from the bag and resets restaurantInBag
+  //If there are no more menuItems in the bag
   removeMenuItem = (index) => {
     let menuItems = this.state.menuItemsInBag;
     menuItems.splice(index, 1);
-    this.setState({
-      menuItemsInBag: menuItems,
-    });
+    if (this._isMounted) {
+      this.setState({
+        menuItemsInBag: menuItems,
+      });
+    }
 
-    if (menuItems.length === 0) {
+    if (menuItems.length === 0 && this._isMounted) {
       this.setState({
         restaurantInBag: [],
       });
@@ -206,28 +251,41 @@ export default class Restaurant extends Component {
   };
 
   render() {
+    const {
+      isPageLoaded,
+      user,
+      isUserLoaded,
+      menuItemsInBag,
+      menuItemsInBagLoaded,
+      restaurantInBag,
+      restaurantInBagLoaded,
+      restaurant,
+      itemSelectionMade,
+      itemSelection,
+    } = this.state;
+
     if (
-      this.state.isPageLoaded &&
-      this.state.isUserLoaded &&
-      this.state.menuItemsInBagLoaded &&
-      this.state.restaurantInBagLoaded
+      isPageLoaded &&
+      isUserLoaded &&
+      menuItemsInBagLoaded &&
+      restaurantInBagLoaded
     ) {
-      if (this.state.restaurant) {
+      if (restaurant) {
         return (
           <div>
-            {this.state.itemSelectionMade && (
+            {itemSelectionMade && (
               <MenuItemOverlay
-                menuItem={this.state.itemSelection}
+                menuItem={itemSelection}
                 cancelPopUp={this.cancelPopUp}
                 addToBag={this.addToBag}
                 addRestaurantToBag={this.addRestaurantToBag}
-                restaurant={this.state.restaurant}
+                restaurant={restaurant}
               />
             )}
             <Navbar
-              user={this.state.user}
-              menuItems={this.state.menuItemsInBag}
-              restaurant={this.state.restaurantInBag}
+              user={user}
+              menuItems={menuItemsInBag}
+              restaurant={restaurantInBag}
               removeMenuItem={this.removeMenuItem}
             />
             <div className="RestaurantContainer">
@@ -235,7 +293,7 @@ export default class Restaurant extends Component {
                 <img
                   src={
                     "https://mealtimebucket.s3-us-west-1.amazonaws.com/" +
-                    this.state.restaurant._id +
+                    restaurant._id +
                     "/small.png"
                   }
                   onError={(e) => {
@@ -245,19 +303,12 @@ export default class Restaurant extends Component {
                   className="RestaurantImage"
                   alt=""
                 />
-                <h2 className="RestaurantName">{this.state.restaurant.name}</h2>
-                <h5>{this.state.restaurant.address}</h5>
+                <h2 className="RestaurantName">{restaurant.name}</h2>
+                <h5>{restaurant.address}</h5>
               </div>
-              <hr />
-              <div className="RestaurantFlexContainer">
-                <div className="RestaurantRating">
-                  <DisplayRating rating={this.state.restaurant.rating} />
-                </div>
-                <div className="RestaurantPrice">
-                  <DisplayPrice price={this.state.restaurant.price} />
-                </div>
-                <div className="RestaurantDistance">xx.xx miles</div>
-              </div>
+              <DisplayRating rating={restaurant.rating} />
+              <br />
+              <DisplayPrice price={restaurant.price} />
             </div>
             <div className="RestaurantItemContainer">
               <div className="RestaurantContainer">
@@ -273,10 +324,10 @@ export default class Restaurant extends Component {
         return (
           <div>
             <Navbar
-              user={this.state.user}
-              menuItems={this.state.menuItemsInBag}
-              restaurant={this.state.restaurantInBag}
-              removeMenuItem={this.state.removeMenuItem}
+              user={user}
+              menuItems={menuItemsInBag}
+              restaurant={restaurantInBag}
+              removeMenuItem={this.removeMenuItem}
             />
             <br />
             <br />

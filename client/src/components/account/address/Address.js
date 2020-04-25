@@ -9,6 +9,8 @@ import {
 } from "../../../utils/axios/Users";
 
 export default class Address extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -24,21 +26,35 @@ export default class Address extends Component {
     };
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   //Event handlers for each form field
   onChangeAddress = (e) => {
-    this.setState({
-      address: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        address: e.target.value,
+      });
+    }
   };
   onChangePhone = (e) => {
-    this.setState({
-      phone: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        phone: e.target.value,
+      });
+    }
   };
   onChangePasswordPhone = (e) => {
-    this.setState({
-      passwordphone: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        passwordphone: e.target.value,
+      });
+    }
   };
 
   //Event handlers for when the user submits the forms on the page
@@ -50,23 +66,28 @@ export default class Address extends Component {
     /*address update*/
     UpdateUserAddress(this.props.user._id, pkg)
       .then(() => {
-        this.setState({
-          errorMessage: "",
-          successMessage: "Successfully updated address!",
-        });
+        if (this._isMounted) {
+          this.setState({
+            errorMessage: "",
+            successMessage: "Successfully updated address!",
+          });
+        }
       })
       .catch((error) => {
-        if (error.response.status === 404) {
-          this.setState({
-            errorMessage:
-              "404 user not found. Please refresh page and try again.",
-            successMessage: "",
-          });
-        } else {
-          this.setState({
-            errorMessage: "400 internal server error. Please try again later.",
-            successMessage: "",
-          });
+        if (this._isMounted) {
+          if (error.response.status === 404) {
+            this.setState({
+              errorMessage:
+                "404 user not found. Please refresh page and try again.",
+              successMessage: "",
+            });
+          } else {
+            this.setState({
+              errorMessage:
+                "400 internal server error. Please try again later.",
+              successMessage: "",
+            });
+          }
         }
       });
     e.preventDefault();
@@ -82,32 +103,38 @@ export default class Address extends Component {
       /*Phone number update*/
       UpdateUserPhoneNumber(this.props.user._id, pkg)
         .then(() => {
-          this.setState({
-            errorMessagePhone: "",
-            successMessagePhone: "Successfully updated phone!",
-          });
-        })
-        .catch((error) => {
-          if (error.response.status === 404) {
+          if (this._isMounted) {
             this.setState({
-              errorMessagePhone:
-                "404 user not found. Please refresh page and try again.",
-              successMessagePhone: "",
-            });
-          } else if (error.response.status === 500) {
-            this.setState({
-              errorMessagePhone: "Error! Invalid password",
-              successMessagePhone: "",
-            });
-          } else {
-            this.setState({
-              errorMessagePhone:
-                "400 internal server error. Please try again later.",
-              successMessagePhone: "",
+              errorMessagePhone: "",
+              successMessagePhone: "Successfully updated phone!",
             });
           }
+        })
+        .catch((error) => {
+          if (this._isMounted) {
+            if (error.response.status === 404) {
+              this.setState({
+                errorMessagePhone:
+                  "404 user not found. Please refresh page and try again.",
+                successMessagePhone: "",
+              });
+            } else if (error.response.status === 500) {
+              this.setState({
+                errorMessagePhone: "Error! Invalid password",
+                successMessagePhone: "",
+              });
+            } else {
+              this.setState({
+                errorMessagePhone:
+                  "400 internal server error. Please try again later.",
+                successMessagePhone: "",
+              });
+            }
+          }
         });
-      this.setState({ passwordphone: "" });
+      this.setState({
+        passwordphone: "",
+      });
     }
     e.preventDefault();
   };
@@ -126,7 +153,7 @@ export default class Address extends Component {
         "Your phone number must only contain numbers.\n"
       );
     }
-    if (errorMessage) {
+    if (errorMessage && this._isMounted) {
       this.setState({ errorMessagePhone: errorMessage });
       return false;
     }

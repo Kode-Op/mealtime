@@ -11,18 +11,37 @@ import DisplayRating from "../../assets/displayrating/DisplayRating";
 import "./RestaurantFeedComponent.css";
 
 export default class RestaurantFeedComponent extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
-    this.state = { redirect: false };
+    this.state = {
+      redirect: false,
+    };
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   //This method sets the variable redirect to true after clicking on this particular restaurant
   viewRestaurant = () => {
-    this.setState({ redirect: true });
+    if (this._isMounted) {
+      this.setState({
+        redirect: true,
+      });
+    }
   };
 
   render() {
-    if (!this.state.redirect) {
+    const { redirect } = this.state;
+    const { restaurant } = this.props;
+
+    if (!redirect) {
       return (
         <div
           className="RestaurantFeedComponentContainer"
@@ -32,7 +51,7 @@ export default class RestaurantFeedComponent extends Component {
             <img
               src={
                 "https://mealtimebucket.s3-us-west-1.amazonaws.com/" +
-                this.props.restaurant._id +
+                restaurant._id +
                 "/large.png"
               }
               onError={(e) => {
@@ -44,19 +63,16 @@ export default class RestaurantFeedComponent extends Component {
           </div>
           <div className="RestaurantFeedComponentContent">
             <div className="RestaurantFeedComponentContentLeft">
-              <h5>{this.props.restaurant.name}</h5>
-              <DisplayRating rating={this.props.restaurant.rating} />
+              <h5>{restaurant.name}</h5>
+              <DisplayRating rating={restaurant.rating} />
               <br />
-              <DisplayPrice price={this.props.restaurant.price} />
-            </div>
-            <div className="RestaurantFeedComponentContentRight">
-              xx.xx miles
+              <DisplayPrice price={restaurant.price} />
             </div>
           </div>
         </div>
       );
     } else {
-      return <Redirect to={"/restaurant?id=" + this.props.restaurant._id} />;
+      return <Redirect to={"/restaurant?id=" + restaurant._id} />;
     }
   }
 }

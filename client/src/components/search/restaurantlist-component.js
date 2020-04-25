@@ -4,7 +4,7 @@ import { ListGroup } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 
 //Import assets
-import RestaurantImagePlaceholder from "./restaurantimageplaceholder.png";
+import RestaurantImagePlaceholder from "../../assets/images/restaurantlist/restaurantimageplaceholder.png";
 import DisplayPrice from "../../assets/displayprice/DisplayPrice";
 import DisplayRating from "../../assets/displayrating/DisplayRating";
 
@@ -12,18 +12,37 @@ import DisplayRating from "../../assets/displayrating/DisplayRating";
 import "./restaurantlist-component.css";
 
 export default class RestaurantListComponent extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
-    this.state = { redirect: false };
+    this.state = {
+      redirect: false,
+    };
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   //This method sets the variable redirect to true after clicking on this particular restaurant
   viewRestaurant = () => {
-    this.setState({ redirect: true });
+    if (this._isMounted) {
+      this.setState({
+        redirect: true,
+      });
+    }
   };
 
   render() {
-    if (!this.state.redirect) {
+    const { redirect } = this.state;
+    const { restaurant } = this.props;
+
+    if (!redirect) {
       return (
         <ListGroup.Item
           className="RestaurantListComponentItem"
@@ -32,7 +51,7 @@ export default class RestaurantListComponent extends Component {
           <img
             src={
               "https://mealtimebucket.s3-us-west-1.amazonaws.com/" +
-              this.props.restaurant._id +
+              restaurant._id +
               "/small.png"
             }
             onError={(e) => {
@@ -43,22 +62,19 @@ export default class RestaurantListComponent extends Component {
             alt="No restaurant found"
             style={{ width: 100 }}
           />
-          <div className="RestaurantListComponentName">
-            {this.props.restaurant.name}
-          </div>
+          <div className="RestaurantListComponentName">{restaurant.name}</div>
           <div className="RestaurantListGrouping">
             <div className="RestaurantListComponentRating">
-              <DisplayRating rating={this.props.restaurant.rating} />
+              <DisplayRating rating={restaurant.rating} />
             </div>
             <div className="RestaurantListComponentPrice">
-              <DisplayPrice price={this.props.restaurant.price} />
+              <DisplayPrice price={restaurant.price} />
             </div>
-            <div className="RestaurantListComponentDistance">xx.xx miles</div>
           </div>
         </ListGroup.Item>
       );
     } else {
-      return <Redirect to={"/restaurant?id=" + this.props.restaurant._id} />;
+      return <Redirect to={"/restaurant?id=" + restaurant._id} />;
     }
   }
 }

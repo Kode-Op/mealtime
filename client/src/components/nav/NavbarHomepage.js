@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 export default class NavbarHomepage extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -20,6 +22,22 @@ export default class NavbarHomepage extends Component {
         mobileview: false,
         opacity: 0,
       };
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+
+    //Add event listeners
+    window.addEventListener("scroll", this.getOpacity, false);
+    window.addEventListener("resize", this.getOpacity, false);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+
+    //Remove event listeners
+    window.removeEventListener("scroll", this.getOpacity);
+    window.removeEventListener("resize", this.getOpacity);
   }
 
   /*
@@ -36,23 +54,21 @@ export default class NavbarHomepage extends Component {
       let calc = (intViewport - bottomHeight + range) / range;
       if (calc > 1) calc = 1;
       else if (calc < 0) calc = 0;
-      this.setState({ opacity: calc, mobileview: true });
+      if (this._isMounted) {
+        this.setState({
+          opacity: calc,
+          mobileview: true,
+        });
+      }
     } else {
-      this.setState({ opacity: 0, mobileview: false });
+      if (this._isMounted) {
+        this.setState({
+          opacity: 0,
+          mobileview: false,
+        });
+      }
     }
   };
-
-  componentDidMount() {
-    //Add event listeners
-    window.addEventListener("scroll", this.getOpacity, false);
-    window.addEventListener("resize", this.getOpacity, false);
-  }
-
-  componentWillUnmount() {
-    //Remove event listeners
-    window.removeEventListener("scroll", this.getOpacity);
-    window.removeEventListener("resize", this.getOpacity);
-  }
 
   render() {
     return (

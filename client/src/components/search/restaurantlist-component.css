@@ -1,5 +1,6 @@
 .RestaurantListComponentItem {
-  display: flex;
+  max-width: 1200px;
+  width: 100%;
 }
 
 .RestaurantListComponentItem:hover {
@@ -23,7 +24,6 @@
 }
 
 .RestaurantListGrouping {
-  width: 50%;
   float: right;
   display: inline-flex;
   padding-top: 24px;
@@ -35,10 +35,4 @@
 
 .RestaurantListComponentPrice {
   margin-left: 5vw;
-}
-
-.RestaurantListComponentDistance {
-  margin-left: 5vw;
-  font-size: 0.8em;
-  color: grey;
 }

@@ -22,7 +22,6 @@ export default class UserOrderHistoryOverlay extends Component {
   };
 
   onCancelOrder = () => {
-    console.log("?");
     DeleteOrder(this.props.orderID)
       .then((response) => {
         console.log(response);

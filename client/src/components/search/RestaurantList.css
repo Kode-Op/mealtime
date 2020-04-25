@@ -81,6 +81,7 @@
   border-top: 1px solid lightgray;
   display: flex;
   overflow: hidden;
+  border-bottom: 1px solid lightgray;
 }
 
 .RestaurantListAppliedFilters h5 {
@@ -120,11 +121,11 @@
     padding-left: 20px;
     width: 25%;
     border-bottom: none;
-    border-right: 1px solid lightgray;
     min-height: 70vh;
   }
 
   .RestaurantListRightPane {
+    border-left: 1px solid lightgray;
     width: 75%;
     padding-top: 10px;
   }

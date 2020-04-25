@@ -99,34 +99,42 @@ export default class Checkout extends Component {
       const tax = this.getTax(subTotal);
       const fee = 300;
       const totalPaid = Math.round(subTotal + tax + fee);
-      this.setState({
-        menuItems: menuItemArray.menuItems,
-        menuItemsLoaded: true,
-        menuItemIDArray: menuItemIDArray,
-        quantityArray: quantityArray,
-        subTotal: subTotal,
-        tax: tax,
-        fee: fee,
-        totalPaid: totalPaid,
-      });
+      if (this._isMounted) {
+        this.setState({
+          menuItems: menuItemArray.menuItems,
+          menuItemsLoaded: true,
+          menuItemIDArray: menuItemIDArray,
+          quantityArray: quantityArray,
+          subTotal: subTotal,
+          tax: tax,
+          fee: fee,
+          totalPaid: totalPaid,
+        });
+      }
     } else {
-      this.setState({
-        menuItemsLoaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          menuItemsLoaded: true,
+        });
+      }
     }
 
     //Get the restaurant from storage. This is used to display
     //"Your order from (restaurantName)"
     let restaurantArray = getFromStorage("restaurant");
     if (restaurantArray !== null) {
-      this.setState({
-        restaurant: restaurantArray,
-        restaurantLoaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          restaurant: restaurantArray,
+          restaurantLoaded: true,
+        });
+      }
     } else {
-      this.setState({
-        restaurantLoaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          restaurantLoaded: true,
+        });
+      }
     }
   }
 
@@ -137,99 +145,125 @@ export default class Checkout extends Component {
   //Event handlers for each form field
   onChangeDeliveryAddress = (e) => {
     e.preventDefault();
-    this.setState({
-      deliveryAddress: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        deliveryAddress: e.target.value,
+      });
+    }
   };
   onChangePhoneNumber = (e) => {
     e.preventDefault();
-    this.setState({
-      deliveryPhoneNumber: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        deliveryPhoneNumber: e.target.value,
+      });
+    }
   };
   onChangeDeliveryInstructions = (e) => {
     e.preventDefault();
-    this.setState({
-      deliveryInstructions: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        deliveryInstructions: e.target.value,
+      });
+    }
   };
   onChangePaymentFirstName = (e) => {
     e.preventDefault();
-    this.setState({
-      paymentFirstName: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        paymentFirstName: e.target.value,
+      });
+    }
   };
   onChangePaymentLastName = (e) => {
     e.preventDefault();
-    this.setState({
-      paymentLastName: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        paymentLastName: e.target.value,
+      });
+    }
   };
   onChangePaymentCreditCardNumber = (e) => {
     e.preventDefault();
-    this.setState({
-      paymentCreditCardNumber: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        paymentCreditCardNumber: e.target.value,
+      });
+    }
   };
   onChangePaymentExpMonth = (e) => {
     e.preventDefault();
-    this.setState({
-      paymentExpMonth: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        paymentExpMonth: e.target.value,
+      });
+    }
   };
   onChangePaymentExpYear = (e) => {
     e.preventDefault();
-    this.setState({
-      paymentExpYear: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        paymentExpYear: e.target.value,
+      });
+    }
   };
   onChangePaymentCCV = (e) => {
     e.preventDefault();
-    this.setState({
-      paymentCCV: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        paymentCCV: e.target.value,
+      });
+    }
   };
   onChangePaymentBillingAddress = (e) => {
     e.preventDefault();
-    this.setState({
-      paymentBillingAddress: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        paymentBillingAddress: e.target.value,
+      });
+    }
   };
   onChangeTipAmountString = (e) => {
     e.preventDefault();
-    this.setState({
-      tipAmountString: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        tipAmountString: e.target.value,
+      });
+    }
   };
 
   //Updates the credit card info in the state when the user clicks on one
   //of their credit cards
   updateCreditCardInfo = (card) => {
-    this.setState({
-      selectedCardID: card._id,
-      paymentFirstName: card.firstName,
-      paymentLastName: card.lastName,
-      paymentCreditCardNumber: card.number,
-      paymentExpMonth: card.exMonth,
-      paymentExpYear: card.exYear,
-      paymentCCV: card.ccv,
-      paymentBillingAddress: card.address,
-    });
+    if (this._isMounted) {
+      this.setState({
+        selectedCardID: card._id,
+        paymentFirstName: card.firstName,
+        paymentLastName: card.lastName,
+        paymentCreditCardNumber: card.number,
+        paymentExpMonth: card.exMonth,
+        paymentExpYear: card.exYear,
+        paymentCCV: card.ccv,
+        paymentBillingAddress: card.address,
+      });
+    }
   };
 
   //Resets the credit card info in the state when the user goes to add a
   //new card.
   resetCreditCardInfo = () => {
-    this.setState({
-      selectedCardID: "0",
-      paymentFirstName: "",
-      paymentLastName: "",
-      paymentCreditCardNumber: "",
-      paymentExpMonth: "",
-      paymentExpYear: "",
-      paymentCCV: "",
-      paymentBillingAddress: "",
-    });
+    if (this._isMounted) {
+      this.setState({
+        selectedCardID: "0",
+        paymentFirstName: "",
+        paymentLastName: "",
+        paymentCreditCardNumber: "",
+        paymentExpMonth: "",
+        paymentExpYear: "",
+        paymentCCV: "",
+        paymentBillingAddress: "",
+      });
+    }
   };
 
   //Adds up the quantity * price of all menu items. Returns an integer.
@@ -270,15 +304,19 @@ export default class Checkout extends Component {
   getCreditCardInfo = (id) => {
     GetCreditCardByID(id)
       .then((response) => {
-        this.setState({
-          creditCards: response.data,
-          creditCardsLoaded: true,
-        });
+        if (this._isMounted) {
+          this.setState({
+            creditCards: response.data,
+            creditCardsLoaded: true,
+          });
+        }
       })
       .catch(() => {
-        this.setState({
-          creditCardsLoaded: true,
-        });
+        if (this._isMounted) {
+          this.setState({
+            creditCardsLoaded: true,
+          });
+        }
       });
   };
 
@@ -418,7 +456,7 @@ export default class Checkout extends Component {
     //Regular expression courtesy of https://stackoverflow.com/questions/8829765/regular-expression-for-dollar-amount-in-javascript
     const priceVerification = /^\$?[0-9]+(\.[0-9][0-9])?$/;
 
-    if (!priceVerification.test(tipAmountString)) {
+    if (!priceVerification.test(tipAmountString) && this._isMounted) {
       this.setState({
         customTipErrorMessage: "The tip amount must be in the format $xx.xx",
       });
@@ -437,12 +475,14 @@ export default class Checkout extends Component {
     }
 
     let parsedTip = parseInt(dollars, 10) * 100 + parseInt(cents, 10);
-    this.setState({
-      tipAmount: parsedTip,
-      customTipErrorMessage: "",
-      displayCustomTipForm: false,
-      tipByAmount: true,
-    });
+    if (this._isMounted) {
+      this.setState({
+        tipAmount: parsedTip,
+        customTipErrorMessage: "",
+        displayCustomTipForm: false,
+        tipByAmount: true,
+      });
+    }
   };
 
   //This method validate all delivery and payment information form inputs from the user
@@ -523,17 +563,20 @@ export default class Checkout extends Component {
       }
     }
 
-    if (errorMessage) {
+    if (this._isMounted) {
+      if (errorMessage) {
+        this.setState({
+          submitErrorMessage: errorMessage,
+          submitSuccessMessage: "",
+        });
+        return false;
+      }
       this.setState({
-        submitErrorMessage: errorMessage,
-        submitSuccessMessage: "",
+        submitErrorMessage: "",
       });
-      return false;
+      return true;
     }
-    this.setState({
-      submitErrorMessage: "",
-    });
-    return true;
+    return false;
   };
 
   //This method is called when the user presses the submit button to compete their order
@@ -588,17 +631,21 @@ export default class Checkout extends Component {
             //Post the order to the database
             AddOrder(pkg2)
               .then((response) => {
-                this.setState({
-                  submitErrorMessage: "",
-                  submitSuccessMessage: "Successfully added order",
-                });
+                if (this._isMounted) {
+                  this.setState({
+                    submitErrorMessage: "",
+                    submitSuccessMessage: "Successfully added order",
+                  });
+                }
 
                 //Reset menu items in storage
                 setInStorage("restaurant", null).then(() => {
                   setInStorage("shoppingbag", null).then(() => {
-                    this.setState({
-                      redirect: response.data.id,
-                    });
+                    if (this._isMounted) {
+                      this.setState({
+                        redirect: response.data.id,
+                      });
+                    }
                   });
                 });
 
@@ -606,18 +653,22 @@ export default class Checkout extends Component {
               })
               .catch((error) => {
                 console.log(error);
-                this.setState({
-                  submitErrorMessage: "An unexpected error has occurred",
-                  submitSuccessMessage: "",
-                });
+                if (this._isMounted) {
+                  this.setState({
+                    submitErrorMessage: "An unexpected error has occurred",
+                    submitSuccessMessage: "",
+                  });
+                }
               });
           })
           .catch((error) => {
             console.log(error);
-            this.setState({
-              submitErrorMessage: "An unexpected error has occurred",
-              submitSuccessMessage: "",
-            });
+            if (this._isMounted) {
+              this.setState({
+                submitErrorMessage: "An unexpected error has occurred",
+                submitSuccessMessage: "",
+              });
+            }
           });
 
         //Case 2
@@ -636,17 +687,21 @@ export default class Checkout extends Component {
         //Post the order to the database
         AddOrder(pkg)
           .then((response) => {
-            this.setState({
-              submitErrorMessage: "",
-              submitSuccessMessage: "Successfully added order",
-            });
+            if (this._isMounted) {
+              this.setState({
+                submitErrorMessage: "",
+                submitSuccessMessage: "Successfully added order",
+              });
+            }
 
             //Reset menu items in storage
             setInStorage("restaurant", null).then(() => {
               setInStorage("shoppingbag", null).then(() => {
-                this.setState({
-                  redirect: response.data.id,
-                });
+                if (this._isMounted) {
+                  this.setState({
+                    redirect: response.data.id,
+                  });
+                }
               });
             });
 
@@ -654,10 +709,12 @@ export default class Checkout extends Component {
           })
           .catch((error) => {
             console.log(error);
-            this.setState({
-              submitErrorMessage: "An unexpected error has occurred",
-              submitSuccessMessage: "",
-            });
+            if (this._isMounted) {
+              this.setState({
+                submitErrorMessage: "An unexpected error has occurred",
+                submitSuccessMessage: "",
+              });
+            }
           });
       }
     }
@@ -880,6 +937,7 @@ export default class Checkout extends Component {
                       name="saveCard"
                       checked={saveCard}
                       onChange={() =>
+                        this._isMounted &&
                         this.setState({
                           saveCard: !saveCard,
                         })
@@ -900,6 +958,7 @@ export default class Checkout extends Component {
                         : "secondary"
                     }
                     onClick={() =>
+                      this._isMounted &&
                       this.setState({
                         tipPercentage: 0,
                         tipByAmount: false,
@@ -919,6 +978,7 @@ export default class Checkout extends Component {
                         : "secondary"
                     }
                     onClick={() =>
+                      this._isMounted &&
                       this.setState({
                         tipPercentage: 15,
                         tipByAmount: false,
@@ -938,6 +998,7 @@ export default class Checkout extends Component {
                         : "secondary"
                     }
                     onClick={() =>
+                      this._isMounted &&
                       this.setState({
                         tipPercentage: 18,
                         tipByAmount: false,
@@ -957,6 +1018,7 @@ export default class Checkout extends Component {
                         : "secondary"
                     }
                     onClick={() =>
+                      this._isMounted &&
                       this.setState({
                         tipPercentage: 20,
                         tipByAmount: false,
@@ -976,6 +1038,7 @@ export default class Checkout extends Component {
                         : "secondary"
                     }
                     onClick={() =>
+                      this._isMounted &&
                       this.setState({
                         tipPercentage: 25,
                         tipByAmount: false,
@@ -990,6 +1053,7 @@ export default class Checkout extends Component {
                 <button
                   className="CheckoutCustomTip"
                   onClick={() =>
+                    this._isMounted &&
                     this.setState({
                       displayCustomTipForm: !displayCustomTipForm,
                     })

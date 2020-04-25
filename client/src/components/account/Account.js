@@ -25,7 +25,10 @@ export default class Account extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      user: [],
+      isUserLoaded: false,
+    };
   }
 
   componentDidMount() {
@@ -55,12 +58,14 @@ export default class Account extends Component {
   }
 
   render() {
-    if (this.state.isUserLoaded) {
-      if (this.state.user) {
+    const { isUserLoaded, user } = this.state;
+
+    if (isUserLoaded) {
+      if (user) {
         return (
           <div>
             <div className="accountcontainer">
-              <Navbar user={this.state.user} />
+              <Navbar user={user} />
               <div className="accountleftpane">
                 <h2>Your account</h2>
                 <ul>
@@ -91,32 +96,24 @@ export default class Account extends Component {
                 <Route
                   exact
                   path="/account/"
-                  render={(props) => (
-                    <Profile {...props} user={this.state.user} />
-                  )}
+                  render={(props) => <Profile {...props} user={user} />}
                 />
                 <Route
                   path="/account/profile"
-                  render={(props) => (
-                    <Profile {...props} user={this.state.user} />
-                  )}
+                  render={(props) => <Profile {...props} user={user} />}
                 />
                 <Route
                   path="/account/card"
-                  render={(props) => (
-                    <CreditCard {...props} user={this.state.user} />
-                  )}
+                  render={(props) => <CreditCard {...props} user={user} />}
                 />
                 <Route
                   path="/account/address"
-                  render={(props) => (
-                    <Address {...props} user={this.state.user} />
-                  )}
+                  render={(props) => <Address {...props} user={user} />}
                 />
                 <Route
                   path="/account/history"
                   render={(props) => (
-                    <UserOrderHistory {...props} user={this.state.user} />
+                    <UserOrderHistory {...props} user={user} />
                   )}
                 />
               </div>

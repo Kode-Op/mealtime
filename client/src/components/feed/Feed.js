@@ -44,18 +44,19 @@ export default class Feed extends Component {
           });
         }
 
+        //Get the restaurants, sorted by user preference, using the response ID.
         const pkg = {
           userId: response._id,
+
+          //Default values
           tags: [],
           ratings: 0,
           priceLow: 0,
           priceHigh: 0,
         };
 
-        //Fetch all restaurant data, and load into the restaurants variable
         GetFilteredRestaurants(pkg)
           .then((response) => {
-            console.log(response);
             if (this._isMounted) {
               this.setState({
                 restaurants: response.data,
@@ -65,10 +66,14 @@ export default class Feed extends Component {
           })
           .catch(() => {
             if (this._isMounted) {
-              this.setState({ areRestaurantsLoaded: true });
+              this.setState({
+                areRestaurantsLoaded: true,
+              });
             }
           });
       })
+
+      //User did not load
       .catch(() => {
         if (this._isMounted) {
           this.setState({
@@ -82,8 +87,10 @@ export default class Feed extends Component {
     this._isMounted = false;
   }
 
+  //Update user address. This function is passed down as a prop to
+  //FeedAddressOverlay.js
   updateAddressHandler = (newAddress) => {
-    let pkg = {
+    const pkg = {
       address: newAddress,
     };
     UpdateUserAddress(this.state.user._id, pkg)
@@ -92,18 +99,23 @@ export default class Feed extends Component {
         console.log(error);
       });
 
-    this.setState((prevState) => ({
-      user: {
-        ...prevState.user,
-        address: newAddress,
-      },
-    }));
+    //Update the state with the new value
+    if (this._isMounted) {
+      this.setState((prevState) => ({
+        user: {
+          ...prevState.user,
+          address: newAddress,
+        },
+      }));
+    }
   };
 
   //This method renders a restaurant for each object found in the "restaurants"
   getRestaurantFeed = () => {
-    if (this.state.areRestaurantsLoaded) {
-      return this.state.restaurants.map((currentRestaurant) => {
+    const { areRestaurantsLoaded, restaurants } = this.state;
+
+    if (areRestaurantsLoaded) {
+      return restaurants.map((currentRestaurant) => {
         return (
           <RestaurantFeedComponent
             restaurant={currentRestaurant}
@@ -117,31 +129,29 @@ export default class Feed extends Component {
   };
 
   render() {
-    if (this.state.isUserLoaded) {
-      if (this.state.user) {
-        if (this.state.user.address === "") {
-          return (
-            <div>
-              <Navbar user={this.state.user} />
+    const { isUserLoaded, user } = this.state;
+
+    if (isUserLoaded) {
+      if (user) {
+        return (
+          <div>
+            <Navbar user={user} />
+
+            {user.address === "" && (
               <FeedAddressOverlay
                 updateAddressHandler={this.updateAddressHandler}
               />
-            </div>
-          );
-        } else {
-          return (
-            <div>
-              <Navbar user={this.state.user} />
-              <div className="FeedContainer">
-                <h4>What do you want to eat?</h4>
-                <div className="FeedRestaurantContainer">
-                  {this.getRestaurantFeed()}
-                </div>
+            )}
+
+            <div className="FeedContainer">
+              <h4>What do you want to eat?</h4>
+              <div className="FeedRestaurantContainer">
+                {this.getRestaurantFeed()}
               </div>
-              <Footer />
             </div>
-          );
-        }
+            <Footer />
+          </div>
+        );
       } else {
         return <Redirect to="/" />;
       }

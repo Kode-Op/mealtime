@@ -9,15 +9,13 @@ import Loader from "../../../assets/loader/Loader";
 
 //Import utilities
 import TagBank from "../../../utils/Tags";
-
+import UploadFile from "../../../utils/axios/Files";
 import {
   GetRestaurantByUserID,
   AddRestaurant,
   UpdateRestaurant,
   DeleteRestaurant,
 } from "../../../utils/axios/Restaurants";
-
-import UploadFile from "../../../utils/axios/Files";
 
 //Import stylesheets
 import "./ManageRestaurants.css";
@@ -83,34 +81,68 @@ export default class ManageRestaurants extends Component {
 
   //Event handlers for each form field
   onChangeName = (e) => {
-    this.setState({ name: e.target.value });
     e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        name: e.target.value,
+      });
+    }
   };
   onChangeAddress = (e) => {
-    this.setState({ address: e.target.value });
     e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        address: e.target.value,
+      });
+    }
   };
   onChangePrice = (e) => {
-    this.setState({ price: e.target.value });
     e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        price: e.target.value,
+      });
+    }
   };
   onChangeMinOrder = (e) => {
-    this.setState({ minorder: e.target.value });
     e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        minorder: e.target.value,
+      });
+    }
   };
   onChangeRating = (e) => {
-    this.setState({ rating: e.target.value });
     e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        rating: e.target.value,
+      });
+    }
   };
   onChangeDescription = (e) => {
-    this.setState({ description: e.target.value });
     e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        description: e.target.value,
+      });
+    }
   };
   onChangeThumbnail = (e) => {
-    this.setState({ thumbnail: e.target.files[0] });
+    e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        thumbnail: e.target.files[0],
+      });
+    }
   };
   onChangeLargeImage = (e) => {
-    this.setState({ largeImage: e.target.files[0] });
+    e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        largeImage: e.target.files[0],
+      });
+    }
   };
 
   //This method converts a given time the format we represent times with,
@@ -166,7 +198,9 @@ export default class ManageRestaurants extends Component {
       hoursofoperation[dayOfWeek][3] = adjustedEndTime;
     }
 
-    this.setState({ hoursofoperation: hoursofoperation });
+    if (this._isMounted) {
+      this.setState({ hoursofoperation: hoursofoperation });
+    }
   };
 
   //This method copies the restaurant data directly into seperate state
@@ -176,21 +210,23 @@ export default class ManageRestaurants extends Component {
     minorder.toLocaleString("en-US", { style: "currency", currency: "USD" });
     minorder = "$" + minorder;
 
-    this.setState({
-      errorMessage: "",
-      successMessage: "",
-      tagWarning: "",
-      name: restaurant.name,
-      address: restaurant.address,
-      rating: restaurant.rating,
-      price: restaurant.price,
-      minorder: minorder,
-      tags: restaurant.tags,
-      description: restaurant.description,
-      hoursofoperation: restaurant.hoursofoperation,
-      thumbnail: null,
-      largeImage: null,
-    });
+    if (this._isMounted) {
+      this.setState({
+        errorMessage: "",
+        successMessage: "",
+        tagWarning: "",
+        name: restaurant.name,
+        address: restaurant.address,
+        rating: restaurant.rating,
+        price: restaurant.price,
+        minorder: minorder,
+        tags: restaurant.tags,
+        description: restaurant.description,
+        hoursofoperation: restaurant.hoursofoperation,
+        thumbnail: null,
+        largeImage: null,
+      });
+    }
   };
 
   //This resets the state values for adding restaurants
@@ -201,21 +237,23 @@ export default class ManageRestaurants extends Component {
       hourmatrix[i] = ["0000", "0100", "0900", "1159"];
     }
 
-    this.setState({
-      errorMessage: "",
-      successMessage: "",
-      tagWarning: "",
-      name: "",
-      address: "",
-      rating: 0,
-      price: 0,
-      minorder: "$0.00",
-      tags: [],
-      description: "",
-      hoursofoperation: hourmatrix,
-      thumbnail: null,
-      largeImage: null,
-    });
+    if (this._isMounted) {
+      this.setState({
+        errorMessage: "",
+        successMessage: "",
+        tagWarning: "",
+        name: "",
+        address: "",
+        rating: 0,
+        price: 0,
+        minorder: "$0.00",
+        tags: [],
+        description: "",
+        hoursofoperation: hourmatrix,
+        thumbnail: null,
+        largeImage: null,
+      });
+    }
   };
 
   //This method displays the operating hours
@@ -265,13 +303,15 @@ export default class ManageRestaurants extends Component {
 
   //This method adds a tag to the tag array in the state.
   addTag = (index) => {
-    if (this.state.tags.length < 6) {
-      this.setState({
-        tags: [...this.state.tags, index],
-        tagWarning: "",
-      });
-    } else {
-      this.setState({ tagWarning: "You many only select up to 6 tags" });
+    if (this._isMounted) {
+      if (this.state.tags.length < 6) {
+        this.setState({
+          tags: [...this.state.tags, index],
+          tagWarning: "",
+        });
+      } else {
+        this.setState({ tagWarning: "You many only select up to 6 tags" });
+      }
     }
   };
 
@@ -282,10 +322,12 @@ export default class ManageRestaurants extends Component {
       let index = tags.indexOf(i);
       if (index !== -1) {
         tags.splice(index, 1);
-        this.setState({
-          tags: tags,
-          tagWarning: "",
-        });
+        if (this._isMounted) {
+          this.setState({
+            tags: tags,
+            tagWarning: "",
+          });
+        }
       }
     }
   };
@@ -545,17 +587,21 @@ export default class ManageRestaurants extends Component {
 
       UpdateRestaurant(restaurantID, pkg)
         .then(() => {
-          this.setState({
-            successMessage: "Successfully edited restaurant!",
-            errorMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              successMessage: "Successfully edited restaurant!",
+              errorMessage: "",
+            });
+          }
         })
         .catch((error) => {
-          this.setState({
-            errorMessage:
-              "An unxpected error has occurred. Please try again later.",
-            successMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessage:
+                "An unxpected error has occurred. Please try again later.",
+              successMessage: "",
+            });
+          }
           console.log(error);
         });
     }
@@ -580,12 +626,15 @@ export default class ManageRestaurants extends Component {
 
       AddRestaurant(pkg)
         .then((response) => {
-          this.setState({
-            successMessage: "Successfully added restaurant!",
-            errorMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              successMessage: "Successfully added restaurant!",
+              errorMessage: "",
+            });
+          }
+
+          //If appliciable, upload images
           if (this.state.thumbnail !== null || this.state.largeImage !== null) {
-            //If appliciable, upload images
             if (this.state.thumbnail !== null) {
               let formData = new FormData();
               formData.append("file", this.state.thumbnail);
@@ -618,11 +667,13 @@ export default class ManageRestaurants extends Component {
           }
         })
         .catch((error) => {
-          this.setState({
-            errorMessage:
-              "An unxpected error has occurred. Please try again later.",
-            successMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessage:
+                "An unxpected error has occurred. Please try again later.",
+              successMessage: "",
+            });
+          }
           console.log(error);
         });
     }
@@ -638,28 +689,32 @@ export default class ManageRestaurants extends Component {
     ) {
       DeleteRestaurant(restaurantID)
         .then(() => {
-          this.setState({
-            successMessage: "Successfully deleted restaurant.",
-            errorMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              successMessage: "Successfully deleted restaurant.",
+              errorMessage: "",
+            });
+          }
           window.location.reload(true);
         })
         .catch((error) => {
-          this.setState({
-            errorMessage:
-              "An unxpected error has occurred. Please try again later.",
-            successMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessage:
+                "An unxpected error has occurred. Please try again later.",
+              successMessage: "",
+            });
+          }
           console.log(error);
         });
     }
   };
 
   //This method validates the form.
-  //Todo: Operating hour verification
   validateForm = () => {
     //Regular expression courtesy of https://stackoverflow.com/questions/8829765/regular-expression-for-dollar-amount-in-javascript
     const minorderVerification = /^\$?[0-9]+(\.[0-9][0-9])?$/;
+
     let errorMessage = "";
     if (this.state.price === "0") {
       errorMessage = errorMessage.concat(
@@ -671,12 +726,15 @@ export default class ManageRestaurants extends Component {
         "The minimum order price must be in the format $xx.xx \n"
       );
     }
-    if (errorMessage) {
-      this.setState({ errorMessage });
-      return false;
+    if (this._isMounted) {
+      if (errorMessage) {
+        this.setState({ errorMessage });
+        return false;
+      }
+      this.setState({ errorMessage: "" });
+      return true;
     }
-    this.setState({ errorMessage: "" });
-    return true;
+    return false;
   };
 
   //This method turns "$xxx.yy" into an integer xxxyy
@@ -694,6 +752,7 @@ export default class ManageRestaurants extends Component {
     return parseInt(dollars, 10) * 100 + parseInt(cents, 10);
   };
 
+  //This method renders the list of restaurants in the accordion.
   restaurantList = () => {
     if (this.state.areRestaurantsLoaded) {
       return this.state.restaurants.map((currentRestaurant) => {

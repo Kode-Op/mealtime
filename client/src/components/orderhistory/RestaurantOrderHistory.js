@@ -52,6 +52,7 @@ export default class RestaurantOrderHistory extends Component {
   }
 
   componentWillUnmount() {
+    document.body.style.overflow = "unset";
     this._isMounted = false;
   }
 

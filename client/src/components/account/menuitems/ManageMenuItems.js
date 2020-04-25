@@ -48,10 +48,9 @@ export default class ManageMenuItems extends Component {
       largeImage: null,
     };
   }
+
   componentDidMount() {
     this._isMounted = true;
-
-    console.log(this.props.user._id);
 
     //Load the restaurant data associated with the user that is logged in.
     GetRestaurantByUserID(this.props.user._id)
@@ -76,43 +75,65 @@ export default class ManageMenuItems extends Component {
     this._isMounted = false;
   }
 
+  //Event handlers
   onChangeName = (e) => {
     e.preventDefault();
-    this.setState({
-      name: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        name: e.target.value,
+      });
+    }
   };
   onChangePrice = (e) => {
     e.preventDefault();
-    this.setState({
-      price: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        price: e.target.value,
+      });
+    }
   };
   onChangePrepTime = (e) => {
     e.preventDefault();
-    this.setState({
-      preptime: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        preptime: e.target.value,
+      });
+    }
   };
   onChangeCategory = (e) => {
     e.preventDefault();
-    this.setState({
-      category: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        category: e.target.value,
+      });
+    }
   };
   onChangeDescription = (e) => {
     e.preventDefault();
-    this.setState({
-      description: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        description: e.target.value,
+      });
+    }
   };
   onChangeThumbnail = (e) => {
-    this.setState({ thumbnail: e.target.files[0] });
+    e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        thumbnail: e.target.files[0],
+      });
+    }
   };
   onChangeLargeImage = (e) => {
-    this.setState({ largeImage: e.target.files[0] });
+    e.preventDefault();
+    if (this._isMounted) {
+      this.setState({
+        largeImage: e.target.files[0],
+      });
+    }
   };
 
+  //The method renders the form to add, edit, delete a particular menu item.
   getForm = (category, id) => {
     return (
       <React.Fragment>
@@ -193,6 +214,7 @@ export default class ManageMenuItems extends Component {
     );
   };
 
+  //Returns the categories that the user can select from in the form
   getCategories = (id) => {
     return Object.entries(this.state.menuItems).map((key) => {
       return (
@@ -203,6 +225,8 @@ export default class ManageMenuItems extends Component {
     });
   };
 
+  //Returns the additional categories not included in this.state.menuItems
+  //that are created when a user adds a new category but doesn't save it.
   getAdditionalCategories = (id) => {
     return this.state.additionalCategories.map((currentCategory) => {
       return (
@@ -213,40 +237,50 @@ export default class ManageMenuItems extends Component {
     });
   };
 
+  //Gets the menu items for a particular restaurant and sets it in the state
   getRestaurantMenuItems = (e) => {
     if (e.target.value !== "0") {
       let restaurantID = e.target.value;
-      this.setState({
-        restaurantSelectionMade: true,
-        additionalCategories: [],
-      });
+      if (this._isMounted) {
+        this.setState({
+          restaurantSelectionMade: true,
+          additionalCategories: [],
+        });
+      }
       GetMenuItemsByRestaurantID(e.target.value)
         .then((response) => {
           const groupedByCategory = _.groupBy(
             response.data,
             (menuitem) => menuitem.category
           );
-          this.setState({
-            restaurantID: restaurantID,
-            menuItems: groupedByCategory,
-            areMenuItemsLoaded: true,
-          });
+          if (this._isMounted) {
+            this.setState({
+              restaurantID: restaurantID,
+              menuItems: groupedByCategory,
+              areMenuItemsLoaded: true,
+            });
+          }
         })
         .catch((error) => {
-          this.setState({
-            menuItems: null,
-            areMenuItemsLoaded: true,
-          });
+          if (this._isMounted) {
+            this.setState({
+              menuItems: null,
+              areMenuItemsLoaded: true,
+            });
+          }
           console.log(error);
         });
     } else {
-      this.setState({
-        restaurantSelectionMade: false,
-        areMenuItemsLoaded: false,
-      });
+      if (this._isMounted) {
+        this.setState({
+          restaurantSelectionMade: false,
+          areMenuItemsLoaded: false,
+        });
+      }
     }
   };
 
+  //Returns the restaurants that a particular user can select from in an <option>
   getRestaurantSelection = () => {
     return this.state.restaurants.map((currentRestaurant) => {
       return (
@@ -257,36 +291,42 @@ export default class ManageMenuItems extends Component {
     });
   };
 
+  //Updates the state with a particular menu item's properties
   updateStateVals = (menuitem) => {
     let price = menuitem.price / 100;
     price.toLocaleString("en-US", { style: "currency", currency: "USD" });
     price = "$" + price;
 
-    this.setState({
-      name: menuitem.name,
-      price: price,
-      preptime: menuitem.preptime,
-      category: menuitem.category,
-      description: menuitem.description,
-      errorMessage: "",
-      successMessage: "",
-      thumbnail: null,
-      largeImage: null,
-    });
+    if (this._isMounted) {
+      this.setState({
+        name: menuitem.name,
+        price: price,
+        preptime: menuitem.preptime,
+        category: menuitem.category,
+        description: menuitem.description,
+        errorMessage: "",
+        successMessage: "",
+        thumbnail: null,
+        largeImage: null,
+      });
+    }
   };
 
+  //Resets the state to its default values. Used when adding a new item/
   resetStateVals = (category) => {
-    this.setState({
-      name: "",
-      price: "$0.00",
-      preptime: 0,
-      category: category,
-      description: "",
-      errorMessage: "",
-      successMessage: "",
-      thumbnail: null,
-      largeImage: null,
-    });
+    if (this._isMounted) {
+      this.setState({
+        name: "",
+        price: "$0.00",
+        preptime: 0,
+        category: category,
+        description: "",
+        errorMessage: "",
+        successMessage: "",
+        thumbnail: null,
+        largeImage: null,
+      });
+    }
   };
 
   validateForm = () => {
@@ -305,8 +345,10 @@ export default class ManageMenuItems extends Component {
         "Your preptime must only contain numbers.\n"
       );
     }
-    if (errorMessage) {
-      this.setState({ errorMessage: errorMessage });
+    if (errorMessage && this._isMounted) {
+      this.setState({
+        errorMessage: errorMessage,
+      });
       return false;
     }
     return true;
@@ -327,6 +369,7 @@ export default class ManageMenuItems extends Component {
     return parseInt(dollars, 10) * 100 + parseInt(cents, 10);
   };
 
+  //This method adds a menu item to a restaurant
   onAddMenuItem = (e) => {
     e.preventDefault();
     if (this.validateForm()) {
@@ -339,15 +382,17 @@ export default class ManageMenuItems extends Component {
         category: this.state.category,
       };
 
-      console.log(pkg);
       AddMenuItem(pkg)
         .then((response) => {
-          this.setState({
-            successMessage: "Successfully added menu item!",
-            errorMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              successMessage: "Successfully added menu item!",
+              errorMessage: "",
+            });
+          }
+
+          //If appliciable, upload images
           if (this.state.thumbnail !== null || this.state.largeImage !== null) {
-            //If appliciable, upload images
             if (this.state.thumbnail !== null) {
               let formData = new FormData();
               formData.append("file", this.state.thumbnail);
@@ -380,16 +425,19 @@ export default class ManageMenuItems extends Component {
           }
         })
         .catch((error) => {
-          this.setState({
-            errorMessage:
-              "An unxpected error has occurred. Please try again later.",
-            successMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessage:
+                "An unxpected error has occurred. Please try again later.",
+              successMessage: "",
+            });
+          }
           console.log(error);
         });
     }
   };
 
+  //This method updates a menu item within a restaurant
   onUpdateMenuItem = (e, id) => {
     e.preventDefault();
     if (this.validateForm()) {
@@ -428,23 +476,28 @@ export default class ManageMenuItems extends Component {
 
       UpdateMenuItem(id, pkg)
         .then(() => {
-          this.setState({
-            successMessage: "Successfully edited menu item!",
-            errorMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              successMessage: "Successfully edited menu item!",
+              errorMessage: "",
+            });
+          }
           window.location.reload(true);
         })
         .catch((error) => {
-          this.setState({
-            errorMessage:
-              "An unxpected error has occurred. Please try again later.",
-            successMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessage:
+                "An unxpected error has occurred. Please try again later.",
+              successMessage: "",
+            });
+          }
           console.log(error);
         });
     }
   };
 
+  //This method deletes a particular menu item from a restaurant
   onDeleteMenuItem = (e, id) => {
     e.preventDefault();
     if (
@@ -454,23 +507,28 @@ export default class ManageMenuItems extends Component {
     ) {
       DeleteMenuItem(id)
         .then(() => {
-          this.setState({
-            successMessage: "Successfully deleted menu item",
-            errorMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              successMessage: "Successfully deleted menu item",
+              errorMessage: "",
+            });
+          }
           window.location.reload(true);
         })
         .catch((error) => {
-          this.setState({
-            errorMessage:
-              "An unxpected error has occurred. Please try again later.",
-            successMessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessage:
+                "An unxpected error has occurred. Please try again later.",
+              successMessage: "",
+            });
+          }
           console.log(error);
         });
     }
   };
 
+  //This method adds a category to "additionalCategories" in the state
   onAddCategory = () => {
     let categoryName = prompt(
       "Please enter the name of the category you would like to add."
@@ -478,10 +536,16 @@ export default class ManageMenuItems extends Component {
     if (categoryName !== "" && categoryName !== null) {
       let additionalCategories = this.state.additionalCategories;
       additionalCategories.unshift(categoryName);
-      this.setState({ additionalCategories });
+
+      if (this._isMounted) {
+        this.setState({
+          additionalCategories,
+        });
+      }
     }
   };
 
+  //This method renders the accordian for a particular menu item.
   renderMenuItems(category, menuItemArray) {
     return menuItemArray.map((currentMenuItem) => {
       return (
@@ -540,56 +604,7 @@ export default class ManageMenuItems extends Component {
     });
   }
 
-  renderAdditionalMenuItemGroups = () => {
-    if (this.state.restaurantSelectionMade && this.state.areMenuItemsLoaded) {
-      return this.state.additionalCategories.map((currentCategory) => {
-        return (
-          <div key={currentCategory + " div"}>
-            <h2 key={currentCategory} style={{ paddingTop: 30 }}>
-              {currentCategory}
-            </h2>
-            <Card key={currentCategory + " card"}>
-              <Accordion.Toggle
-                as={Card.Header}
-                onClick={() => this.resetStateVals(currentCategory)}
-                eventKey={currentCategory + " add"}
-                style={{ cursor: "pointer" }}
-              >
-                <div
-                  style={{
-                    display: "inline",
-                    fontWeight: "bold",
-                    paddingRight: 10,
-                  }}
-                >
-                  Add Menu Item+
-                  <div
-                    className="ProfileEditLink"
-                    style={{ fontWeight: "normal" }}
-                  >
-                    Add
-                  </div>
-                </div>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey={currentCategory + " add"}>
-                <Card.Body>
-                  <form onSubmit={(e) => this.onAddMenuItem(e)}>
-                    {this.getForm(currentCategory, 0)}
-                    <Button variant="success" type="submit">
-                      Add menu item
-                    </Button>
-                  </form>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </div>
-        );
-      });
-    } else {
-      return <div></div>;
-    }
-  };
-
+  //This method renders each menu item category and the accordians underneath them
   renderMenuItemGroups = () => {
     if (this.state.restaurantSelectionMade) {
       if (this.state.areMenuItemsLoaded) {
@@ -641,13 +656,73 @@ export default class ManageMenuItems extends Component {
         return <Loader />;
       }
     } else {
-      return <div></div>;
+      return null;
+    }
+  };
+
+  //This method renders the categories that have not yet been saved to the server,
+  //along with the accordion "Add new item+"
+  renderAdditionalMenuItemGroups = () => {
+    if (this.state.restaurantSelectionMade && this.state.areMenuItemsLoaded) {
+      return this.state.additionalCategories.map((currentCategory) => {
+        return (
+          <div key={currentCategory + " div"}>
+            <h2 key={currentCategory} style={{ paddingTop: 30 }}>
+              {currentCategory}
+            </h2>
+            <Card key={currentCategory + " card"}>
+              <Accordion.Toggle
+                as={Card.Header}
+                onClick={() => this.resetStateVals(currentCategory)}
+                eventKey={currentCategory + " add"}
+                style={{ cursor: "pointer" }}
+              >
+                <div
+                  style={{
+                    display: "inline",
+                    fontWeight: "bold",
+                    paddingRight: 10,
+                  }}
+                >
+                  Add Menu Item+
+                  <div
+                    className="ProfileEditLink"
+                    style={{ fontWeight: "normal" }}
+                  >
+                    Add
+                  </div>
+                </div>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey={currentCategory + " add"}>
+                <Card.Body>
+                  <form onSubmit={(e) => this.onAddMenuItem(e)}>
+                    {this.getForm(currentCategory, 0)}
+                    <Button variant="success" type="submit">
+                      Add menu item
+                    </Button>
+                  </form>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </div>
+        );
+      });
+    } else {
+      return null;
     }
   };
 
   render() {
-    if (this.state.areRestaurantsLoaded) {
-      if (this.state.restaurants.length > 0) {
+    const {
+      areRestaurantsLoaded,
+      restaurants,
+      areMenuItemsLoaded,
+      menuItems,
+      additionalCategories,
+    } = this.state;
+
+    if (areRestaurantsLoaded) {
+      if (restaurants.length > 0) {
         return (
           <div>
             <h2>Please select a restaurant</h2>
@@ -662,7 +737,7 @@ export default class ManageMenuItems extends Component {
                 {this.getRestaurantSelection()}
               </select>
 
-              {this.state.areMenuItemsLoaded && (
+              {areMenuItemsLoaded && (
                 <Button
                   style={{ width: 150, marginLeft: 20 }}
                   onClick={() => this.onAddCategory()}
@@ -671,9 +746,9 @@ export default class ManageMenuItems extends Component {
                 </Button>
               )}
             </div>
-            {this.state.areMenuItemsLoaded &&
-              this.state.additionalCategories.length === 0 &&
-              Object.keys(this.state.menuItems).length === 0 && (
+            {areMenuItemsLoaded &&
+              additionalCategories.length === 0 &&
+              Object.keys(menuItems).length === 0 && (
                 <div style={{ marginTop: 30 }}>
                   <h2>To add a menu item, click "Add Category" to start!</h2>
                 </div>

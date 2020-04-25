@@ -16,6 +16,8 @@ import {
 import "./CreditCard.css";
 
 export default class CreditCard extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -36,8 +38,9 @@ export default class CreditCard extends Component {
   }
 
   componentDidMount() {
-    //Load the credit card data associated with the user that's logged in.
+    this._isMounted = true;
 
+    //Load the credit card data associated with the user that's logged in.
     GetCreditCardByID(this.props.user._id)
       .then((response) => {
         this.setState({ creditCards: response.data, isLoaded: true });
@@ -47,41 +50,59 @@ export default class CreditCard extends Component {
       });
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   //Event handlers for each form field
   onChangeFName = (e) => {
-    this.setState({
-      ccfname: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        ccfname: e.target.value,
+      });
+    }
   };
   onChangeLName = (e) => {
-    this.setState({
-      cclname: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        cclname: e.target.value,
+      });
+    }
   };
   onChangeNumber = (e) => {
-    this.setState({
-      ccnumber: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        ccnumber: e.target.value,
+      });
+    }
   };
   onChangeCCV = (e) => {
-    this.setState({
-      ccv: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        ccv: e.target.value,
+      });
+    }
   };
   onChangeMonth = (e) => {
-    this.setState({
-      ccmonth: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        ccmonth: e.target.value,
+      });
+    }
   };
   onChangeYear = (e) => {
-    this.setState({
-      ccyear: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        ccyear: e.target.value,
+      });
+    }
   };
   onChangeAddress = (e) => {
-    this.setState({
-      ccaddress: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        ccaddress: e.target.value,
+      });
+    }
   };
 
   //Event handlers for when the user submits the forms on the page
@@ -103,24 +124,28 @@ export default class CreditCard extends Component {
 
       AddCreditCard(pkg)
         .then(() => {
-          this.setState({
-            successmessage: "Successfully added card!",
-            errormessage: "",
-          });
+          if (this._isMounted) {
+            this.setState({
+              successmessage: "Successfully added card!",
+              errormessage: "",
+            });
+          }
         })
         .catch((error) => {
-          if (error.response.status === 404) {
-            this.setState({
-              errormessage:
-                "404 user not found. Please refresh page and try again.",
-              successmessage: "",
-            });
-          } else {
-            this.setState({
-              errormessage:
-                "400 internal server error. Please try again later.",
-              successmessage: "",
-            });
+          if (this._isMounted) {
+            if (error.response.status === 404) {
+              this.setState({
+                errormessage:
+                  "404 user not found. Please refresh page and try again.",
+                successmessage: "",
+              });
+            } else {
+              this.setState({
+                errormessage:
+                  "400 internal server error. Please try again later.",
+                successmessage: "",
+              });
+            }
           }
         });
     }
@@ -163,7 +188,7 @@ export default class CreditCard extends Component {
     if (this.state.ccyear === "blankyear" || this.state.ccyear === "") {
       errorMessage = errorMessage.concat("You must enter a year.\n");
     }
-    if (errorMessage) {
+    if (errorMessage && this._isMounted) {
       this.setState({ errormessage: errorMessage });
       return false;
     }
@@ -172,8 +197,10 @@ export default class CreditCard extends Component {
 
   //This method renders each credit card that belongs to the user
   creditCardList = () => {
-    if (this.state.isLoaded) {
-      return this.state.creditCards.map((currentCard) => {
+    const { isLoaded, creditCards, errorMessage } = this.state;
+
+    if (isLoaded) {
+      return creditCards.map((currentCard) => {
         return (
           <Card key={currentCard._id}>
             <Accordion.Toggle
@@ -191,9 +218,7 @@ export default class CreditCard extends Component {
             <Accordion.Collapse eventKey={currentCard._id}>
               <Card.Body>
                 <h5>Are you sure?</h5>
-                <div className="ProfileErrorMessage">
-                  {this.state.errorMessageName}
-                </div>
+                <div className="ProfileErrorMessage">{errorMessage}</div>
                 <Button
                   variant="danger"
                   onClick={this.onDeleteCard(currentCard._id)}

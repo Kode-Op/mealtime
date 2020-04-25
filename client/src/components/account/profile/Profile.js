@@ -12,6 +12,8 @@ import {
 } from "../../../utils/axios/Users";
 
 export default class Profile extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -40,55 +42,83 @@ export default class Profile extends Component {
     };
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   //Event handlers for each form field
   onChangeFName = (e) => {
-    this.setState({
-      fName: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        fName: e.target.value,
+      });
+    }
   };
   onChangeLName = (e) => {
-    this.setState({
-      lName: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        lName: e.target.value,
+      });
+    }
   };
   onChangePasswordName = (e) => {
-    this.setState({
-      passwordname: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        passwordname: e.target.value,
+      });
+    }
   };
   onChangeEmail = (e) => {
-    this.setState({
-      email: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        email: e.target.value,
+      });
+    }
   };
   onChangeEmailConfirm = (e) => {
-    this.setState({
-      emailconfirm: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        emailconfirm: e.target.value,
+      });
+    }
   };
   onChangePasswordEmail = (e) => {
-    this.setState({
-      passwordemail: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        passwordemail: e.target.value,
+      });
+    }
   };
   onChangePasswordCurrent = (e) => {
-    this.setState({
-      passwordcurrent: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        passwordcurrent: e.target.value,
+      });
+    }
   };
   onChangePasswordNew = (e) => {
-    this.setState({
-      passwordnew: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        passwordnew: e.target.value,
+      });
+    }
   };
   onChangePasswordNewConfirm = (e) => {
-    this.setState({
-      passwordnewconfirm: e.target.value,
-    });
+    if (this._isMounted) {
+      this.setState({
+        passwordnewconfirm: e.target.value,
+      });
+    }
   };
 
   //Event handlers for when the user submits the forms on the page
   onSubmitName = (e) => {
+    e.preventDefault();
+
     let pkg = {
       firstName: this.state.fName,
       lastName: this.state.lName,
@@ -97,36 +127,40 @@ export default class Profile extends Component {
 
     UpdateUserName(this.state.userID, pkg)
       .then(() => {
-        this.setState({
-          errorMessageName: "",
-          successMessageName: "Successfully updated name!",
-        });
-      })
-      .catch((error) => {
-        if (error.response.status === 404) {
+        if (this._isMounted) {
           this.setState({
-            errorMessageName:
-              "404 user not found. Please refresh page and try again.",
-            successMessageName: "",
-          });
-        } else if (error.response.status === 500) {
-          this.setState({
-            errorMessageName: "Error! Invalid password",
-            successMessageName: "",
-          });
-        } else {
-          this.setState({
-            errorMessageName:
-              "400 internal server error. Please try again later.",
-            successMessageName: "",
+            errorMessageName: "",
+            successMessageName: "Successfully updated name!",
           });
         }
+      })
+      .catch((error) => {
+        if (this._isMounted) {
+          if (error.response.status === 404) {
+            this.setState({
+              errorMessageName:
+                "404 user not found. Please refresh page and try again.",
+              successMessageName: "",
+            });
+          } else if (error.response.status === 500) {
+            this.setState({
+              errorMessageName: "Error! Invalid password",
+              successMessageName: "",
+            });
+          } else {
+            this.setState({
+              errorMessageName:
+                "400 internal server error. Please try again later.",
+              successMessageName: "",
+            });
+          }
+        }
       });
-    e.preventDefault();
   };
 
   onSubmitEmail = (e) => {
     e.preventDefault();
+
     if (this.validateEmail()) {
       let pkg = {
         email: this.state.email,
@@ -135,29 +169,33 @@ export default class Profile extends Component {
 
       UpdateUserEmail(this.state.userID, pkg)
         .then(() => {
-          this.setState({
-            errorMessageEmail: "",
-            successMessageEmail: "Successfully updated email!",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessageEmail: "",
+              successMessageEmail: "Successfully updated email!",
+            });
+          }
         })
         .catch((error) => {
-          if (error.response.status === 404) {
-            this.setState({
-              errorMessageEmail:
-                "404 user not found. Please refresh page and try again.",
-              successMessageEmail: "",
-            });
-          } else if (error.response.status === 500) {
-            this.setState({
-              errorMessageEmail: "Error! Invalid password",
-              successMessageEmail: "",
-            });
-          } else {
-            this.setState({
-              errorMessageEmail:
-                "400 internal server error. Please try again later.",
-              successMessageEmail: "",
-            });
+          if (this._isMounted) {
+            if (error.response.status === 404) {
+              this.setState({
+                errorMessageEmail:
+                  "404 user not found. Please refresh page and try again.",
+                successMessageEmail: "",
+              });
+            } else if (error.response.status === 500) {
+              this.setState({
+                errorMessageEmail: "Error! Invalid password",
+                successMessageEmail: "",
+              });
+            } else {
+              this.setState({
+                errorMessageEmail:
+                  "400 internal server error. Please try again later.",
+                successMessageEmail: "",
+              });
+            }
           }
         });
     }
@@ -165,67 +203,78 @@ export default class Profile extends Component {
 
   onSubmitPreferences = (e) => {
     e.preventDefault();
+
     let pkg = {
       tags: this.state.tags,
     };
 
     UpdateUserTags(this.state.userID, pkg)
       .then(() => {
-        this.setState({
-          errorMessageTags: "",
-          successMessageTags: "Successfully updated tags!",
-        });
+        if (this._isMounted) {
+          this.setState({
+            errorMessageTags: "",
+            successMessageTags: "Successfully updated tags!",
+          });
+        }
         window.location.reload(true);
       })
       .catch((error) => {
-        if (error.response.status === 404) {
-          this.setState({
-            errorMessageTags:
-              "404 user not found. Please refresh page and try again.",
-            successMessageTags: "",
-          });
-        } else {
-          this.setState({
-            errorMessageTags:
-              "An unexpected error has occurred. Please refresh page and try again.",
-            successMessageTags: "",
-          });
+        if (this._isMounted) {
+          if (error.response.status === 404) {
+            this.setState({
+              errorMessageTags:
+                "404 user not found. Please refresh page and try again.",
+              successMessageTags: "",
+            });
+          } else {
+            this.setState({
+              errorMessageTags:
+                "An unexpected error has occurred. Please refresh page and try again.",
+              successMessageTags: "",
+            });
+          }
         }
       });
   };
 
   onSubmitPassword = (e) => {
     e.preventDefault();
+
     if (this.validatePassword()) {
       let pkg = {
         oldPassword: this.state.passwordcurrent,
         newPassword: this.state.passwordnew,
       };
+
       UpdateUserPassword(this.state.userID, pkg)
         .then(() => {
-          this.setState({
-            errorMessagePassword: "",
-            successMessagePassword: "Successfully updated password!",
-          });
+          if (this._isMounted) {
+            this.setState({
+              errorMessagePassword: "",
+              successMessagePassword: "Successfully updated password!",
+            });
+          }
         })
         .catch((error) => {
-          if (error.response.status === 404) {
-            this.setState({
-              errorMessagePassword:
-                "404 user not found. Please refresh page and try again.",
-              successMessagePassword: "",
-            });
-          } else if (error.response.status === 500) {
-            this.setState({
-              errorMessagePassword: "Error! Invalid current password",
-              successMessagePassword: "",
-            });
-          } else {
-            this.setState({
-              errorMessagePassword:
-                "400 internal server error. Please try again later.",
-              successMessagePassword: "",
-            });
+          if (this._isMounted) {
+            if (error.response.status === 404) {
+              this.setState({
+                errorMessagePassword:
+                  "404 user not found. Please refresh page and try again.",
+                successMessagePassword: "",
+              });
+            } else if (error.response.status === 500) {
+              this.setState({
+                errorMessagePassword: "Error! Invalid current password",
+                successMessagePassword: "",
+              });
+            } else {
+              this.setState({
+                errorMessagePassword:
+                  "400 internal server error. Please try again later.",
+                successMessagePassword: "",
+              });
+            }
           }
         });
     }
@@ -248,12 +297,19 @@ export default class Profile extends Component {
       errorMessage = errorMessage.concat("Your emails must match. \n");
     }
 
-    if (errorMessage) {
-      this.setState({ errorMessageEmail: errorMessage });
-      return false;
+    if (this._isMounted) {
+      if (errorMessage) {
+        this.setState({
+          errorMessageEmail: errorMessage,
+        });
+        return false;
+      }
+      this.setState({
+        errorMessageEmail: "",
+      });
+      return true;
     }
-    this.setState({ errorMessageEmail: "" });
-    return true;
+    return false;
   };
 
   //This helper function verifies that the new password is in the correct format.
@@ -286,8 +342,11 @@ export default class Profile extends Component {
         "Your new password must contain numbers. \n"
       );
     }
-    if (errorMessage) {
-      this.setState({ errorMessagePassword: errorMessage });
+
+    if (errorMessage && this._isMounted) {
+      this.setState({
+        errorMessagePassword: errorMessage,
+      });
       return false;
     }
     return true;
@@ -295,9 +354,11 @@ export default class Profile extends Component {
 
   //This method adds a tag to the tag array in the state.
   addTag = (index) => {
-    this.setState({
-      tags: [...this.state.tags, index],
-    });
+    if (this._isMounted) {
+      this.setState({
+        tags: [...this.state.tags, index],
+      });
+    }
   };
 
   //This method removes a tag from the tag array in the state.
@@ -307,9 +368,11 @@ export default class Profile extends Component {
       let index = tags.indexOf(i);
       if (index !== -1) {
         tags.splice(index, 1);
-        this.setState({
-          tags: tags,
-        });
+        if (this._isMounted) {
+          this.setState({
+            tags: tags,
+          });
+        }
       }
     }
   };
@@ -361,6 +424,7 @@ export default class Profile extends Component {
     return rows;
   };
 
+  //The method obtains the tags to display in the accordion menu
   getTagListSimple = () => {
     let rows = [];
     this.state.tags.forEach((item, i) => {
@@ -380,6 +444,26 @@ export default class Profile extends Component {
   };
 
   render() {
+    const {
+      fName,
+      lName,
+      passwordname,
+      errorMessageName,
+      successMessageName,
+      email,
+      emailconfirm,
+      passwordemail,
+      errorMessageEmail,
+      successMessageEmail,
+      errorMessageTags,
+      successMessageTags,
+      passwordcurrent,
+      passwordnew,
+      passwordnewconfirm,
+      errorMessagePassword,
+      successMessagePassword,
+    } = this.state;
+
     return (
       <div>
         <h2>Profile</h2>
@@ -392,7 +476,7 @@ export default class Profile extends Component {
             >
               <div className="ProfileHeaderLeft">Name:</div>
               <div className="ProfileUserInfo">
-                {this.state.fName} {this.state.lName}
+                {fName} {lName}
               </div>
               <div className="ProfileEditLink">Edit</div>
             </Accordion.Toggle>
@@ -407,7 +491,7 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="fname"
-                    value={this.state.fName}
+                    value={fName}
                     onChange={this.onChangeFName}
                     className="ProfileInputBox"
                     required
@@ -418,7 +502,7 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="lname"
-                    value={this.state.lName}
+                    value={lName}
                     onChange={this.onChangeLName}
                     className="ProfileInputBox"
                     required
@@ -429,16 +513,14 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordname"
-                    value={this.state.passwordname}
+                    value={passwordname}
                     onChange={this.onChangePasswordName}
                     className="ProfileInputBox"
                     required
                   />
-                  <div className="ProfileErrorMessage">
-                    {this.state.errorMessageName}
-                  </div>
+                  <div className="ProfileErrorMessage">{errorMessageName}</div>
                   <div className="ProfileSuccessMessage">
-                    {this.state.successMessageName}
+                    {successMessageName}
                   </div>
                   <Button variant="success" type="submit">
                     Update name
@@ -454,7 +536,7 @@ export default class Profile extends Component {
               style={{ cursor: "pointer" }}
             >
               <div className="ProfileHeaderLeft">Email:</div>
-              <div className="ProfileUserInfo">{this.state.email}</div>
+              <div className="ProfileUserInfo">{email}</div>
               <div className="ProfileEditLink">Edit</div>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="1">
@@ -468,7 +550,7 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="email"
-                    value={this.state.email}
+                    value={email}
                     onChange={this.onChangeEmail}
                     className="ProfileInputBox"
                     required
@@ -479,7 +561,7 @@ export default class Profile extends Component {
                   <input
                     type="text"
                     name="emailconfirm"
-                    value={this.state.emailconfirm}
+                    value={emailconfirm}
                     onChange={this.onChangeEmailConfirm}
                     className="ProfileInputBox"
                     required
@@ -490,16 +572,14 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordemail"
-                    value={this.state.passwordemail}
+                    value={passwordemail}
                     onChange={this.onChangePasswordEmail}
                     className="ProfileInputBox"
                     required
                   />
-                  <div className="ProfileErrorMessage">
-                    {this.state.errorMessageEmail}
-                  </div>
+                  <div className="ProfileErrorMessage">{errorMessageEmail}</div>
                   <div className="ProfileSuccessMessage">
-                    {this.state.successMessageEmail}
+                    {successMessageEmail}
                   </div>
                   <Button variant="success" type="submit">
                     Update email
@@ -538,11 +618,9 @@ export default class Profile extends Component {
                     </div>
                   </div>
 
-                  <div className="ProfileErrorMessage">
-                    {this.state.errorMessageTags}
-                  </div>
+                  <div className="ProfileErrorMessage">{errorMessageTags}</div>
                   <div className="ProfileSuccessMessage">
-                    {this.state.successMessageTags}
+                    {successMessageTags}
                   </div>
                   <Button variant="success" type="submit">
                     Update preferences
@@ -572,7 +650,7 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordcurrent"
-                    value={this.state.passwordcurrent}
+                    value={passwordcurrent}
                     onChange={this.onChangePasswordCurrent}
                     className="ProfileInputBox"
                     required
@@ -583,7 +661,7 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordnew"
-                    value={this.state.passwordnew}
+                    value={passwordnew}
                     onChange={this.onChangePasswordNew}
                     className="ProfileInputBox"
                     required
@@ -597,16 +675,16 @@ export default class Profile extends Component {
                   <input
                     type="password"
                     name="passwordnewconfirm"
-                    value={this.state.passwordnewconfirm}
+                    value={passwordnewconfirm}
                     onChange={this.onChangePasswordNewConfirm}
                     className="ProfileInputBox"
                     required
                   />
                   <div className="ProfileErrorMessage">
-                    {this.state.errorMessagePassword}
+                    {errorMessagePassword}
                   </div>
                   <div className="ProfileSuccessMessage">
-                    {this.state.successMessagePassword}
+                    {successMessagePassword}
                   </div>
                   <Button variant="success" type="submit">
                     Update password

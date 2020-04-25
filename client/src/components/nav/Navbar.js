@@ -44,41 +44,38 @@ export default class NavBar extends Component {
     }
   }
 
-  //This method sets mobileview to true if the window has
-  //a width of less than 1024
-  getMobileView = () => {
-    if (window.innerWidth < 1024) {
-      this.setState({ mobileview: true });
-    } else {
-      this.setState({ mobileview: false });
-    }
-  };
-
   componentDidMount() {
     this._isMounted = true;
 
     //If a prop is found, set getMenuItemsFromStorage to true. Otherwise,
     //set to false and initialize the menuitems state to whatever is in storage
     if (this.props.menuItems) {
-      this.setState({
-        getMenuItemsFromStorage: false,
-      });
+      if (this._isMounted) {
+        this.setState({
+          getMenuItemsFromStorage: false,
+        });
+      }
     } else {
       let menuItemArray = getFromStorage("shoppingbag");
       let restaurant = getFromStorage("restaurant");
-
-      this.setState({
-        getMenuItemsFromStorage: true,
-        restaurant: restaurant,
-      });
+      if (this._isMounted) {
+        this.setState({
+          getMenuItemsFromStorage: true,
+          restaurant: restaurant,
+        });
+      }
       if (menuItemArray) {
-        this.setState({
-          menuItems: menuItemArray.menuItems,
-        });
+        if (this._isMounted) {
+          this.setState({
+            menuItems: menuItemArray.menuItems,
+          });
+        }
       } else {
-        this.setState({
-          menuItems: [],
-        });
+        if (this._isMounted) {
+          this.setState({
+            menuItems: [],
+          });
+        }
       }
     }
 
@@ -92,10 +89,22 @@ export default class NavBar extends Component {
     window.removeEventListener("resize", this.getMobileView);
   }
 
+  //This method sets mobileview to true if the window has
+  //a width of less than 1024
+  getMobileView = () => {
+    if (this._isMounted) {
+      if (window.innerWidth < 1024) {
+        this.setState({ mobileview: true });
+      } else {
+        this.setState({ mobileview: false });
+      }
+    }
+  };
+
   //Whenever a new menu item is received from Restaurant.js, set 'bagMenuToggle' to true.
   //This automatically opens the bag icon in the navbar
   componentDidUpdate(prevProps) {
-    if (prevProps.menuItems !== this.props.menuItems) {
+    if (prevProps.menuItems !== this.props.menuItems && this._isMounted) {
       this.setState({
         bagMenuToggle: true,
       });
@@ -117,7 +126,7 @@ export default class NavBar extends Component {
     let menuItemArray = getFromStorage("shoppingbag");
     menuItemArray.menuItems.splice(index, 1);
     setInStorage("shoppingbag", menuItemArray);
-    if (menuItemArray.menuItems.length === 0) {
+    if (menuItemArray.menuItems.length === 0 && this._isMounted) {
       setInStorage("restaurant", null);
       this.setState({
         restaurant: [],
@@ -125,9 +134,11 @@ export default class NavBar extends Component {
     }
 
     if (this.state.getMenuItemsFromStorage) {
-      this.setState({
-        menuItems: menuItemArray.menuItems,
-      });
+      if (this._isMounted) {
+        this.setState({
+          menuItems: menuItemArray.menuItems,
+        });
+      }
     } else {
       this.props.removeMenuItem(index);
     }
@@ -138,6 +149,7 @@ export default class NavBar extends Component {
     return menuItems.map((currentMenuItem, index) => {
       const { quantity, time } = currentMenuItem;
       const { name, price, _id } = currentMenuItem.menuItem;
+
       return (
         <div key={_id + " " + time}>
           {quantity} x {name}
@@ -390,7 +402,6 @@ export default class NavBar extends Component {
     }
   };
 
-  //If mobileview is false, then the navbar will stick to the top of the page.
   render() {
     return (
       <div>

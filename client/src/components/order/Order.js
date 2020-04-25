@@ -18,7 +18,7 @@ import { GetOrderByID } from "../../utils/axios/Orders";
 import "./Order.css";
 
 export default class Order extends Component {
-  _isMounted = true;
+  _isMounted = false;
 
   constructor(props) {
     super(props);
@@ -67,6 +67,10 @@ export default class Order extends Component {
       });
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   //This functions gets the order data. Set on a 30 second timer
   async loadOrder() {
     return GetOrderByID(this.state.id)
@@ -79,17 +83,21 @@ export default class Order extends Component {
           readyTime.getMinutes() + response.data[0].prepTime
         );
 
-        this.setState({
-          order: response.data[0],
-          isOrderLoaded: true,
-          readyTime: readyTime,
-        });
+        if (this._isMounted) {
+          this.setState({
+            order: response.data[0],
+            isOrderLoaded: true,
+            readyTime: readyTime,
+          });
+        }
       })
       .catch(() => {
-        this.setState({
-          order: null,
-          isOrderLoaded: true,
-        });
+        if (this._isMounted) {
+          this.setState({
+            order: null,
+            isOrderLoaded: true,
+          });
+        }
       });
   }
 
@@ -147,8 +155,8 @@ export default class Order extends Component {
       }
     }
   };
+
   render() {
-    //Deconstruct the state
     const { isUserLoaded, user, isOrderLoaded, order, readyTime } = this.state;
 
     if (isUserLoaded && isOrderLoaded) {

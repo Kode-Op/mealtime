@@ -45,32 +45,6 @@ export default class Home extends Component {
     }
   }
 
-  /*  
-      This method sets the "scrolled" variable to true is the top of the
-      window surpasses the "Enter your address" input field. This is used
-      to make it stick to the top of the screen after it's surpassed. This
-      method also recalculates "mobileview" and "smallscreendesktop" when
-      the window is either being scrolled or resized
-  */
-  getScrollState = () => {
-    let intViewportWidth;
-    this.state.smallscreendesktop
-      ? (intViewportWidth = window.innerWidth / 8 + 30)
-      : (intViewportWidth = window.innerWidth / 10 + 75);
-    let isTop = window.scrollY < intViewportWidth;
-
-    if (window.innerWidth < 1024) {
-      this.setState({ mobileview: true, scrolled: false });
-    } else {
-      this.setState({ mobileview: false });
-      if (isTop !== true) {
-        this.setState({ scrolled: true });
-      } else {
-        this.setState({ scrolled: false });
-      }
-    }
-  };
-
   componentDidMount() {
     this._isMounted = true;
 
@@ -107,6 +81,34 @@ export default class Home extends Component {
     window.removeEventListener("scroll", this.getScrollState);
     window.removeEventListener("resize", this.getScrollState);
   }
+
+  /*  
+      This method sets the "scrolled" variable to true is the top of the
+      window surpasses the "Enter your address" input field. This is used
+      to make it stick to the top of the screen after it's surpassed. This
+      method also recalculates "mobileview" and "smallscreendesktop" when
+      the window is either being scrolled or resized
+  */
+  getScrollState = () => {
+    let intViewportWidth;
+    this.state.smallscreendesktop
+      ? (intViewportWidth = window.innerWidth / 8 + 30)
+      : (intViewportWidth = window.innerWidth / 10 + 75);
+    let isTop = window.scrollY < intViewportWidth;
+
+    if (this._isMounted) {
+      if (window.innerWidth < 1024) {
+        this.setState({ mobileview: true, scrolled: false });
+      } else {
+        this.setState({ mobileview: false });
+        if (isTop !== true) {
+          this.setState({ scrolled: true });
+        } else {
+          this.setState({ scrolled: false });
+        }
+      }
+    }
+  };
 
   render() {
     if (this.state.isUserLoaded) {

@@ -8,16 +8,30 @@ import "./FeedAddressOverlay.css";
 //This class renders a popup text box that asks the user for the address if
 //no address is associated with the user's account
 export default class FeedAddressOverlay extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
-    this.state = { address: "" };
+    this.state = {
+      address: "",
+    };
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   //Event handler for changing the address
-  onChangeAddress = e => {
-    this.setState({
-      address: e.target.value
-    });
+  onChangeAddress = (e) => {
+    if (this._isMounted) {
+      this.setState({
+        address: e.target.value,
+      });
+    }
   };
 
   render() {
