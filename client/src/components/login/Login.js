@@ -26,7 +26,7 @@ export default class Login extends Component {
     }
   }
 
-  componentDidMounted() {
+  componentDidMount() {
     this._isMounted = true;
   }
 
