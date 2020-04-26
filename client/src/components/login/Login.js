@@ -7,6 +7,8 @@ import { Link, Redirect } from "react-router-dom";
 import "./Login.css";
 
 export default class Login extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -14,7 +16,7 @@ export default class Login extends Component {
       email: "",
       password: "",
       errorMessage: "",
-      isValidated: false
+      isValidated: false,
     };
 
     //If this page was redirected back from the confirmation page,
@@ -24,24 +26,38 @@ export default class Login extends Component {
     }
   }
 
+  componentDidMounted() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   //Event handlers for each form field
-  onChangeEmail = e => {
-    this.setState({
-      email: e.target.value
-    });
+  onChangeEmail = (e) => {
+    if (this._isMounted) {
+      this.setState({
+        email: e.target.value,
+      });
+    }
   };
-  onChangePassword = e => {
-    this.setState({
-      password: e.target.value
-    });
+  onChangePassword = (e) => {
+    if (this._isMounted) {
+      this.setState({
+        password: e.target.value,
+      });
+    }
   };
 
   //Event handler for form submission
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     if (this.validate()) {
-      this.setState({ isValidated: true });
+      if (this._isMounted) {
+        this.setState({ isValidated: true });
+      }
     }
   };
 
@@ -50,7 +66,7 @@ export default class Login extends Component {
     //Regular expression courtesy of https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
     const emailVerification = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (!emailVerification.test(this.state.email)) {
+    if (!emailVerification.test(this.state.email) && this._isMounted) {
       this.setState({ errorMessage: "You must enter a valid email address." });
       return false;
     }
@@ -65,8 +81,8 @@ export default class Login extends Component {
             pathname: "/login/confirmation",
             state: {
               email: this.state.email,
-              password: this.state.password
-            }
+              password: this.state.password,
+            },
           }}
         />
       );

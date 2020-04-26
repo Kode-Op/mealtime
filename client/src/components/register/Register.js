@@ -7,6 +7,8 @@ import { Link, Redirect } from "react-router-dom";
 import "./Register.css";
 
 export default class Register extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -16,7 +18,7 @@ export default class Register extends Component {
       email: "",
       password: "",
       errorMessage: "",
-      isValidated: false
+      isValidated: false,
     };
 
     //If this page was redirected back from the confirmation page,
@@ -26,35 +28,49 @@ export default class Register extends Component {
     }
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   //Event handlers for each form field
-  onChangeFirstName = e => {
-    this.setState({
-      firstName: e.target.value
-    });
+  onChangeFirstName = (e) => {
+    if (this._isMounted) {
+      this.setState({
+        firstName: e.target.value,
+      });
+    }
   };
-  onChangeLastName = e => {
-    this.setState({
-      lastName: e.target.value
-    });
+  onChangeLastName = (e) => {
+    if (this._isMounted) {
+      this.setState({
+        lastName: e.target.value,
+      });
+    }
   };
-  onChangeEmail = e => {
-    this.setState({
-      email: e.target.value
-    });
+  onChangeEmail = (e) => {
+    if (this._isMounted) {
+      this.setState({
+        email: e.target.value,
+      });
+    }
   };
-  onChangePassword = e => {
-    this.setState({
-      password: e.target.value
-    });
+  onChangePassword = (e) => {
+    if (this._isMounted) {
+      this.setState({
+        password: e.target.value,
+      });
+    }
   };
 
   //Event handler for form submission
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
-    const isValid = this.validate();
-
-    if (isValid) {
+    if (this.validate() && this._isMounted) {
       this.setState({ isValidated: true });
     }
   };
@@ -92,7 +108,7 @@ export default class Register extends Component {
         "Your password must contain numbers. \n"
       );
     }
-    if (errorMessage) {
+    if (errorMessage && this._isMounted) {
       this.setState({ errorMessage });
       return false;
     }
@@ -109,8 +125,8 @@ export default class Register extends Component {
               firstName: this.state.firstName,
               lastName: this.state.lastName,
               email: this.state.email,
-              password: this.state.password
-            }
+              password: this.state.password,
+            },
           }}
         />
       );
