@@ -102,7 +102,7 @@ export default class Order extends Component {
   }
 
   getOrderStatus = (order, readyTime) => {
-    const { isCancelled, isFulfilled } = order;
+    const { isCanceled, isFulfilled } = order;
 
     const currentTime = new Date();
     const timeDifference = readyTime - currentTime;
@@ -114,10 +114,10 @@ export default class Order extends Component {
       minutesRemaining = 0;
     }
 
-    if (isCancelled) {
+    if (isCanceled) {
       return (
         <div>
-          <h3>Your order is cancelled</h3>
+          <h3>Your order is canceled.</h3>
           <br />
         </div>
       );
