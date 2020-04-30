@@ -33,7 +33,7 @@ mongoose.connect(uri, {
 });
 const connection = mongoose.connection;
 connection.once("open", () => {
-  console.log("MongoDB database connection established successfully");
+  //console.log("MongoDB database connection established successfully");
 });
 
 // define api routes (partitioned by file)
@@ -62,3 +62,5 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.listen(port);
+
+module.exports = app;
