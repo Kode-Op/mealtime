@@ -1,18 +1,10 @@
 const router = require("express").Router();
 let MenuItem = require("../models/menuItem_model");
 
-// DEPRECATED - DO NOT USE
-// Format: GET /api/menuItems/
-// Returns: Returns JSON packages of all menu items for all restaurants
-router.route("/").get((req, res) => {
-  MenuItem.find()
-    .then((menuItems) => res.json(menuItems))
-    .catch((err) => res.status(400).json("Error: " + err));
-});
-
-// Format: GET /api/menuItems/
+// Format: GET /api/menuItems/Restaurant._id
+// Required Parameters: Restaurant._id
 // Returns: Returns JSON packages of all menu items associated with a restaurant
-router.get("/:id", function (req, res) {
+router.route("/:id").get((req, res) => {
   MenuItem.find({
     restaurantId: req.params.id,
     isHidden: false,
@@ -23,7 +15,7 @@ router.get("/:id", function (req, res) {
 
 // Format: POST /api/menuItems/add
 // Required Fields: restaurantId, name, price, preptime, description, category
-// Returns: Status based on successful/unsuccessful menuItem creation, and menuItem._id
+// Returns: Status based on successful/unsuccessful menuItem creation, and new MenuItem._id
 router.route("/add").post((req, res) => {
   const restaurantId = req.body.restaurantId;
   const name = req.body.name;
@@ -77,7 +69,8 @@ router.route("/add").post((req, res) => {
 
 // Format: POST /api/menuItems/update/MenuItem._id
 // Required Fields: name, price, preptime, description, category
-// Returns: Status based on successful/unsuccessful menuItem creation
+// Required Parameters: MenuItem._id
+// Returns: Status based on successful/unsuccessful menuItem update
 router.route("/update/:id").post((req, res) => {
   const id = req.params.id;
   const name = req.body.name;
@@ -102,7 +95,9 @@ router.route("/update/:id").post((req, res) => {
 
 // Format: DELETE /api/menuItems/MenuItem._id
 // Required Fields: none
+// Required Parameters: MenuItem._id
 // Returns: Status based on successful/unsuccessful deletion
+// Note: Does not delete document, sets isHidden flag
 router.route("/:id").delete((req, res) => {
   MenuItem.findById(req.params.id).then((restaurant) => {
     restaurant.isHidden = true;

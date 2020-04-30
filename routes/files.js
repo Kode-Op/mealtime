@@ -3,6 +3,7 @@ const AWS = require("aws-sdk");
 
 require("dotenv").config();
 
+// gather s3 information from env file
 let s3bucket = new AWS.S3({
   accessKeyId: process.env.IAM_USER_KEY,
   secretAccessKey: process.env.IAM_USER_SECRET,
@@ -11,7 +12,7 @@ let s3bucket = new AWS.S3({
 
 // Format: POST /api/files/upload
 // Required Fields: file, path (path format: subfolder/filename.txt) *only for images
-// Returns: location if successful, error if not
+// Returns: location and success if successful, error if not
 router.route("/upload").post((req, res) => {
   const file = req.files.file;
 

@@ -4,11 +4,29 @@ const Schema = mongoose.Schema;
 
 const restaurantSchema = new Schema(
   {
-    name: { type: String, required: true },
-    price: { type: Number, required: true, minimum: 0, maximum: 5 },
-    rating: { type: Number, minimum: 0, maximum: 10 },
-    description: { type: String, required: true },
-    minorder: { type: Number, default: 1 },
+    name: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      minimum: 0,
+      maximum: 5,
+    },
+    rating: {
+      type: Number,
+      minimum: 0,
+      maximum: 10,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    minorder: {
+      type: Number,
+      default: 1,
+    },
     address: {
       type: String,
       default: "",

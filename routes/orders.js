@@ -45,23 +45,9 @@ const processOrders = async (orders) => {
   }
 };
 
-// Format: GET /api/orders/
-// Required Fields: none
-// Returns: All info on all orders
-router.route("/").get((req, res) => {
-  Order.find()
-    .then((orders) => {
-      const process = async (orders) => {
-        result = await processOrders(orders);
-        res.json(orders);
-      };
-      process(orders);
-    })
-    .catch((err) => res.status(400).json("Error: " + err));
-});
-
 // Format: GET /api/orders/byUser/User._id
 // Required Fields: none
+// Required Parameters: User._id
 // Returns: All orders on a specific user
 router.route("/byUser/:id").get((req, res) => {
   Order.find({ userId: req.params.id })
@@ -77,6 +63,7 @@ router.route("/byUser/:id").get((req, res) => {
 
 // Format: GET /api/orders/byRestaurant/Resturant._id
 // Required Fields: none
+// Required Parameters: Restaurant._id
 // Returns: All orders on a specific resturant
 router.route("/byRestaurant/:id").get((req, res) => {
   Order.find({ restaurantId: req.params.id })
@@ -93,7 +80,8 @@ router.route("/byRestaurant/:id").get((req, res) => {
 // Format: POST /api/orders/add
 // Required Fields: userId, restaurantId, creditCardId, menuItems[], address,
 //                  quantity[], totalPaid
-// Returns: Status based on successful/unsuccessful order creation and Order._id
+// Optional Fields: instructions
+// Returns: Status based on successful/unsuccessful order creation and new Order._id
 router.route("/add").post((req, res) => {
   const userId = req.body.userId;
   let custFirst = "";
@@ -207,6 +195,7 @@ router.route("/add").post((req, res) => {
 
 // Format: GET /api/orders/Order._id
 // Required Fields: none
+// Required Parameters: Order._id
 // Returns: All info on a specific order
 router.route("/:id").get((req, res) => {
   Order.find({ _id: req.params.id })
@@ -222,14 +211,16 @@ router.route("/:id").get((req, res) => {
 
 // Format: GET /api/orders/cancel/Order._id
 // Required Fields: none
-// Returns: All info on a specific order
+// Required Parameters: Order._id
+// Returns: Status based on successful/unsuccessful cancelation of order
+// Note: This does NOT delete the document, sets isCanceled to true
 router.route("/cancel/:id").get((req, res) => {
   Order.findById(req.params.id)
     .then((orders) => {
       orders.isCanceled = true;
       orders
         .save()
-        .then(() => res.json("Order Cancelled."))
+        .then(() => res.json("Order Canceled."))
         .catch((err) => res.status(400).json("Error: " + err));
     })
     .catch((err) => res.status(400).json("Error: " + err));
