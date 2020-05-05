@@ -219,6 +219,34 @@ describe("Restaurant", function () {
     res.body.should.be.a("array");
   });
 
+  it("POST api/restaurants/filter should return restaurants filtered by scpecified criteria just for tag search", async function () {
+    let pkg = {
+      tags: [2],
+      priceLow: 0,
+      priceHigh: 0,
+      ratings: 0,
+    };
+
+    let res = await chai.request(app).post("/api/restaurants/filter").send(pkg);
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+  });
+
+  it("POST api/restaurants/filter should return restaurants filtered by scpecified criteria just for price range", async function () {
+    let pkg = {
+      tags: [],
+      priceLow: 0,
+      priceHigh: 5,
+      ratings: 0,
+    };
+
+    let res = await chai.request(app).post("/api/restaurants/filter").send(pkg);
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+  });
+
   it("POST api/restaurants/filter should return restaurants filtered by scpecified criteria if limiting criteria are given", async function () {
     let pkg = {
       tags: [2, 4],
