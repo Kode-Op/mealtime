@@ -140,6 +140,7 @@ describe("Order", function () {
   });
 
   it("GET api/orders/byRestuarant/Restaurant._id should return all orders", async function () {
+    this.timeout(10000);
     let res = await chai
       .request(app)
       .get("/api/orders/byRestaurant/5ea27026200dd800170da05c");
@@ -347,6 +348,19 @@ describe("User", function () {
     res.body.should.be.a("string");
   });
 
+  it("POST api/users/add should return a 403 if user's email already exists", async function () {
+    let pkg = {
+      email: "test@testing.com",
+      firstName: "Test",
+      lastName: "Tester",
+      password: "badPassword!1",
+    };
+    let res = await chai.request(app).post("/api/users/add").send(pkg);
+
+    res.should.have.status(403);
+    res.body.should.be.a("string");
+  });
+
   it("POST api/users/login should log a user into the service", async function () {
     let pkg = {
       email: "test@testing.com",
@@ -359,12 +373,38 @@ describe("User", function () {
     tempToken = res.body.token;
   });
 
+  it("POST api/users/login should return a 404 if user is not found", async function () {
+    let pkg = {
+      email: "test@testing.com",
+      password: "badPassword!",
+    };
+    let res = await chai.request(app).post("/api/users/login").send(pkg);
+
+    res.should.have.status(404);
+  });
+
   it("GET api/users/verify/UserSession._id should confirm if a token exists", async function () {
     let res = await chai.request(app).get("/api/users/verify/" + tempToken);
 
     res.should.have.status(200);
     res.body.should.be.a("object");
     tempUser = res.body.data._id;
+  });
+
+  it("GET api/users/verify/UserSession._id should return a 404 if token doesn't exist", async function () {
+    let res = await chai
+      .request(app)
+      .get("/api/users/verify/000000000000000000000000");
+
+    res.should.have.status(404);
+  });
+
+  it("GET api/users/verify/UserSession._id should return a 500 if token is expired (logged out)", async function () {
+    let res = await chai
+      .request(app)
+      .get("/api/users/verify/5e729826f62c9c45d442ab94");
+
+    res.should.have.status(500);
   });
 
   it("GET api/users/logout/UserSession._id should deactivate a valid token", async function () {
@@ -381,6 +421,15 @@ describe("User", function () {
     res.body.should.be.a("string");
   });
 
+  it("GET api/users/makeOwner/User._id should return a 404 if user doesn't exist", async function () {
+    let res = await chai
+      .request(app)
+      .get("/api/users/makeOwner/000000000000000000000000");
+
+    res.should.have.status(404);
+    res.body.should.be.a("string");
+  });
+
   it("GET api/users/updateName/User._id should update a user's name", async function () {
     let pkg = {
       firstName: "Testy",
@@ -393,6 +442,36 @@ describe("User", function () {
       .send(pkg);
 
     res.should.have.status(200);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updateName/User._id should return a 404 if user doesn't exist", async function () {
+    let pkg = {
+      firstName: "Testy",
+      lastName: "Testest",
+      password: "badPassword!1",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updateName/000000000000000000000000")
+      .send(pkg);
+
+    res.should.have.status(404);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updateName/User._id should return a 500 if password is incorrect", async function () {
+    let pkg = {
+      firstName: "Testy",
+      lastName: "Testest",
+      password: "badPassword!",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updateName/" + tempUser)
+      .send(pkg);
+
+    res.should.have.status(500);
     res.body.should.be.a("string");
   });
 

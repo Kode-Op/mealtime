@@ -73,11 +73,9 @@ router.route("/add").post((req, res) => {
     .save()
     .then(() => res.json("User added!"))
     .catch(() => {
-      User.find({ email: email }, (err, previousUsers) => {
+      User.find({ email: email }).then((previousUsers) => {
         if (previousUsers.length > 0) {
           res.status(403).json("Error: Account already exists");
-        } else if (err) {
-          res.status(400).json("Error: " + err);
         }
       });
     });
@@ -90,11 +88,7 @@ router.route("/login").post((req, res) => {
   var email = req.body.email;
   email = email.toLowerCase();
   var password = req.body.password;
-
-  User.findOne({ email: email }, function (err, user) {
-    if (err) {
-      return res.status(500).send();
-    }
+  User.findOne({ email: email }).then((user) => {
     if (!user) {
       // not found
       return res.status(404).send();
