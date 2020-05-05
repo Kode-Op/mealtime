@@ -403,6 +403,16 @@ describe("User", function () {
 
   it("POST api/users/login should return a 404 if user is not found", async function () {
     let pkg = {
+      email: "test@testing.co",
+      password: "badPassword!1",
+    };
+    let res = await chai.request(app).post("/api/users/login").send(pkg);
+
+    res.should.have.status(404);
+  });
+
+  it("POST api/users/login should return a 404 if password is incorrect", async function () {
+    let pkg = {
       email: "test@testing.com",
       password: "badPassword!",
     };
@@ -417,6 +427,14 @@ describe("User", function () {
     res.should.have.status(200);
     res.body.should.be.a("object");
     tempUser = res.body.data._id;
+  });
+
+  it("GET api/users/verify/UserSession._id should return a 404 if user is not found from token", async function () {
+    let res = await chai
+      .request(app)
+      .get("/api/users/verify/5eb19ce27afb8d0b51220ea6");
+
+    res.should.have.status(404);
   });
 
   it("GET api/users/verify/UserSession._id should return a 404 if token doesn't exist", async function () {
@@ -517,6 +535,34 @@ describe("User", function () {
     res.body.should.be.a("string");
   });
 
+  it("GET api/users/updateEmail/User._id should return a 404 if user doesn't exist", async function () {
+    let pkg = {
+      email: "newEmail@test.com",
+      password: "badPassword!1",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updateEmail/000000000000000000000000")
+      .send(pkg);
+
+    res.should.have.status(404);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updateEmail/User._id should return a 500 if password is incorrect", async function () {
+    let pkg = {
+      email: "newEmail@test.com",
+      password: "badPassword!",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updateEmail/" + tempUser)
+      .send(pkg);
+
+    res.should.have.status(500);
+    res.body.should.be.a("string");
+  });
+
   it("GET api/users/updatePhone/User._id should update a user's phone number", async function () {
     let pkg = {
       phone: "555-521-1234",
@@ -528,6 +574,34 @@ describe("User", function () {
       .send(pkg);
 
     res.should.have.status(200);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updatePhone/User._id should return a 404 if user doesn't exist", async function () {
+    let pkg = {
+      phone: "555-521-1234",
+      password: "badPassword!1",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updatePhone/000000000000000000000000")
+      .send(pkg);
+
+    res.should.have.status(404);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updatePhone/User._id should return a 500 if password is incorrect", async function () {
+    let pkg = {
+      phone: "555-521-1234",
+      password: "badPassword!",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updatePhone/" + tempUser)
+      .send(pkg);
+
+    res.should.have.status(500);
     res.body.should.be.a("string");
   });
 
@@ -544,6 +618,19 @@ describe("User", function () {
     res.body.should.be.a("string");
   });
 
+  it("GET api/users/updateAddress/User._id should return a 404 if user doesn't exist", async function () {
+    let pkg = {
+      address: "555-521-1234",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updateAddress/000000000000000000000000")
+      .send(pkg);
+
+    res.should.have.status(404);
+    res.body.should.be.a("string");
+  });
+
   it("GET api/users/updateTags/User._id should update a user's preference tags", async function () {
     let pkg = {
       tags: [2, 4, 5],
@@ -554,6 +641,19 @@ describe("User", function () {
       .send(pkg);
 
     res.should.have.status(200);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updateTags/User._id should return a 404 if user doesn't exist", async function () {
+    let pkg = {
+      tags: [2, 4, 5],
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updateTags/000000000000000000000000")
+      .send(pkg);
+
+    res.should.have.status(404);
     res.body.should.be.a("string");
   });
 
@@ -568,6 +668,34 @@ describe("User", function () {
       .send(pkg);
 
     res.should.have.status(200);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updatePassword/User._id should return a 404 if user doesn't exist", async function () {
+    let pkg = {
+      newPassword: "worsePassword!2",
+      oldPassword: "badPassword!1",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updatePassword/000000000000000000000000")
+      .send(pkg);
+
+    res.should.have.status(404);
+    res.body.should.be.a("string");
+  });
+
+  it("GET api/users/updatePassword/User._id should return a 500 if password is incorrect", async function () {
+    let pkg = {
+      newPassword: "worsePassword!2",
+      oldPassword: "badPassword!",
+    };
+    let res = await chai
+      .request(app)
+      .post("/api/users/updatePassword/" + tempUser)
+      .send(pkg);
+
+    res.should.have.status(500);
     res.body.should.be.a("string");
   });
 
