@@ -40,8 +40,6 @@ const processOrders = async (orders) => {
     for (let i = 0; i < orders.length; i++) {
       orders[i] = await setDone(orders[i]);
     }
-  } else {
-    console.log("Err: Invalid Request");
   }
 };
 
