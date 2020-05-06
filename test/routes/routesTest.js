@@ -276,6 +276,21 @@ describe("Restaurant", function () {
     res.body.should.be.a("array");
   });
 
+  it("POST api/restaurants/filter should return a 400 status if limiting criteria are not in the right format", async function () {
+    let pkg = {
+      userId: "5e8cf3b3cc4ff418b8388973",
+      tags: [2, 4],
+      priceLow: -1,
+      priceHigh: 4,
+      ratings: 3,
+    };
+
+    let res = await chai.request(app).post("/api/restaurants/filter").send(pkg);
+
+    res.should.have.status(400);
+    res.body.should.be.a("string");
+  });
+
   it("POST api/restaurants/add should create a new restaurant", async function () {
     let pkg = {
       ownerId: "5e8cf3b3cc4ff418b8388973",

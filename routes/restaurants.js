@@ -126,7 +126,6 @@ router.route("/filter").post((req, res) => {
       };
 
       result = await internalSort();
-      resolve(sortedList);
     });
   };
 
