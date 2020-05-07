@@ -167,6 +167,22 @@ describe("Order", function () {
     res.body.id.length.should.equal(24);
   });
 
+  it("POST api/orders/add should return a 400 if quantities[] and menuItems[] are of mismatched sizes", async function () {
+    let pkg = {
+      userId: "5e8cf3b3cc4ff418b8388973",
+      restaurantId: "5ea27026200dd800170da05c",
+      creditCardId: tempCard,
+      menuItems: [tempItem],
+      quantity: [1, 2],
+      address: "123 Main St, Anywhere USA",
+      totalPaid: 600,
+    };
+
+    let res = await chai.request(app).post("/api/orders/add").send(pkg);
+
+    res.should.have.status(400);
+  });
+
   it("GET api/orders/Order._id should return all info on a specific order", async function () {
     let res = await chai.request(app).get("/api/orders/" + tempOrder);
 
