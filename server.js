@@ -25,7 +25,7 @@ app.use(busboyBodyParser());
 // use mongoose to connect to MongoDB and alert the terminal when
 // connection is made successfully
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, {
+mongoose.connect(encodeURI(uri), {
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true,

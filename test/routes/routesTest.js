@@ -317,26 +317,6 @@ describe("Restaurant", function () {
 });
 
 describe("Order", function () {
-  it("GET api/orders/byUser/User._id should return all orders", async function () {
-    this.timeout(10000);
-    let res = await chai
-      .request(app)
-      .get("/api/orders/byUser/5e8cf3b3cc4ff418b8388973");
-
-    res.should.have.status(200);
-    res.body.should.be.a("array");
-  });
-
-  it("GET api/orders/byRestuarant/Restaurant._id should return all orders", async function () {
-    this.timeout(10000);
-    let res = await chai
-      .request(app)
-      .get("/api/orders/byRestaurant/5ea27026200dd800170da05c");
-
-    res.should.have.status(200);
-    res.body.should.be.a("array");
-  });
-
   it("POST api/orders/add should be able to create an order", async function () {
     let pkg = {
       userId: "5e703665cf231212cc75f372",
@@ -369,6 +349,26 @@ describe("Order", function () {
     let res = await chai.request(app).post("/api/orders/add").send(pkg);
 
     res.should.have.status(400);
+  });
+
+  it("GET api/orders/byUser/User._id should return all orders", async function () {
+    this.timeout(10000);
+    let res = await chai
+      .request(app)
+      .get("/api/orders/byUser/5e8cf3b3cc4ff418b8388973");
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+  });
+
+  it("GET api/orders/byRestuarant/Restaurant._id should return all orders", async function () {
+    this.timeout(10000);
+    let res = await chai
+      .request(app)
+      .get("/api/orders/byRestaurant/5ea27026200dd800170da05c");
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
   });
 
   it("GET api/orders/Order._id should return all info on a specific order", async function () {
