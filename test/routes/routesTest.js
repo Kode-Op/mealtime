@@ -128,76 +128,6 @@ describe("MenuItem", function () {
   });
 });
 
-describe("Order", function () {
-  it("GET api/orders/byUser/User._id should return all orders", async function () {
-    this.timeout(10000);
-    let res = await chai
-      .request(app)
-      .get("/api/orders/byUser/5e8cf3b3cc4ff418b8388973");
-
-    res.should.have.status(200);
-    res.body.should.be.a("array");
-  });
-
-  it("GET api/orders/byRestuarant/Restaurant._id should return all orders", async function () {
-    this.timeout(10000);
-    let res = await chai
-      .request(app)
-      .get("/api/orders/byRestaurant/5ea27026200dd800170da05c");
-
-    res.should.have.status(200);
-    res.body.should.be.a("array");
-  });
-
-  it("POST api/orders/add should be able to create an order", async function () {
-    let pkg = {
-      userId: "5e8cf3b3cc4ff418b8388973",
-      restaurantId: "5ea27026200dd800170da05c",
-      creditCardId: tempCard,
-      menuItems: [tempItem],
-      quantity: [1],
-      address: "123 Main St, Anywhere USA",
-      totalPaid: 600,
-    };
-
-    let res = await chai.request(app).post("/api/orders/add").send(pkg);
-
-    res.should.have.status(200);
-    tempOrder = res.body.id;
-    res.body.id.length.should.equal(24);
-  });
-
-  it("POST api/orders/add should return a 400 if quantities[] and menuItems[] are of mismatched sizes", async function () {
-    let pkg = {
-      userId: "5e8cf3b3cc4ff418b8388973",
-      restaurantId: "5ea27026200dd800170da05c",
-      creditCardId: tempCard,
-      menuItems: [tempItem],
-      quantity: [1, 2],
-      address: "123 Main St, Anywhere USA",
-      totalPaid: 600,
-    };
-
-    let res = await chai.request(app).post("/api/orders/add").send(pkg);
-
-    res.should.have.status(400);
-  });
-
-  it("GET api/orders/Order._id should return all info on a specific order", async function () {
-    let res = await chai.request(app).get("/api/orders/" + tempOrder);
-
-    res.should.have.status(200);
-    res.body.should.be.a("array");
-  });
-
-  it("GET api/orders/cancel/Order._id should cancel a specific order", async function () {
-    let res = await chai.request(app).get("/api/orders/cancel/" + tempOrder);
-
-    res.should.have.status(200);
-    res.body.should.be.a("string");
-  });
-});
-
 describe("Restaurant", function () {
   it("GET api/restaurants/ should return all restaurants", async function () {
     let res = await chai.request(app).get("/api/restaurants/");
@@ -380,6 +310,76 @@ describe("Restaurant", function () {
     let res = await chai
       .request(app)
       .delete("/api/restaurants/" + tempRestaurant);
+
+    res.should.have.status(200);
+    res.body.should.be.a("string");
+  });
+});
+
+describe("Order", function () {
+  it("GET api/orders/byUser/User._id should return all orders", async function () {
+    this.timeout(10000);
+    let res = await chai
+      .request(app)
+      .get("/api/orders/byUser/5e8cf3b3cc4ff418b8388973");
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+  });
+
+  it("GET api/orders/byRestuarant/Restaurant._id should return all orders", async function () {
+    this.timeout(10000);
+    let res = await chai
+      .request(app)
+      .get("/api/orders/byRestaurant/5ea27026200dd800170da05c");
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+  });
+
+  it("POST api/orders/add should be able to create an order", async function () {
+    let pkg = {
+      userId: "5e703665cf231212cc75f372",
+      restaurantId: tempRestaurant,
+      creditCardId: tempCard,
+      menuItems: [tempItem],
+      quantity: [1],
+      address: "123 Main St, Anywhere USA",
+      totalPaid: 600,
+    };
+
+    let res = await chai.request(app).post("/api/orders/add").send(pkg);
+
+    res.should.have.status(200);
+    tempOrder = res.body.id;
+    res.body.id.length.should.equal(24);
+  });
+
+  it("POST api/orders/add should return a 400 if quantities[] and menuItems[] are of mismatched sizes", async function () {
+    let pkg = {
+      userId: "5e8cf3b3cc4ff418b8388973",
+      restaurantId: "5ea27026200dd800170da05c",
+      creditCardId: tempCard,
+      menuItems: [tempItem],
+      quantity: [1, 2],
+      address: "123 Main St, Anywhere USA",
+      totalPaid: 600,
+    };
+
+    let res = await chai.request(app).post("/api/orders/add").send(pkg);
+
+    res.should.have.status(400);
+  });
+
+  it("GET api/orders/Order._id should return all info on a specific order", async function () {
+    let res = await chai.request(app).get("/api/orders/" + tempOrder);
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+  });
+
+  it("GET api/orders/cancel/Order._id should cancel a specific order", async function () {
+    let res = await chai.request(app).get("/api/orders/cancel/" + tempOrder);
 
     res.should.have.status(200);
     res.body.should.be.a("string");
