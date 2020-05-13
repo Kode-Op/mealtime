@@ -359,7 +359,7 @@ describe("Order", function () {
     res.body.should.be.a("array");
   });
 
-  it("GET api/orders/byRestuarant/Restaurant._id should return all orders", async function () {
+  it("GET api/orders/byRestuarant/Restaurant._id should return all orders for a given restaurant", async function () {
     this.timeout(10000);
     let res = await chai
       .request(app)
