@@ -13,8 +13,6 @@ let tempOrder = "";
 let tempRestaurant = "";
 let tempToken = "";
 
-// Unit Tests for CreditCard
-
 describe("CreditCard", function () {
   it("GET api/creditCards/User._id should return all credit cards for user", async function () {
     let res = await chai
