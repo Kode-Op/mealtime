@@ -1,6 +1,5 @@
 // require dependencies
 const express = require("express");
-const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
 const busboy = require("connect-busboy");
@@ -18,7 +17,6 @@ if (port == null || port == "") {
   port = 5000;
 }
 
-app.use(cors());
 app.use(express.json());
 app.use(busboyBodyParser());
 
