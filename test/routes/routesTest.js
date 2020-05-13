@@ -163,7 +163,7 @@ describe("Restaurant", function () {
     res.body.should.be.a("array");
   });
 
-  it("POST api/restaurants/filter should return restaurants filtered by scpecified criteria just for tag search", async function () {
+  it("POST api/restaurants/filter should return restaurants filtered by specified criteria just for tag search", async function () {
     let pkg = {
       tags: [2],
       priceLow: 0,
@@ -177,7 +177,7 @@ describe("Restaurant", function () {
     res.body.should.be.a("array");
   });
 
-  it("POST api/restaurants/filter should return restaurants filtered by scpecified criteria just for price range", async function () {
+  it("POST api/restaurants/filter should return restaurants filtered by specified criteria just for price range", async function () {
     let pkg = {
       tags: [],
       priceLow: 0,
@@ -191,7 +191,7 @@ describe("Restaurant", function () {
     res.body.should.be.a("array");
   });
 
-  it("POST api/restaurants/filter should return restaurants filtered by scpecified criteria if limiting criteria are given", async function () {
+  it("POST api/restaurants/filter should return restaurants filtered by specified criteria if limiting criteria are given", async function () {
     let pkg = {
       tags: [2, 4],
       priceLow: 2,
