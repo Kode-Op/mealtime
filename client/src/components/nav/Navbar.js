@@ -99,6 +99,8 @@ export default class NavBar extends Component {
         this.setState({ mobileview: false });
       }
     }
+
+    console.log(this.state.mobileview);
   };
 
   //Whenever a new menu item is received from Restaurant.js, set 'bagMenuToggle' to true.

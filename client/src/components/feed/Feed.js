@@ -12,7 +12,7 @@ import Footer from "../footer/Footer";
 import Loader from "../../assets/loader/Loader";
 
 //Import utilities
-import { UpdateUserAddress } from "../../utils/axios/Users";
+import { UpdateUserAddress, UpdateUserTags } from "../../utils/axios/Users";
 import { GetFilteredRestaurants } from "../../utils/axios/Restaurants";
 import GetLogin from "../../utils/GetLogin";
 
@@ -89,25 +89,35 @@ export default class Feed extends Component {
 
   //Update user address. This function is passed down as a prop to
   //FeedAddressOverlay.js
-  updateAddressHandler = (newAddress) => {
+  updateAddressHandler = (newAddress, tags) => {
     const pkg = {
       address: newAddress,
     };
     UpdateUserAddress(this.state.user._id, pkg)
-      .then()
+      .then(() => {
+        const pkg2 = {
+          tags: tags,
+        };
+        UpdateUserTags(this.state.user._id, pkg2)
+          .then(() => {
+            window.location.reload(true);
+          })
+          .catch((error) => {
+            console.log(error);
+            //Update the state with the new value
+            if (this._isMounted) {
+              this.setState((prevState) => ({
+                user: {
+                  ...prevState.user,
+                  address: newAddress,
+                },
+              }));
+            }
+          });
+      })
       .catch((error) => {
         console.log(error);
       });
-
-    //Update the state with the new value
-    if (this._isMounted) {
-      this.setState((prevState) => ({
-        user: {
-          ...prevState.user,
-          address: newAddress,
-        },
-      }));
-    }
   };
 
   //This method renders a restaurant for each object found in the "restaurants"
@@ -128,6 +138,17 @@ export default class Feed extends Component {
     }
   };
 
+  //This method disables the scrollbar and renders a popup if the address is not set.
+  //Expected to occur on first login.
+  renderFeedAddressOverlay = (address) => {
+    if (address === "") {
+      document.body.style.overflow = "hidden";
+      return (
+        <FeedAddressOverlay updateAddressHandler={this.updateAddressHandler} />
+      );
+    }
+  };
+
   render() {
     const { isUserLoaded, user } = this.state;
 
@@ -136,12 +157,7 @@ export default class Feed extends Component {
         return (
           <div>
             <Navbar user={user} />
-
-            {user.address === "" && (
-              <FeedAddressOverlay
-                updateAddressHandler={this.updateAddressHandler}
-              />
-            )}
+            {this.renderFeedAddressOverlay(user.address)}
 
             <div className="FeedContainer">
               <h4>What do you want to eat?</h4>

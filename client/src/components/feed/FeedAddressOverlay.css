@@ -39,3 +39,56 @@
   padding: 0 10px 0 10px;
   border-radius: 5px;
 }
+
+.FeedAddressOverlayTagComponent {
+  width: 100%;
+  border: 1px solid grey;
+  padding: 5px 10px 0 10px;
+  border-radius: 5px;
+  margin: 20px 0 20px 0;
+}
+
+.FeedAddressOverlayAppliedTags {
+  min-height: 48px;
+  width: 100%;
+  border-bottom: 2px solid lightgray;
+}
+
+.FeedAddressOverlayTagArea {
+  height: 180px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.FeedAddressOverlayTagItem {
+  padding: 3px;
+  margin: 6px 3px 6px 3px;
+  border-radius: 6px;
+  border: 2px solid skyblue;
+  background-color: #def1fd;
+  display: inline-block;
+  cursor: default;
+}
+
+.FeedAddressOverlayTagItemSelected {
+  padding: 3px;
+  margin: 6px 3px 6px 3px;
+  border-radius: 6px;
+  background-color: #0066ff;
+  border: 2px solid #0066ff;
+  color: white;
+  display: inline-block;
+  cursor: default;
+}
+
+.FeedAddressOverlayTagItemSelected:hover {
+  border: 2px solid #0033cc;
+  background-color: #0033cc;
+  cursor: pointer;
+}
+
+.FeedAddressOverlayTagItem:hover {
+  border: 2px solid #0066ff;
+  background-color: #99ccff;
+  cursor: pointer;
+}

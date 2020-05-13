@@ -94,13 +94,7 @@ export default class RegisterConfirmation extends Component {
           />
         );
       } else {
-        return (
-          <div>
-            <br />
-            <br />
-            <p>{this.state.message}. Redirecting in 3 seconds...</p>
-          </div>
-        );
+        return null;
       }
     } else {
       return (
